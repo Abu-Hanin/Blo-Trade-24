@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دورة تعلم التداول - سلسلة فيديوهات شاملة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0c0c0d;
+            color: #f8f8f8;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #0c0c0d, #1c1c1e, #0c0c0d);
+            padding: 25px 0;
+            border-bottom: 2px solid #f0b90b;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            color: #f0b90b;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            margin-left: 10px;
+            font-size: 32px;
+        }
+        
+        .header-title {
+            color: #f0b90b;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        .header-description {
+            color: #e0e0e0;
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .course-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .course-title {
+            color: #f0b90b;
+            font-size: 32px;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .course-title:after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 3px;
+            background-color: #f0b90b;
+            bottom: -10px;
+            left: 20%;
+        }
+        
+        .course-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background-color: #1c1c1e;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #333;
+            min-width: 180px;
+        }
+        
+        .stat-number {
+            color: #f0b90b;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .video-card {
+            background: linear-gradient(to bottom, #1a1a1c, #131315);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(240, 185, 11, 0.2);
+            border-color: #f0b90b;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .progress-section {
+            background-color: #1c1c1e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #2a2a2c;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #f0b90b;
+            border-radius: 5px;
+            width: 30%; /* يمكن تغيير هذه النسبة حسب التقدم الفعلي */
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: #e0e0e0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 2px solid #f0b90b;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .videos-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">₿</span>
+                <span>Trading Mastery</span>
+            </div>
+            <h1 class="header-title">دورة تعلم التداول الشاملة</h1>
+            <p class="header-description">احترف عالم التداول من خلال سلسلة الفيديوهات التعليمية الشاملة التي تغطي جميع أساسيات ومتقدمات التداول في الأسواق المالية</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="course-header">
+            <h2 class="course-title">سلسلة فيديوهات تعلم التداول</h2>
+            <p>استفد من الخبراء وتعلم بخطى ثابتة من الصفر إلى الاحتراف</p>
+            
+            <div class="course-stats">
+                <div class="stat">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">فيديو تعليمي</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">ساعة تعليمية</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">عملي وتطبيقي</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <h3>تقدمك في الدورة</h3>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">
+                <span>0% مكتمل</span>
+                <span>ابدأ التعلم الآن!</span>
+            </div>
+        </div>
+        
+        <div class="videos-container">
+            <!-- فيديو 1 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=1" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 2 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=2" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 3 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=3" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 4 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=4" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 5 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=5" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 6 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=6" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 7 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=7" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 8 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=8" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 9 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=9" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 10 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=10" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 11 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=11" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 12 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=12" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 13 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=13" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 14 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=14" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 15 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=15" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 16 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=16" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 17 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=17" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 18 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=18" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- فيديو 19 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=19" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 20 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=20" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 21 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=21" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 22 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=22" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 23 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=23" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 24 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=24" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 25 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=25" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 26 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=26" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 27 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=27" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 28 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=28" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 29 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=29" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <!-- вideo 30 -->
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=30" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>دورة تعلم التداول الشاملة</p>
+        </div>
+    </footer>
+    
+    <script>
+        // يمكن إضافة JavaScript هنا لتتبع تقدم المشاهدة
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoCards = document.querySelectorAll('.video-card');
+            
+            videoCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const progressFill = document.querySelector('.progress-fill');
+                    const progressText = document.querySelector('.progress-text span');
+                    
+                    let currentWidth = parseFloat(progressFill.style.width) || 0;
+                    currentWidth += 3.33;
+                    
+                    if (currentWidth > 100) currentWidth = 100;
+                    
+                    progressFill.style.width = currentWidth + '%';
+                    progressText.textContent = Math.round(currentWidth) + '% مكتمل';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
