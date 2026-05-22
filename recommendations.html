@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>توصيات التداول الفوري | بايننس ستايل</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #0B0E11;
+      font-family: 'Inter', sans-serif;
+      color: #EAECEF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.5rem;
+    }
+    .content-wrapper {
+      max-width: 1000px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #F0B90B;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .lead-description {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #EAECEF;
+      margin: 0.5rem 0 1.5rem 0;
+    }
+    .lead-description i {
+      color: #F0B90B;
+      margin-left: 0.5rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background: #F0B90B;
+      color: #0B0E11;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 1rem 2.4rem;
+      border-radius: 50px;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 12px 25px -8px rgba(240, 185, 11, 0.4);
+      transition: all 0.25s;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-primary:hover {
+      background: #FCD535;
+      transform: translateY(-4px);
+    }
+    .btn-green {
+      background: #2EBd6B;
+      color: #fff;
+      box-shadow: 0 12px 20px -10px rgba(46, 189, 107, 0.5);
+    }
+    .btn-green:hover {
+      background: #3ecc7b;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+      justify-content: center;
+    }
+    .top-action {
+      margin: 1.8rem 0 2.2rem;
+    }
+    .video-premium {
+      background: #15191E;
+      border-radius: 32px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border: 1px solid #2F363E;
+      box-shadow: 0 20px 35px -10px black;
+    }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: #0F1217;
+      box-shadow: 0 0 0 2px #2B3139;
+      cursor: pointer;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-thumbnail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://img.youtube.com/vi/RFrr-yf21YM/maxresdefault.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-thumbnail::after {
+      content: "\f04b";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      font-size: 4rem;
+      color: white;
+      background: rgba(0,0,0,0.6);
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+    .video-thumbnail:hover::after {
+      transform: scale(1.1);
+      background: #F0B90B;
+      color: #0B0E11;
+    }
+    .divider-gold {
+      height: 3px;
+      width: 110px;
+      background: linear-gradient(90deg, #F0B90B, #FCD535, transparent);
+      border-radius: 3px;
+      margin: 1.5rem 0 2rem 0;
+    }
+
+    /* قسم معلومات الخدمة */
+    .service-info {
+      background: #15191E;
+      border-radius: 32px;
+      padding: 1.8rem;
+      margin: 2rem 0 1rem;
+      border: 1px solid #2F363E;
+      box-shadow: 0 15px 30px -10px black;
+    }
+    .info-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .header-text {
+      flex: 1;
+      min-width: 250px;
+    }
+    .header-text p {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #F0B90B;
+    }
+    .header-text p:first-child {
+      color: #EAECEF;
+      font-weight: 500;
+    }
+    .toggle-btn {
+      background: rgba(240, 185, 11, 0.15);
+      border: 1px solid #F0B90B;
+      color: #F0B90B;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .toggle-btn:hover {
+      background: #F0B90B;
+      color: #0B0E11;
+      transform: translateY(-2px);
+    }
+    .toggle-btn i {
+      font-size: 0.9rem;
+      transition: transform 0.3s;
+    }
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+      margin-top: 0;
+    }
+    .collapsible-content.expanded {
+      max-height: 1000px;
+      transition: max-height 0.6s ease-in;
+    }
+    .info-details {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #2F363E;
+    }
+    .info-details p {
+      margin: 0.8rem 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .info-details i {
+      color: #F0B90B;
+      width: 24px;
+      text-align: center;
+    }
+    .price-highlight {
+      color: #2EBd6B;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .feature-list {
+      list-style: none;
+      margin: 1rem 0 0.5rem;
+    }
+    .feature-list li {
+      margin: 0.7rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .feature-list i.fa-check-circle {
+      color: #2EBd6B;
+    }
+    .note-line {
+      margin-top: 1rem;
+      font-weight: 500;
+      color: #F0B90B;
+    }
+    @media (max-width: 700px) {
+      h1 { font-size: 2.4rem; }
+      .lead-description { font-size: 1.3rem; }
+      .btn-primary, .btn-green { width: 100%; }
+      .button-row { flex-direction: column; }
+      .service-info { padding: 1.2rem; }
+      .info-header { flex-direction: column; align-items: flex-start; }
+      .toggle-btn { align-self: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    
+    <h1>توصيات للتداول الفوري</h1>
+
+    <div class="lead-description">
+      <i class="fas fa-bolt"></i> 
+      نقدم لكم توصيات بشكل يومي · توصيات للتداول الفوري
+    </div>
+
+    <!-- الزر الأول تحت الوصف - يفتح صفحة تفاصيل التوصيات -->
+    <div class="top-action">
+      <a href="signals-details.html" class="btn-primary">
+        <i class="fas fa-fire"></i> 
+        توصيات للتداول
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    </div>
+
+    <div class="divider-gold"></div>
+
+    <!-- الفيديو مع تشغيل عند النقر -->
+    <div class="video-premium">
+      <div class="video-wrapper" id="videoWrapper">
+        <div class="video-thumbnail" id="videoThumb"></div>
+      </div>
+    </div>
+
+    <!-- قسم معلومات الخدمة مع زر واضح لعرض التفاصيل -->
+    <div class="service-info">
+      <div class="info-header">
+        <div class="header-text">
+          <p>استفد من توصيات احترافية مدروسة بعناية ومخصصة لسوق التداول الفوري مع تحديثات مستمرة وفرص منتقاة بدقة.</p>
+          <p>💎 نوع الاشتراك: دفع مرة واحدة فقط</p>
+        </div>
+        <div class="toggle-btn" id="toggleBtn">
+          <span>عرض التفاصيل</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+      <div class="collapsible-content" id="collapsibleContent">
+        <div class="info-details">
+          <p><i class="fas fa-tag"></i> <span class="price-highlight">💰 السعر: 33 دولار مدى الحياة</span></p>
+          <p><i class="fas fa-infinity"></i> ♾ الصلاحية: وصول دائم بدون تجديد</p>
+          <p><i class="fas fa-bell"></i> 🔔 المزايا:</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> تنبيهات فورية للفرص الجديدة</li>
+            <li><i class="fas fa-check-circle"></i> نقاط دخول واضحة</li>
+            <li><i class="fas fa-check-circle"></i> أهداف متعددة</li>
+            <li><i class="fas fa-check-circle"></i> تحديد وقف خسارة لإدارة المخاطر</li>
+          </ul>
+          <p><i class="fas fa-check-circle" style="color:#2EBd6B;"></i> ✅ لا توجد رسوم شهرية</p>
+          <p><i class="fas fa-check-circle" style="color:#2EBd6B;"></i> ✅ لا يوجد تجديد سنوي</p>
+          <p><i class="fas fa-check-circle" style="color:#2EBd6B;"></i> ✅ اشتراك دائم مقابل دفعة واحدة فقط</p>
+          <p class="note-line"><i class="fas fa-arrow-left"></i> اضغط على اشترك الآن لتفعيل التوصيات والبدء فورًا 🚀</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- الأزرار تحت الفيديو والمعلومات -->
+    <div class="button-row">
+      <a href="signals-details.html" class="btn-primary">
+        <i class="fas fa-crown"></i> 
+        توصيات للتداول
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <a href="subscription.html" class="btn-primary btn-green">
+        <i class="fas fa-star"></i> 
+        اشترك الان
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // تشغيل الفيديو عند النقر على الصورة المصغرة
+    const wrapper = document.getElementById('videoWrapper');
+    const thumbnail = document.getElementById('videoThumb');
+    wrapper.addEventListener('click', function() {
+      if (wrapper.querySelector('iframe')) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/RFrr-yf21YM?autoplay=1&rel=0&controls=1&loop=1&playlist=RFrr-yf21YM&modestbranding=1';
+      iframe.allow = 'autoplay; encrypted-media';
+      iframe.allowFullscreen = true;
+      thumbnail.style.display = 'none';
+      wrapper.appendChild(iframe);
+    });
+
+    // طي/توسيع معلومات الخدمة باستخدام الزر المخصص
+    const toggleBtn = document.getElementById('toggleBtn');
+    const collapsibleContent = document.getElementById('collapsibleContent');
+    const btnSpan = toggleBtn.querySelector('span');
+    const btnIcon = toggleBtn.querySelector('i');
+
+    toggleBtn.addEventListener('click', function() {
+      collapsibleContent.classList.toggle('expanded');
+      if (collapsibleContent.classList.contains('expanded')) {
+        btnSpan.textContent = 'إخفاء التفاصيل';
+        btnIcon.classList.remove('fa-chevron-down');
+        btnIcon.classList.add('fa-chevron-up');
+      } else {
+        btnSpan.textContent = 'عرض التفاصيل';
+        btnIcon.classList.remove('fa-chevron-up');
+        btnIcon.classList.add('fa-chevron-down');
+      }
+    });
+  </script>
+</body>
+</html>
