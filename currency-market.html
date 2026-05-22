@@ -641,4 +641,288 @@
             }
             
             // جلب بيانات الشموع من Binance API
-            async function fetchCandleData(
+            async function fetchCandleData(symbol, interval = '1w') {
+                try {
+                    // تحويل الفترة إلى معيار Binance
+                    let binanceInterval = '1d';
+                    switch(interval) {
+                        case '1h': binanceInterval = '1h'; break;
+                        case '1d': binanceInterval = '1d'; break;
+                        case '1w': binanceInterval = '1w'; break;
+                        case '1m': binanceInterval = '1M'; break;
+                    }
+                    
+                    const limit = 100; // عدد الشموع المراد جلبها
+                    const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${binanceInterval}&limit=${limit}`);
+                    const data = await response.json();
+                    
+                    // تحويل البيانات إلى التنسيق المطلوب للمخطط
+                    return data.map(d => ({
+                        time: d[0] / 1000, // تحويل الوقت من مللي ثانية إلى ثواني
+                        open: parseFloat(d[1]),
+                        high: parseFloat(d[2]),
+                        low: parseFloat(d[3]),
+                        close: parseFloat(d[4])
+                    }));
+                } catch (error) {
+                    console.error('Error fetching candle data:', error);
+                    return [];
+                }
+            }
+            
+            // تحديث إحصائيات السوق
+            function updateMarketStats(coins) {
+                const totalVolume = coins.reduce((sum, coin) => sum + parseFloat(coin.quoteVolume), 0);
+                document.getElementById('total-volume').textContent = `$${(totalVolume / 1000000000).toLocaleString('en-US', { maximumFractionDigits: 2 })}B`;
+                
+                // قيم تقديرية للقيمة السوقية وهيمنة البيتكوين
+                document.getElementById('total-market-cap').textContent = `$${(totalVolume * 20 / 1000000000000).toLocaleString('en-US', { maximumFractionDigits: 2 })}T`;
+                document.getElementById('btc-dominance').textContent = `${(38 + Math.random() * 2).toFixed(1)}%`;
+            }
+            
+            // عرض العملات في الجدول
+            function displayCoins(coins) {
+                if (coins.length === 0) {
+                    coinContainer.innerHTML = '<div class="loading">لا توجد عملات تطابق معايير البحث.</div>';
+                    return;
+                }
+                
+                coinContainer.innerHTML = '';
+                
+                coins.forEach(coin => {
+                    const symbol = coin.symbol.replace(currentPair, '');
+                    const price = parseFloat(coin.lastPrice);
+                    const change = parseFloat(coin.priceChangePercent);
+                    const volume = parseFloat(coin.quoteVolume);
+                    
+                    const row = document.createElement('div');
+                    row.className = 'coin-row';
+                    row.setAttribute('data-symbol', coin.symbol);
+                    
+                    row.innerHTML = `
+                        <div class="coin-info">
+                            <div class="coin-icon">${symbol.substring(0, 2)}</div>
+                            <div>
+                                <div class="coin-name">${symbol}</div>
+                                <span class="coin-symbol">/${currentPair}</span>
+                            </div>
+                        </div>
+                        <div class="price">$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: price < 1 ? 6 : 2 })}</div>
+                        <div class="change ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</div>
+                        <div class="volume">$${(volume / 1000000).toLocaleString('en-US', { maximumFractionDigits: 2 })}M</div>
+                        <div class="market-cap">--</div>
+                    `;
+                    
+                    row.addEventListener('click', () => showChart(coin.symbol, symbol, price, change));
+                    coinContainer.appendChild(row);
+                });
+            }
+            
+            // البحث عن عملات
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    filteredCoins = allCoins;
+                } else {
+                    filteredCoins = allCoins.filter(coin => 
+                        coin.symbol.replace(currentPair, '').toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                displayCoins(filteredCoins);
+            });
+            
+            // تبديل بين علامات التبويب الرئيسية
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const type = tab.getAttribute('data-type');
+                    
+                    if (type === 'top-traded') {
+                        const topTraded = [...allCoins].sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume)).slice(0, 20);
+                        displayCoins(topTraded);
+                    } else {
+                        displayCoins(allCoins);
+                    }
+                });
+            });
+            
+            // تبديل بين أزواج التداول
+            subTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    subTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    currentPair = tab.getAttribute('data-pair');
+                    fetchMarketData();
+                });
+            });
+            
+            // إظهار مخطط العملة
+            async function showChart(symbol, coinName, price, change) {
+                currentChartSymbol = symbol;
+                chartTitle.textContent = `${coinName}/${currentPair}`;
+                chartPrice.textContent = `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: price < 1 ? 6 : 2 })}`;
+                chartChange.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+                chartChange.className = `change ${change >= 0 ? 'positive' : 'negative'}`;
+                
+                chartContainer.style.display = 'block';
+                
+                // إنشاء المخطط إذا لم يكن موجودًا
+                if (!chart) {
+                    chart = LightweightCharts.createChart(chartElement, {
+                        width: chartElement.clientWidth,
+                        height: 400,
+                        layout: {
+                            backgroundColor: '#2b3139',
+                            textColor: '#d9d9d9',
+                        },
+                        grid: {
+                            vertLines: {
+                                color: 'rgba(42, 46, 57, 0.5)',
+                                style: 1,
+                                visible: true,
+                            },
+                            horzLines: {
+                                color: 'rgba(42, 46, 57, 0.5)',
+                                style: 1,
+                                visible: true,
+                            },
+                        },
+                        timeScale: {
+                            timeVisible: true,
+                            secondsVisible: false,
+                            borderColor: '#D9D9D9',
+                        },
+                        crosshair: {
+                            mode: 1,
+                        },
+                    });
+                    
+                    candleSeries = chart.addCandlestickSeries({
+                        upColor: '#0ecb81',
+                        downColor: '#f6465d',
+                        borderDownColor: '#f6465d',
+                        borderUpColor: '#0ecb81',
+                        wickDownColor: '#f6465d',
+                        wickUpColor: '#0ecb81',
+                        priceLineVisible: false,
+                    });
+                }
+                
+                // جلب بيانات الشموع
+                const candleData = await fetchCandleData(symbol, '1w');
+                if (candleData.length > 0) {
+                    candleSeries.setData(candleData);
+                    
+                    // إضافة مؤشرات فنية
+                    chart.timeScale().fitContent();
+                    
+                    // إضافة خطوط المتوسطات المتحركة
+                    const ma7 = calculateMA(candleData, 7);
+                    const ma7Series = chart.addLineSeries({
+                        color: '#2962FF',
+                        lineWidth: 2,
+                        lineStyle: 0,
+                        title: 'MA7',
+                    });
+                    ma7Series.setData(ma7);
+                    
+                    const ma25 = calculateMA(candleData, 25);
+                    const ma25Series = chart.addLineSeries({
+                        color: '#FF6D00',
+                        lineWidth: 2,
+                        lineStyle: 0,
+                        title: 'MA25',
+                    });
+                    ma25Series.setData(ma25);
+                } else {
+                    candleSeries.setData(generateChartData());
+                }
+                
+                // تمرير إلى الأعلى لرؤية المخطط
+                chartContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // حساب المتوسط المتحرك
+            function calculateMA(data, count) {
+                const result = [];
+                for (let i = 0; i < data.length; i++) {
+                    if (i < count) {
+                        result.push({ time: data[i].time, value: data[i].close });
+                        continue;
+                    }
+                    let sum = 0;
+                    for (let j = 0; j < count; j++) {
+                        sum += data[i - j].close;
+                    }
+                    result.push({ time: data[i].time, value: sum / count });
+                }
+                return result;
+            }
+            
+            // تبديل الفترات الزمنية للمخطط
+            intervals.forEach(interval => {
+                interval.addEventListener('click', async () => {
+                    intervals.forEach(i => i.classList.remove('active'));
+                    interval.classList.add('active');
+                    
+                    if (currentChartSymbol) {
+                        const intervalValue = interval.getAttribute('data-interval');
+                        const candleData = await fetchCandleData(currentChartSymbol, intervalValue);
+                        if (candleData.length > 0) {
+                            candleSeries.setData(candleData);
+                        }
+                    }
+                });
+            });
+            
+            // إغلاق المخطط
+            closeChart.addEventListener('click', () => {
+                chartContainer.style.display = 'none';
+            });
+            
+            // بيانات وهمية للمخطط (للطوارئ)
+            function generateChartData() {
+                const baseValue = 50000 + Math.random() * 20000;
+                const time = new Date();
+                const data = [];
+                
+                for (let i = 0; i < 100; i++) {
+                    const baseTime = time.getTime() / 1000 - i * 3600;
+                    const open = baseValue + Math.random() * 2000 - 1000;
+                    const high = open + Math.random() * 1000;
+                    const low = open - Math.random() * 1000;
+                    const close = open + Math.random() * 500 - 250;
+                    
+                    data.push({
+                        time: baseTime,
+                        open: open,
+                        high: high,
+                        low: low,
+                        close: close,
+                    });
+                }
+                
+                return data.reverse();
+            }
+            
+            // تحديث حجم المخطط عند تغيير حجم النافذة
+            window.addEventListener('resize', () => {
+                if (chart) {
+                    chart.applyOptions({ width: chartElement.clientWidth });
+                }
+            });
+            
+            // بدء جلب البيانات
+            fetchMarketData();
+            
+            // تحديث البيانات كل 10 ثواني (بدون تحريك الصفحة)
+            setInterval(fetchMarketData, 10000);
+        });
+    </script>
+</body>
+</html>
