@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توصيات التداول الفوري - Binance Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #f0b90b;
+            --accent-color: #f0b90b;
+            --text-color: #eaecef;
+            --card-bg: #1e2026;
+            --header-bg: #0c0f16;
+            --card-shadow: 0 4px 20px rgba(240, 185, 11, 0.15);
+            --green-color: #00bc7e;
+            --red-color: #f84960;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        
+        header {
+            background: var(--header-bg);
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 2.5rem 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(240, 185, 11, 0.1) 0%, transparent 50%);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(240, 185, 11, 0.2);
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(240, 185, 11, 0.2);
+        }
+        
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            background: var(--header-bg);
+            border: 2px solid rgba(240, 185, 11, 0.3);
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            color: var(--text-color);
+        }
+        
+        .search-box input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+        }
+        
+        .refresh-btn {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #e0a90b;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(240, 185, 11, 0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 30px rgba(240, 185, 11, 0.2);
+            border-color: var(--secondary-color);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--header-bg), var(--primary-color));
+            color: var(--secondary-color);
+            padding: 18px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            position: relative;
+            border-bottom: 1px solid rgba(240, 185, 11, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .card-header:hover {
+            background: linear-gradient(135deg, var(--header-bg), #1a1c22);
+        }
+        
+        .price-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .current-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .price-change {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .price-up {
+            background-color: rgba(0, 188, 126, 0.2);
+            color: var(--green-color);
+        }
+        
+        .price-down {
+            background-color: rgba(248, 73, 96, 0.2);
+            color: var(--red-color);
+        }
+        
+        .post-date {
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #e0a90b;
+            font-weight: normal;
+        }
+        
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .post-content {
+            line-height: 1.7;
+            color: var(--text-color);
+            font-size: 1.05rem;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(240, 185, 11, 0.2);
+        }
+        
+        .post-content p {
+            margin-bottom: 15px;
+        }
+        
+        .post-content h2, .post-content h3 {
+            color: var(--secondary-color);
+            margin: 20px 0 15px;
+        }
+        
+        .card-footer {
+            background: var(--header-bg);
+            padding: 15px 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(240, 185, 11, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .social-share {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-share a {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        
+        .social-share a:hover {
+            color: #e0a90b;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: var(--text-color);
+            grid-column: 1 / -1;
+        }
+        
+        .loading i {
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            text-align: center;
+            padding: 2.5rem;
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 12px;
+            margin: 2rem 0;
+            grid-column: 1 / -1;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+        
+        .error i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rss-info {
+            display: none; /* إخفاء هذا القسم */
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .copy-notification.show {
+            opacity: 1;
+        }
+        
+        @media (max-width: 992px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.3rem;
+            }
+            
+            header p {
+                font-size: 1.1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .card-header {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+            
+            .post-content {
+                font-size: 1rem;
+            }
+            
+            .card-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .price-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-coins"></i>
+        </div>
+        <h1>توصيات للتداول الفوري</h1>
+        <p>نقدم لكم توصيات بشكل يومي توصيات للتداول الفوري</p>
+    </header>
+    
+    <div class="container">
+        <div class="rss-info">
+            <p>يتم جلب التوصيات تلقائيًا من المدونة عبر تقنية RSS - سيتم عرض آخر المقالات هنا</p>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-number" id="today-posts">0</span>
+                <span class="stat-label">توصيات اليوم</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="ابحث في التوصيات...">
+            </div>
+            
+            <button class="refresh-btn" id="refresh-btn">
+                <i class="fas fa-sync-alt"></i> تحديث التوصيات
+            </button>
+        </div>
+        
+        <div id="cards-container" class="cards-container">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>جاري تحميل أحدث التوصيات...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="copy-notification" id="copy-notification">تم نسخ العنوان بنجاح!</div>
+
+    <script>
+        // بيانات نموذجية للعرض (سيتم استبدالها بالبيانات الفعلية من RSS)
+        const samplePosts = [
+            {
+                title: "DOGE USDT توصية تداول",
+                content: `
+                    <p>توصية شراء لزوج DOGE/USDT عند سعر 0.2114 مع أهداف عند 0.2150</p>
+                    <p>وقف الخسارة عند 0.1280</p>
+                    <p>التوصية قائمة على تحليل الموجات والتحليل الفني للشارت اليومي مع وجود إشارات شراء قوية من المؤشرات الفنية.</p>
+                `,
+                date: new Date().toISOString().split('T')[0] // تاريخ اليوم
+            },
+            {
+                title: "BTC USDT توصية تداول",
+                content: `
+                    <p>توصية شراء لزوج BTC/USDT عند سعر 34,500 مع أهداف عند 35,200 ثم 35,800</p>
+                    <p>وقف الخسارة عند 34,000</p>
+                    <p>التوصية بناء على كسر مستوى دعم رئيسي وتشكيل نموذج هبوطي على الشارت اليومي مع تأكيد من مؤشر القوة النسبية.</p>
+                `,
+                date: new Date().toISOString().split('T')[0] // تاريخ اليوم
+            },
+            {
+                title: "ETH USDT توصية تداول",
+                content: `
+                    <p>توصية بيع لزوج ETH/USDT عند سعر 0.065 مع أهداف عند 0.063 ثم 0.061</p>
+                    <p>وقف الخسارة عند 0.067</p>
+                    <p>التوصية نتيجة ارتداد السعر من مستوى دعم قوي مع تأكيد إشارات شراء من مؤشر الماكد وستوكاستك على الإطار اليومي.</p>
+                `,
+                date: "2023-11-13" // تاريخ قديم لاختبار العداد
+            },
+            {
+                title: "XRP USDT توصية تداول",
+                content: `
+                    <p>توصية شراء لزوج XRP/USDT عند سعر 0.65 مع أهداف عند 0.68 ثم 0.72</p>
+                    <p>وقف الخسارة عند 0.62</p>
+                    <p>التوصية بناء على تشكيل نموذج صعودي مع تأكيد من مؤشر الماكد.</p>
+                `,
+                date: new Date().toISOString().split('T')[0] // تاريخ اليوم
+            },
+            {
+                title: "ADA USDT توصية تداول",
+                content: `
+                    <p>توصية شراء لزوج ADA/USDT عند سعر 0.38 مع أهداف عند 0.42 ثم 0.45</p>
+                    <p>وقف الخسارة عند 0.35</p>
+                    <p>التوصية نتيجة كسر المقاومة واستمرار الاتجاه الصعودي.</p>
+                `,
+                date: new Date().toISOString().split('T')[0] // تاريخ اليوم
+            }
+        ];
+
+        // متغير لتخزين جميع أزواج العملات وأسعارها
+        let allCurrencyPrices = {};
+        let priceUpdateInterval;
+
+        // دالة للحصول على تاريخ اليوم بتوقيت محلي
+        function getTodayDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // دالة للحصول على الوقت المتبقي حتى منتصف الليل
+        function getTimeUntilMidnight() {
+            const now = new Date();
+            const midnight = new Date();
+            midnight.setHours(24, 0, 0, 0);
+            return midnight - now;
+        }
+
+        // دالة لاستخراج زوج العملات من العنوان
+        function extractCurrencyPair(title) {
+            // البحث عن نمط العملة/العملة مثل BTC/USDT أو BTC USDT
+            const match = title.match(/([A-Za-z]+)[\/\s]+([A-Za-z]+)/i);
+            if (match) {
+                const baseCurrency = match[1].toUpperCase();
+                const quoteCurrency = match[2].toUpperCase();
+                
+                // إذا كانت العملة المقابلة هي USDT، نعيد الزوج
+                if (quoteCurrency === 'USDT') {
+                    return baseCurrency + quoteCurrency;
+                } else {
+                    // إذا لم تكن USDT، نعيد الزوج مع USDT افتراضيًا
+                    return baseCurrency + 'USDT';
+                }
+            }
+            
+            // إذا لم يكن بالصيغة القياسية، نبحث عن أي عملات مشهورة
+            const currencies = ['BTC', 'ETH', 'XRP', 'BNB', 'ADA', 'DOGE', 'DOT', 'LTC', 'BCH', 'LINK', 'SOL', 'MATIC', 'AVAX', 'ATOM'];
+            for (const currency of currencies) {
+                if (title.toUpperCase().includes(currency)) {
+                    return currency + 'USDT';
+                }
+            }
+            
+            return null;
+        }
+
+        // دالة لجلب سعر العملة من Binance
+        async function fetchCurrencyPrice(symbol) {
+            try {
+                const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                return {
+                    price: parseFloat(data.lastPrice),
+                    change: parseFloat(data.priceChangePercent),
+                    symbol: symbol
+                };
+            } catch (error) {
+                console.error(`Error fetching price for ${symbol}:`, error);
+                return null;
+            }
+        }
+
+        // دالة لجلب جميع أسعار العملات
+        async function fetchAllPrices(symbols) {
+            const uniqueSymbols = [...new Set(symbols.filter(symbol => symbol !== null))];
+            const pricePromises = uniqueSymbols.map(symbol => fetchCurrencyPrice(symbol));
+            const priceResults = await Promise.all(pricePromises);
+            
+            const prices = {};
+            priceResults.forEach(priceData => {
+                if (priceData) {
+                    prices[priceData.symbol] = priceData;
+                }
+            });
+            
+            return prices;
+        }
+
+        // دالة لتحديث الأسعار كل 10 ثواني
+        function startPriceUpdates(symbols) {
+            // إيقاف أي interval سابق
+            if (priceUpdateInterval) {
+                clearInterval(priceUpdateInterval);
+            }
+            
+            // تحديث الأسعار فورًا
+            updateAllPrices(symbols);
+            
+            // ثم تحديثها كل 10 ثواني
+            priceUpdateInterval = setInterval(() => {
+                updateAllPrices(symbols);
+            }, 10000); // 10 ثواني
+        }
+
+        // دالة لتحديث جميع الأسعار
+        async function updateAllPrices(symbols) {
+            try {
+                const prices = await fetchAllPrices(symbols);
+                allCurrencyPrices = {...allCurrencyPrices, ...prices};
+                updatePriceDisplays();
+            } catch (error) {
+                console.error('Error updating prices:', error);
+            }
+        }
+
+        // دالة لتحديث عرض الأسعار في البطاقات
+        function updatePriceDisplays() {
+            document.querySelectorAll('.card').forEach(card => {
+                const title = card.querySelector('.card-header').textContent;
+                const symbol = extractCurrencyPair(title);
+                
+                if (symbol && allCurrencyPrices[symbol]) {
+                    const priceData = allCurrencyPrices[symbol];
+                    const isPositive = priceData.change >= 0;
+                    const changeClass = isPositive ? 'price-up' : 'price-down';
+                    const changeIcon = isPositive ? '▲' : '▼';
+                    
+                    // البحث عن عنصر السعر الحالي أو إنشاؤه
+                    let priceInfo = card.querySelector('.price-info');
+                    if (!priceInfo) {
+                        priceInfo = document.createElement('div');
+                        priceInfo.className = 'price-info';
+                        card.querySelector('.card-header').appendChild(priceInfo);
+                    }
+                    
+                    priceInfo.innerHTML = `
+                        <span class="current-price">السعر: $${priceData.price.toFixed(4)}</span>
+                        <span class="price-change ${changeClass}">
+                            ${changeIcon} ${Math.abs(priceData.change).toFixed(2)}%
+                        </span>
+                    `;
+                }
+            });
+        }
+
+        // دالة لنسخ النص إلى الحافظة
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // إظهار إشعار النسخ
+                const notification = document.getElementById('copy-notification');
+                notification.textContent = 'تم نسخ العنوان بنجاح!';
+                notification.classList.add('show');
+                
+                // إخفاء الإشعار بعد 2 ثانية
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // دالة لتحميل المنشورات من RSS
+        async function loadPosts() {
+            const blogUrl = 'https://walidsalama1.blogspot.com';
+            const rssUrl = `${blogUrl}/feeds/posts/default?alt=json-in-script&callback=processRSSResponse`;
+            
+            try {
+                // إزالة أي نصوص سابقة إذا وجدت
+                const existingScript = document.querySelector('script[src*="blogspot.com"]');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+                
+                // استخدام JSONP لتجنب مشاكل CORS
+                const script = document.createElement('script');
+                script.src = rssUrl;
+                document.head.appendChild(script);
+                
+                // سيتم معالجة الاستجابة بواسطة processRSSResponse
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                showError();
+            }
+        }
+
+        // دالة لمعالجة استجابة RSS
+        function processRSSResponse(data) {
+            const container = document.getElementById('cards-container');
+            
+            if (data.feed && data.feed.entry) {
+                displayPosts(data.feed.entry);
+                updateStats(data.feed.entry);
+            } else {
+                // استخدام البيانات النموذجية في حالة عدم توفر بيانات حقيقية
+                displayPosts(samplePosts);
+                updateStats(samplePosts);
+            }
+        }
+
+        // دالة لتحديث الإحصائيات
+        function updateStats(posts) {
+            if (!posts) return;
+            
+            const today = getTodayDate();
+            const todayPosts = posts.filter(post => {
+                let postDate;
+                if (post.published) {
+                    // تحويل تاريخ النشر إلى التاريخ المحلي
+                    const publishedDate = new Date(post.published.$t);
+                    const year = publishedDate.getFullYear();
+                    const month = String(publishedDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(publishedDate.getDate()).padStart(2, '0');
+                    postDate = `${year}-${month}-${day}`;
+                } else {
+                    postDate = post.date;
+                }
+                return postDate === today;
+            }).length;
+            
+            document.getElementById('today-posts').textContent = todayPosts;
+            
+            // جدولة إعادة تعيين العداد عند منتصف الليل
+            const timeUntilMidnight = getTimeUntilMidnight();
+            setTimeout(() => {
+                document.getElementById('today-posts').textContent = '0';
+                // بعد منتصف الليل، أعد جدولة التحديث كل يوم
+                setInterval(() => {
+                    document.getElementById('today-posts').textContent = '0';
+                }, 24 * 60 * 60 * 1000); // كل 24 ساعة
+            }, timeUntilMidnight);
+        }
+
+        // دالة لعرض الخطأ
+        function showError() {
+            document.getElementById('cards-container').innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>حدث خطأ في تحميل التوصيات. يرجى المحاولة مرة أخرى لاحقاً.</p>
+                    <p>جاري عرض بيانات تجريبية للعرض...</p>
+                </div>
+            `;
+            
+            // عرض البيانات النموذجية في حالة الخطأ
+            setTimeout(() => {
+                displayPosts(samplePosts);
+                updateStats(samplePosts);
+            }, 2000);
+        }
+
+        // دالة لعرض المنشورات
+        async function displayPosts(posts) {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            
+            if (!posts || posts.length === 0) {
+                container.innerHTML = '<div class="error">لا توجد توصيات متاحة حالياً</div>';
+                return;
+            }
+            
+            // جمع جميع أزواج العملات الفريدة من العناوين
+            const currencySymbols = [];
+            const postsWithCurrencies = [];
+            
+            for (const post of posts) {
+                const title = post.title ? post.title.$t : (post.title || 'توصية بدون عنوان');
+                const symbol = extractCurrencyPair(title);
+                
+                if (symbol) {
+                    currencySymbols.push(symbol);
+                }
+                postsWithCurrencies.push({ post, title, symbol });
+            }
+            
+            // بدء تحديث الأسعار
+            startPriceUpdates(currencySymbols);
+            
+            // عرض المنشورات
+            postsWithCurrencies.forEach(({ post, title, symbol }) => {
+                // استخراج بيانات المنشور
+                const content = post.content ? post.content.$t : (post.content || '');
+                let publishedDate;
+                
+                if (post.published) {
+                    const date = new Date(post.published.$t);
+                    publishedDate = date.toLocaleDateString('ar-EG');
+                } else {
+                    publishedDate = new Date(post.date || Date.now()).toLocaleDateString('ar-EG');
+                }
+                
+                const card = document.createElement('div');
+                card.className = `card`;
+                
+                // إعداد معلومات السعر إذا كان متاحًا
+                let priceHTML = '';
+                if (symbol && allCurrencyPrices[symbol]) {
+                    const priceData = allCurrencyPrices[symbol];
+                    const isPositive = priceData.change >= 0;
+                    const changeClass = isPositive ? 'price-up' : 'price-down';
+                    const changeIcon = isPositive ? '▲' : '▼';
+                    
+                    priceHTML = `
+                        <div class="price-info">
+                            <span class="current-price">السعر: $${priceData.price.toFixed(4)}</span>
+                            <span class="price-change ${changeClass}">
+                                ${changeIcon} ${Math.abs(priceData.change).toFixed(2)}%
+                            </span>
+                        </div>
+                    `;
+                } else if (symbol) {
+                    // إذا كان الزوج معروفًا ولكن لم يتم تحميل السعر بعد
+                    priceHTML = `
+                        <div class="price-info">
+                            <span class="current-price">جاري تحميل السعر...</span>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        ${title}
+                        ${priceHTML}
+                        <span class="post-date">
+                            <i class="far fa-calendar-alt"></i>
+                            ${publishedDate}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="post-content">
+                            ${content}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="social-share">
+                            <a href="#" title="مشاركة على فيسبوك"><i class="fab fa-facebook"></i></a>
+                            <a href="#" title="مشاركة على تويتر"><i class="fab fa-twitter"></i></a>
+                            <a href="#" title="مشاركة على لينكد إن"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                `;
+                
+                // إضافة event listener لنسخ العنوان عند النقر
+                const cardHeader = card.querySelector('.card-header');
+                cardHeader.addEventListener('click', () => {
+                    copyToClipboard(title);
+                });
+                
+                container.appendChild(card);
+            });
+            
+            // إضافةEventListener لصندوق البحث
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                document.querySelectorAll('.card').forEach(card => {
+                    const title = card.querySelector('.card-header').textContent.toLowerCase();
+                    const content = card.querySelector('.post-content').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // إضافةEventListener لزر التحديث
+        document.getElementById('refresh-btn').addEventListener('click', function() {
+            // إظهار رسالة التحميل
+            document.getElementById('cards-container').innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>جاري تحديث التوصيات...</p>
+                </div>
+            `;
+            
+            // تحميل المنشورات بعد نصف ثانية لإظهار تأثير التحديث
+            setTimeout(loadPosts, 500);
+        });
+
+        // تحميل المنشورات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', loadPosts);
+
+        // دالة لمعالجة الأخطاء في JSONP
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (source.includes('blogspot.com')) {
+                showError();
+                return true;
+            }
+            return false;
+        };
+    </script>
+</body>
+</html>
