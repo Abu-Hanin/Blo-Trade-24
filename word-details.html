@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>كلمة اليوم على باينانس</title>
+    <style>
+        /* ===== خطوط عصري ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 30% 10%, #1a1a1a 0%, #0a0a0a 90%);
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 70% 20%, rgba(240, 185, 11, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== الهيدر والعنوان ===== */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            color: #f0b90b;
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(240, 185, 11, 0.5);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        h1:hover {
+            text-shadow: 0 0 35px #f0b90b;
+            transform: scale(1.02);
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f0b90b, #f0d77b, #f0b90b, transparent);
+            border-radius: 100%;
+            animation: shine 2.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { opacity: 0.3; width: 60%; left: 20%; }
+            50% { opacity: 1; width: 80%; left: 10%; }
+            100% { opacity: 0.3; width: 60%; left: 20%; }
+        }
+
+        .description {
+            color: #e0e0e0;
+            font-size: 1.25rem;
+            font-weight: 400;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            display: inline-block;
+            padding: 0.7rem 2.5rem;
+            border-radius: 60px;
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            box-shadow: 0 10px 25px -10px #00000080;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== عداد عدد كلمات اليوم ===== */
+        .today-counter {
+            background: linear-gradient(145deg, #1b1f28, #13161e);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            color: #f0b90b;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 0.9rem 3rem;
+            border-radius: 70px;
+            box-shadow: 0 15px 30px -8px #f0b90b40, 0 0 0 1px #f0b90b20 inset;
+            letter-spacing: 0.5px;
+            margin-top: 1.2rem;
+            backdrop-filter: blur(5px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            cursor: default;
+            border: 1px solid rgba(240, 185, 11, 0.5);
+            box-shadow: 0 10px 25px -8px #000000cc, 0 0 0 1px #f0b90b40 inset;
+        }
+
+        .today-counter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 35px -10px #f0b90b60, 0 0 0 1px #f0b90b80 inset;
+            border-color: #f0b90b;
+        }
+
+        .counter-number {
+            font-weight: 900;
+            font-size: 2rem;
+            margin-left: 6px;
+            color: white;
+            text-shadow: 0 0 15px #f0b90b;
+            background: rgba(0,0,0,0.4);
+            padding: 0 8px;
+            border-radius: 40px;
+            min-width: 50px;
+            display: inline-block;
+        }
+
+        /* ===== شبكة البطاقات ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+            perspective: 800px;
+        }
+
+        .card {
+            background: #1b1f28;
+            background: linear-gradient(145deg, #1f242e, #191d26);
+            border-radius: 32px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 20px 35px -12px #000000cc, 0 0 0 1px #2a2e38 inset, 0 0 0 1px rgba(240, 185, 11, 0.1);
+            transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            min-height: 240px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(240, 185, 11, 0.1);
+            transform: translateY(0);
+            will-change: transform, box-shadow, border;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 35px 50px -15px #f0b90b80, 0 0 0 2px #f0b90b inset;
+            border-color: #f0b90b60;
+            background: #222833;
+        }
+
+        .card:active {
+            transform: scale(0.98) translateY(-3px);
+            transition: 0.1s;
+        }
+
+        .card-title-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1.4;
+            word-break: break-word;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 0 15px rgba(240, 185, 11, 0.3);
+            letter-spacing: -0.02em;
+            max-width: 100%;
+        }
+
+        .card-date {
+            color: #a8b3c0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-top: 1px dashed #2f3540;
+            padding-top: 1rem;
+            font-weight: 400;
+            transition: color 0.2s;
+            width: 100%;
+        }
+
+        .card:hover .card-date {
+            color: #f0b90b;
+        }
+
+        .card-date::before {
+            content: '📅';
+            font-size: 1.1rem;
+            filter: drop-shadow(0 0 6px #f0b90b);
+            opacity: 0.9;
+        }
+
+        /* ===== رسالة Toast ===== */
+        .toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #0f1217;
+            color: #f0b90b;
+            font-weight: 600;
+            padding: 0.9rem 2.5rem;
+            border-radius: 60px;
+            box-shadow: 0 15px 35px -5px #f0b90b, 0 0 0 1px #f0b90b inset, 0 0 20px #f0b90b30;
+            font-size: 1.15rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+            border: 1px solid #f0b90b40;
+            backdrop-filter: blur(12px);
+            white-space: nowrap;
+            max-width: 90%;
+            text-align: center;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast::before {
+            content: '✅';
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 6px #f0b90b);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: #f0b90b;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 80px;
+            border: 1px solid #f0b90b20;
+            box-shadow: 0 20px 40px -15px black;
+        }
+
+        .loader::after {
+            content: "";
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(240, 185, 11, 0.2);
+            border-top-color: #f0b90b;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            grid-column: 1 / -1;
+            background: #231f1f;
+            border: 1px solid #f0b90b40;
+            color: #ffc6a0;
+            padding: 2.5rem;
+            border-radius: 60px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 30px -12px black;
+        }
+
+        /* ===== تجاوب ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.4rem;
+            }
+            .description {
+                font-size: 1rem;
+                padding: 0.6rem 1.5rem;
+            }
+            .today-counter {
+                font-size: 1rem;
+                padding: 0.6rem 1.5rem;
+            }
+            .counter-number {
+                font-size: 1.6rem;
+                min-width: 40px;
+            }
+            .cards-grid {
+                gap: 1.3rem;
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 1.4rem;
+                min-height: 200px;
+            }
+            .card-title {
+                font-size: 1.8rem;
+            }
+            .toast {
+                font-size: 0.95rem;
+                padding: 0.7rem 1.5rem;
+                top: 20px;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card:nth-child(odd) {
+            background: linear-gradient(145deg, #1d222b, #181c24);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>كلمة اليوم على باينانس</h1>
+            <p class="description">نقدم لكم كلمة اليوم للربح عملات مجانية على باينانس</p>
+            <!-- عداد كلمات اليوم (بدلاً من زر التحديث) -->
+            <div class="today-counter" id="todayCounter">
+                <span>عدد كلمات اليوم:</span>
+                <span class="counter-number" id="counterValue">0</span>
+            </div>
+        </header>
+
+        <div id="cardsContainer" class="cards-grid">
+            <div class="loader">جاري تحميل الكلمات</div>
+        </div>
+    </div>
+
+    <div id="copyToast" class="toast">تم نسخ كلمة اليوم</div>
+
+    <script>
+        (function() {
+            const BLOG_URL = 'https://nbhgtyuhgt.blogspot.com';
+            const FEED_URL = `${BLOG_URL}/feeds/posts/default?alt=json&max-results=100&callback=handleBloggerData`;
+            const CONTAINER_ID = 'cardsContainer';
+            const TOAST_ID = 'copyToast';
+            const COUNTER_ID = 'counterValue';
+
+            let currentScript = null;
+            let fetchTimeout = null;
+            let isFetching = false;
+
+            const container = document.getElementById(CONTAINER_ID);
+            const toast = document.getElementById(TOAST_ID);
+            const counterEl = document.getElementById(COUNTER_ID);
+            let toastTimer = null;
+
+            // تخزين آخر المنشورات المستلمة لإعادة حساب العداد عند تغير اليوم
+            let lastEntries = null;
+
+            // دالة حساب عدد منشورات اليوم (تستخدم توقيت الجهاز، يمكن تعديلها لتوقيت مصر)
+            function countTodayPosts(entries) {
+                if (!entries || entries.length === 0) return 0;
+                const today = new Date();
+                // استخدام toDateString للمقارنة (اليوم/الشهر/السنة بدون وقت)
+                const todayStr = today.toDateString();
+                return entries.filter(entry => {
+                    const publishedRaw = entry.published ? (entry.published.$t || '') : '';
+                    if (!publishedRaw) return false;
+                    try {
+                        const pubDate = new Date(publishedRaw);
+                        return pubDate.toDateString() === todayStr;
+                    } catch {
+                        return false;
+                    }
+                }).length;
+            }
+
+            // تحديث العداد من آخر البيانات المخزنة
+            function updateCounterFromLastEntries() {
+                if (lastEntries && counterEl) {
+                    const count = countTodayPosts(lastEntries);
+                    counterEl.innerText = count;
+                } else if (counterEl) {
+                    counterEl.innerText = '0';
+                }
+            }
+
+            // دالة عرض المنشورات (بدون تغيير في المنطق الأصلي)
+            function renderPosts(entries) {
+                if (!entries || entries.length === 0) {
+                    container.innerHTML = `<div class="error-message">⚠️ لا توجد منشورات حالياً</div>`;
+                    if (counterEl) counterEl.innerText = '0';
+                    lastEntries = entries; // تخزين الحالة الفارغة
+                    return;
+                }
+
+                // تخزين آخر المنشورات لإعادة استخدامها في العداد
+                lastEntries = entries;
+
+                // تحديث العداد بعدد منشورات اليوم
+                const todayCount = countTodayPosts(entries);
+                if (counterEl) counterEl.innerText = todayCount;
+
+                // ترتيب من الأحدث إلى الأقدم
+                const sorted = [...entries].sort((a, b) => {
+                    const dateA = new Date(a.published || a.published.$t);
+                    const dateB = new Date(b.published || b.published.$t);
+                    return dateB - dateA;
+                });
+
+                let html = '';
+                sorted.forEach(entry => {
+                    const title = entry.title ? (entry.title.$t || 'بدون عنوان') : 'بدون عنوان';
+                    const publishedRaw = entry.published ? (entry.published.$t || '') : '';
+                    let formattedDate = 'تاريخ غير متوفر';
+                    if (publishedRaw) {
+                        try {
+                            const d = new Date(publishedRaw);
+                            formattedDate = d.toLocaleDateString('ar-EG', {
+                                year: 'numeric', month: 'short', day: 'numeric'
+                            });
+                        } catch {
+                            formattedDate = publishedRaw.slice(0, 10);
+                        }
+                    }
+
+                    html += `
+                        <div class="card" role="button" tabindex="0" aria-label="انسخ كلمة اليوم: ${title}">
+                            <div class="card-title-container">
+                                <div class="card-title">${title}</div>
+                            </div>
+                            <div class="card-date">${formattedDate}</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            }
+
+            function showCopyMessage() {
+                if (toastTimer) clearTimeout(toastTimer);
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+
+            async function copyToClipboard(text) {
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(text);
+                        showCopyMessage();
+                    } else {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = text;
+                        textarea.style.position = 'fixed';
+                        textarea.style.opacity = '0';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        showCopyMessage();
+                    }
+                } catch (err) {
+                    console.error('فشل النسخ:', err);
+                }
+            }
+
+            container.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                if (!card) return;
+                const titleElement = card.querySelector('.card-title');
+                if (!titleElement) return;
+                const titleText = titleElement.innerText.trim();
+                if (titleText) copyToClipboard(titleText);
+            });
+
+            function loadPosts() {
+                if (isFetching) {
+                    if (currentScript && currentScript.parentNode) {
+                        currentScript.parentNode.removeChild(currentScript);
+                        currentScript = null;
+                    }
+                    if (fetchTimeout) {
+                        clearTimeout(fetchTimeout);
+                        fetchTimeout = null;
+                    }
+                }
+
+                isFetching = true;
+                container.innerHTML = `<div class="loader">جاري التحديث</div>`;
+
+                const script = document.createElement('script');
+                script.id = 'bloggerJSONP_' + Date.now();
+                script.src = FEED_URL;
+                script.async = true;
+                script.charset = 'utf-8';
+
+                fetchTimeout = setTimeout(() => {
+                    if (currentScript && currentScript.parentNode) {
+                        currentScript.parentNode.removeChild(currentScript);
+                        currentScript = null;
+                    }
+                    isFetching = false;
+                    container.innerHTML = `<div class="error-message">❌ فشل الاتصال ببلوجر</div>`;
+                    if (counterEl) counterEl.innerText = '0';
+                    lastEntries = null;
+                }, 10000);
+
+                window.handleBloggerData = function(data) {
+                    if (fetchTimeout) {
+                        clearTimeout(fetchTimeout);
+                        fetchTimeout = null;
+                    }
+                    if (currentScript && currentScript.parentNode) {
+                        currentScript.parentNode.removeChild(currentScript);
+                        currentScript = null;
+                    }
+                    isFetching = false;
+
+                    try {
+                        const entries = data?.feed?.entry;
+                        if (entries && Array.isArray(entries) && entries.length > 0) {
+                            renderPosts(entries);
+                        } else {
+                            container.innerHTML = `<div class="error-message">📭 لم يتم العثور على منشورات</div>`;
+                            if (counterEl) counterEl.innerText = '0';
+                            lastEntries = null;
+                        }
+                    } catch (err) {
+                        container.innerHTML = `<div class="error-message">⚠️ البيانات غير صالحة</div>`;
+                        if (counterEl) counterEl.innerText = '0';
+                        lastEntries = null;
+                    }
+                };
+
+                document.head.appendChild(script);
+                currentScript = script;
+            }
+
+            // بدء التحميل الأول
+            loadPosts();
+
+            // تحديث تلقائي كل 45 ثانية (كما هو)
+            setInterval(() => {
+                if (!isFetching) loadPosts();
+            }, 45000);
+
+            // التحقق من تغير اليوم كل دقيقة لتصفير العداد تلقائياً عند منتصف الليل
+            setInterval(() => {
+                // إعادة حساب العداد من آخر البيانات المخزنة (إذا وجدت)
+                updateCounterFromLastEntries();
+            }, 60000); // كل دقيقة
+
+            // اختياري: التحقق عند كل دقيقة إذا كان الوقت 12:00 صباحاً بالضبط،
+            // لكن الدالة updateCounterFromLastEntries ستحدث العداد تلقائياً بناءً على تاريخ اليوم الجديد.
+            // هذا كافٍ لأنها تستخدم new Date() في كل مرة.
+        })();
+    </script>
+</body>
+</html>
