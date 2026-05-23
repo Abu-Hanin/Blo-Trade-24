@@ -2,7 +2,7 @@
   "name": "Blo Trade 24",
   "short_name": "BloTrade",
   "description": "تطبيق التوصيات اليومية والتداول الفوري للعملات الرقمية",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "theme_color": "#F0B90B",
   "background_color": "#0B0E11",
