@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>كريم العالمي - صالون الحلاقة</title>
+    <title>حلاق زيرو - صالون الحلاقة</title>
     <link rel="manifest" href="data:application/json,{}" id="manifest-placeholder" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
@@ -23,6 +23,9 @@
             --header-height: 64px;
             --transition: 0.3s ease;
             --max-width: 430px;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
         }
         body.light-theme {
             --bg-primary: #f5f5f5;
@@ -65,7 +68,8 @@
             border: 1px solid var(--border-color);
             transition: background var(--transition), border var(--transition);
         }
-        /* الهيدر */
+
+        /* ===== الهيدر ===== */
         .app-header {
             background: var(--bg-secondary);
             padding: 6px 12px;
@@ -94,14 +98,14 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s; font-size: 15px;
         }
-        .header-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .header-btn:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.05); }
         .user-badge {
             display: flex; align-items: center; gap: 4px;
             background: var(--bg-primary); padding: 2px 10px 2px 6px;
             border-radius: 30px; border: 1px solid var(--border-color);
             cursor: pointer; transition: 0.2s; font-size: 11px; color: var(--text-secondary);
         }
-        .user-badge:hover { border-color: var(--gold); }
+        .user-badge:hover { border-color: var(--gold); transform: scale(1.02); }
         .user-badge i { font-size: 18px; color: var(--gold); }
         .install-btn {
             background: var(--gold); color: var(--bg-primary);
@@ -112,6 +116,7 @@
         }
         .install-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
 
+        /* ===== المحتوى ===== */
         .main-content { flex: 1; overflow-y: auto; padding: 12px 12px 6px; scroll-behavior: smooth; }
         .main-content::-webkit-scrollbar { width: 4px; }
         .main-content::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -119,31 +124,31 @@
 
         .page { display: none; animation: fadeUp 0.3s ease; }
         .page.active { display: block; }
-        @keyframes fadeUp { 0% { opacity:0; transform:translateY(8px); } 100% { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp { 0% { opacity:0; transform:translateY(10px); } 100% { opacity:1; transform:translateY(0); } }
 
-        /* بطاقات */
+        /* ===== البطاقات ===== */
         .card {
             background: var(--bg-card);
             border-radius: var(--radius);
             padding: 14px;
             margin-bottom: 12px;
             border: 1px solid var(--border-color);
-            transition: background var(--transition), border var(--transition), transform 0.2s;
+            transition: all 0.25s;
         }
-        .card:hover { transform: translateY(-2px); }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
         .card-gold { border-right: 5px solid var(--gold); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 4px; }
         .card-title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .card-title i { color: var(--gold); }
 
-        /* خدمة */
+        /* ===== الخدمات ===== */
         .service-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px 0; border-bottom: 1px solid var(--border-color);
             transition: 0.2s; gap: 6px; flex-wrap: wrap;
         }
         .service-item:last-child { border-bottom: none; }
-        .service-item:hover { background: rgba(252,213,53,0.03); border-radius: 10px; padding-left: 6px; padding-right: 6px; }
+        .service-item:hover { background: rgba(252,213,53,0.04); border-radius: 10px; padding-left: 6px; padding-right: 6px; }
         .service-info { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
         .service-icon {
             width: 36px; height: 36px;
@@ -167,9 +172,10 @@
             transition: all 0.3s; display: flex; align-items: center; gap: 4px;
             box-shadow: 0 4px 12px rgba(252,213,53,0.3);
         }
-        .btn-order:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(252,213,53,0.5); }
+        .btn-order:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(252,213,53,0.5); }
+        .btn-order:active { transform: scale(0.95); }
 
-        /* عروض العريس */
+        /* ===== عروض العريس ===== */
         .offer-card {
             background: linear-gradient(145deg, #2b313a, #1e2329);
             border: 2px solid var(--gold);
@@ -178,7 +184,7 @@
             position: relative; overflow: hidden;
             transition: all 0.3s;
         }
-        .offer-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(252,213,53,0.2); }
+        .offer-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(252,213,53,0.2); }
         .offer-card::before { content: '👑'; position: absolute; top: -8px; left: -8px; font-size: 50px; opacity: 0.1; transform: rotate(-15deg); }
         .offer-title { font-size: 18px; font-weight: 700; color: var(--gold); }
         .offer-price { font-size: 22px; font-weight: 800; color: #fff; }
@@ -189,7 +195,7 @@
             color: var(--gold); padding: 5px 14px; border-radius: 30px;
             cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 12px;
         }
-        .offer-details-btn:hover { background: var(--gold); color: var(--bg-primary); }
+        .offer-details-btn:hover { background: var(--gold); color: var(--bg-primary); transform: scale(1.05); }
         .offer-order-btn {
             background: var(--gold); border: none;
             color: var(--bg-primary); padding: 5px 14px; border-radius: 30px;
@@ -197,14 +203,122 @@
         }
         .offer-order-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
 
-        /* الحجوزات */
+        /* ===== الطلبات والأدمن ===== */
+        .order-item {
+            background: var(--bg-primary);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-right: 4px solid var(--gold);
+            transition: 0.2s;
+        }
+        .order-item:hover { transform: translateX(-4px); }
+        .order-item .order-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .order-item .order-name { font-weight: 700; font-size: 16px; }
+        .order-item .order-phone { color: var(--text-secondary); font-size: 14px; direction: ltr; display: inline-block; }
+        .order-item .order-service { font-size: 14px; margin: 4px 0; }
+        .order-item .order-time { color: var(--text-secondary); font-size: 12px; }
+        .order-status {
+            padding: 3px 12px; border-radius: 30px; font-size: 12px; font-weight: 700;
+        }
+        .order-status.pending { background: var(--warning); color: #fff; }
+        .order-status.accepted { background: var(--success); color: #fff; }
+        .order-status.rejected { background: var(--danger); color: #fff; }
+        .order-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .btn-call {
+            background: #25D366; color: #fff; border: none;
+            padding: 4px 12px; border-radius: 30px; font-weight: 600; font-size: 12px;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;
+        }
+        .btn-call:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-accept {
+            background: var(--success); color: #fff; border: none;
+            padding: 4px 12px; border-radius: 30px; font-weight: 600; font-size: 12px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-accept:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-reject {
+            background: var(--danger); color: #fff; border: none;
+            padding: 4px 12px; border-radius: 30px; font-weight: 600; font-size: 12px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-reject:hover { transform: scale(1.05); opacity: 0.9; }
+
+        /* ===== نموذج تسجيل الدخول المحسن ===== */
+        .login-card {
+            background: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
+            border: 1px solid var(--gold);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            max-width: 380px;
+            margin: 0 auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+        }
+        .login-card:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(252,213,53,0.1); }
+        .login-card .login-icon {
+            width: 70px; height: 70px;
+            background: rgba(252,213,53,0.12);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px; color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+        .login-card h3 {
+            text-align: center; font-size: 22px; margin-bottom: 4px;
+            color: var(--gold);
+        }
+        .login-card p.sub {
+            text-align: center; color: var(--text-secondary); font-size: 13px; margin-bottom: 18px;
+        }
+        .login-card .form-group {
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .login-card .form-group label {
+            display: block; font-size: 13px; font-weight: 600;
+            margin-bottom: 4px; color: var(--text-secondary);
+        }
+        .login-card .form-group .input-wrapper {
+            position: relative;
+        }
+        .login-card .form-group .input-wrapper i {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary); font-size: 16px;
+            transition: 0.3s;
+        }
+        .login-card .form-group input {
+            width: 100%; padding: 12px 40px 12px 14px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary); font-size: 15px;
+            outline: none; transition: 0.3s;
+        }
+        .login-card .form-group input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(252,213,53,0.15);
+        }
+        .login-card .form-group input:focus + i,
+        .login-card .form-group input:focus ~ i {
+            color: var(--gold);
+        }
+        .login-card .form-group .error-msg {
+            color: var(--danger); font-size: 11px; margin-top: 4px; display: none;
+        }
+        .login-card .btn {
+            margin-top: 6px;
+        }
+
+        /* ===== جدول الحجوزات ===== */
         .booking-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .booking-table th { background: var(--gold); color: var(--bg-primary); padding: 6px; text-align: center; }
         .booking-table td { padding: 6px; border-bottom: 1px solid var(--border-color); text-align: center; }
         .booking-table tr:hover { background: rgba(252,213,53,0.05); }
-        .phone-masked { font-family: monospace; letter-spacing: 2px; }
 
-        /* الملف الشخصي */
+        /* ===== الملف الشخصي ===== */
         .profile-avatar {
             width: 80px; height: 80px; background: var(--gold);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -214,6 +328,7 @@
         .profile-name { font-size: 20px; font-weight: 700; text-align: center; }
         .profile-email { text-align: center; color: var(--text-secondary); font-size: 13px; margin-bottom: 12px; }
 
+        /* ===== لوحة الأدمن ===== */
         .admin-panel {
             background: var(--bg-secondary); border: 1px solid var(--gold);
             border-radius: var(--radius); padding: 14px; margin-top: 10px;
@@ -225,8 +340,8 @@
         }
         .admin-service-item:last-child { border-bottom: none; }
         .admin-actions { display: flex; gap: 4px; flex-wrap: wrap; }
-        .btn-sm { padding: 3px 10px; font-size: 11px; border-radius: 30px; }
 
+        /* ===== أزرار عامة ===== */
         .btn {
             padding: 10px 16px; border: none; border-radius: 14px;
             font-weight: 700; font-size: 14px; cursor: pointer;
@@ -237,18 +352,10 @@
         .btn-gold { background: var(--gold); color: var(--bg-primary); }
         .btn-gold:hover { background: var(--gold-dark); transform: scale(1.02); box-shadow: 0 6px 16px rgba(252,213,53,0.3); }
         .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
-        .btn-outline:hover { background: var(--gold); color: var(--bg-primary); }
-        .btn-danger { background: #e74c3c; color: #fff; }
-        .btn-danger:hover { background: #c0392b; }
+        .btn-outline:hover { background: var(--gold); color: var(--bg-primary); transform: scale(1.02); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #c0392b; transform: scale(1.02); }
         .btn-sm { padding: 4px 12px; font-size: 12px; width: auto; }
-
-        .toast {
-            background: var(--gold); color: var(--bg-primary);
-            padding: 10px 14px; border-radius: 14px; font-weight: 600;
-            font-size: 13px; display: none; align-items: center; gap: 8px;
-            margin-top: 10px;
-        }
-        .toast.show { display: flex; }
 
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 3px; color: var(--text-secondary); }
@@ -261,8 +368,18 @@
         .form-group input:focus, .form-group select:focus {
             border-color: var(--gold); box-shadow: 0 0 0 4px rgba(252,213,53,0.15);
         }
-        .form-group .error-msg { color: #e74c3c; font-size: 11px; margin-top: 3px; display: none; }
 
+        /* ===== الإشعارات ===== */
+        .toast {
+            background: var(--gold); color: var(--bg-primary);
+            padding: 10px 14px; border-radius: 14px; font-weight: 600;
+            font-size: 13px; display: none; align-items: center; gap: 8px;
+            margin-top: 10px; animation: slideDown 0.3s ease;
+        }
+        .toast.show { display: flex; }
+        @keyframes slideDown { 0% { opacity:0; transform:translateY(-10px); } 100% { opacity:1; transform:translateY(0); } }
+
+        /* ===== التنقل السفلي ===== */
         .bottom-nav {
             background: var(--bg-secondary); border-top: 1px solid var(--border-color);
             display: flex; justify-content: space-around;
@@ -278,8 +395,9 @@
         .nav-item i { font-size: 20px; transition: 0.2s; }
         .nav-item.active { color: var(--gold); }
         .nav-item.active i { transform: translateY(-2px); text-shadow: 0 0 12px rgba(252,213,53,0.3); }
-        .nav-item:hover { color: var(--gold); }
+        .nav-item:hover { color: var(--gold); transform: scale(1.05); }
 
+        /* ===== مودال ===== */
         .modal-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center;
@@ -298,6 +416,7 @@
         .modal-box ul li i { color: var(--gold); width: 18px; }
         .modal-close { margin-top: 14px; }
 
+        /* ===== أدوات مساعدة ===== */
         .text-muted { color: var(--text-secondary); }
         .text-gold { color: var(--gold); }
         .text-center { text-align: center; }
@@ -306,8 +425,9 @@
         .hidden { display: none !important; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-10 { gap: 10px; }
+        .badge { padding: 2px 10px; border-radius: 30px; font-size: 11px; font-weight: 700; }
 
-        /* تحسين للشاشات الصغيرة جداً */
+        /* ===== تحسين الشاشات الصغيرة ===== */
         @media (max-width: 380px) {
             .brand-name { font-size: 15px; }
             .brand i { font-size: 18px; }
@@ -325,24 +445,31 @@
             .card { padding: 10px; }
             .card-title { font-size: 15px; }
         }
-
         @media (min-width: 600px) {
             .app-container { max-width: 480px; max-height: 900px; }
             .brand-name { font-size: 24px; }
             .service-price { font-size: 24px; }
         }
+
+        /* ===== تأثيرات إضافية ===== */
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(252,213,53,0.4); } 70% { box-shadow: 0 0 0 10px rgba(252,213,53,0); } 100% { box-shadow: 0 0 0 0 rgba(252,213,53,0); } }
+        .fade-in { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { 0% { opacity:0; } 100% { opacity:1; } }
+        .slide-up { animation: slideUp 0.4s ease; }
+        @keyframes slideUp { 0% { opacity:0; transform:translateY(20px); } 100% { opacity:1; transform:translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    <!-- الهيدر -->
+    <!-- ===== الهيدر ===== -->
     <header class="app-header">
         <div class="brand">
             <i class="fas fa-scissors"></i>
             <div>
-                <span class="brand-name" data-i18n="app_name">كريم العالمي</span>
-                <span class="brand-sub" data-i18n="app_sub">صالون الحلاقة</span>
+                <span class="brand-name">حلاق زيرو</span>
+                <span class="brand-sub">صالون الحلاقة</span>
             </div>
         </div>
         <div class="header-actions">
@@ -350,26 +477,26 @@
             <button class="install-btn" id="installAppBtn"><i class="fas fa-download"></i> <span data-i18n="install">تثبيت</span></button>
             <div class="user-badge" id="userBadge" title="الملف الشخصي">
                 <i class="fas fa-user-circle"></i>
-                <span id="userBadgeName" data-i18n="guest">زائر</span>
+                <span id="userBadgeName">زائر</span>
             </div>
         </div>
     </header>
 
-    <!-- المحتوى -->
+    <!-- ===== المحتوى ===== -->
     <main class="main-content" id="mainContent">
 
         <!-- ===== الصفحة الرئيسية ===== -->
         <section class="page active" id="page-home">
             <div class="card card-gold">
                 <div class="flex-between">
-                    <div><h2 style="font-size:20px;" data-i18n="welcome">مرحباً بك 👋</h2><p class="text-muted" style="font-size:13px;" data-i18n="welcome_sub">اختر خدمتك واضغط "طلب"</p></div>
+                    <div><h2 style="font-size:20px;">مرحباً بك 👋</h2><p class="text-muted" style="font-size:13px;">اختر خدمتك واضغط "طلب"</p></div>
                     <i class="fas fa-crown" style="font-size:34px; color:var(--gold);"></i>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-list"></i> <span data-i18n="services_title">خدماتنا</span></span>
-                    <span class="text-muted" style="font-size:12px;" data-i18n="instant_order">طلب فوري</span>
+                    <span class="card-title"><i class="fas fa-list"></i> خدماتنا</span>
+                    <span class="text-muted" style="font-size:12px;">طلب فوري</span>
                 </div>
                 <div class="service-grid" id="serviceList"></div>
             </div>
@@ -378,82 +505,121 @@
         <!-- ===== صفحة العريس ===== -->
         <section class="page" id="page-offers">
             <div class="card card-gold">
-                <div class="card-title"><i class="fas fa-ring"></i> <span data-i18n="groom_title">عروض العريس المميزة</span></div>
+                <div class="card-title"><i class="fas fa-ring"></i> عروض العريس المميزة</div>
                 <div id="offersContainer"></div>
             </div>
         </section>
 
-        <!-- ===== صفحة الحجوزات ===== -->
-        <section class="page" id="page-bookings">
+        <!-- ===== صفحة الطلبات (للأدمن فقط) ===== -->
+        <section class="page" id="page-orders">
             <div class="card">
-                <div class="card-title"><i class="fas fa-history"></i> <span data-i18n="bookings_title">سجل الحجوزات</span></div>
-                <div id="bookingsList">
-                    <p class="text-muted text-center" data-i18n="no_bookings">لا توجد حجوزات حتى الآن</p>
+                <div class="card-title"><i class="fas fa-clipboard-list"></i> إدارة الطلبات</div>
+                <div id="ordersList">
+                    <p class="text-muted text-center">لا توجد طلبات حالياً</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== صفحة سجل الطلبات (للعميل فقط) ===== -->
+        <section class="page" id="page-myorders">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-history"></i> طلباتي</div>
+                <div id="myOrdersList">
+                    <p class="text-muted text-center">ليس لديك طلبات سابقة</p>
                 </div>
             </div>
         </section>
 
         <!-- ===== صفحة الملف الشخصي ===== -->
         <section class="page" id="page-profile">
-            <div class="card text-center">
+            <!-- بطاقة تسجيل الدخول المحسنة -->
+            <div id="loginCard" class="login-card">
+                <div class="login-icon"><i class="fas fa-user-plus"></i></div>
+                <h3>مرحباً بك</h3>
+                <p class="sub">سجل دخولك للاستمتاع بخدماتنا</p>
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="loginName" placeholder="أدخل اسمك (حروف فقط)" />
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="error-msg" id="nameError">الاسم يجب أن يحتوي على حروف فقط</div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="loginEmail" placeholder="example@email.com" />
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="error-msg" id="emailError">يرجى إدخال بريد إلكتروني صحيح</div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <div class="input-wrapper">
+                        <input type="tel" id="loginPhone" placeholder="01012345678" />
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="error-msg" id="phoneError">رقم الهاتف يجب أن يكون 11 رقماً ويبدأ بـ 010/011/012/015</div>
+                </div>
+                <button class="btn btn-gold" id="loginSubmitBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
+                <p class="text-muted text-center mt-8" style="font-size:12px;">جميع بياناتك محفوظة بشكل آمن</p>
+            </div>
+
+            <!-- بطاقة الملف الشخصي (تظهر بعد تسجيل الدخول) -->
+            <div id="profileCard" class="card text-center hidden">
                 <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
-                <div class="profile-name" id="profileName" data-i18n="guest">زائر</div>
-                <div class="profile-email" id="profileEmail" data-i18n="not_registered">غير مسجل</div>
+                <div class="profile-name" id="profileName">زائر</div>
+                <div class="profile-email" id="profileEmail">غير مسجل</div>
                 <div class="profile-phone" id="profilePhone" style="text-align:center;color:var(--text-secondary);font-size:13px;"></div>
                 <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
-                    <button class="btn btn-outline btn-sm" id="loginBtn"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">تسجيل دخول</span></button>
-                    <button class="btn btn-outline btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">خروج</span></button>
-                    <button class="btn btn-outline btn-sm" id="langToggle"><i class="fas fa-globe"></i> <span data-i18n="lang_switch">English</span></button>
+                    <button class="btn btn-outline btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
+                    <button class="btn btn-outline btn-sm" id="langToggle"><i class="fas fa-globe"></i> English</button>
                 </div>
             </div>
+
             <!-- لوحة الأدمن -->
             <div id="adminPanel" class="admin-panel hidden">
-                <div class="card-title"><i class="fas fa-cog"></i> <span data-i18n="admin_panel">لوحة التحكم (أدمن)</span></div>
+                <div class="card-title"><i class="fas fa-cog"></i> لوحة التحكم (أدمن)</div>
                 <div id="adminServiceList"></div>
                 <div id="adminOfferList" style="margin-top:12px;border-top:1px solid var(--border-color);padding-top:10px;">
-                    <div class="card-title" style="font-size:15px;"><i class="fas fa-ring"></i> <span data-i18n="admin_offers">عروض العريس</span></div>
+                    <div class="card-title" style="font-size:15px;"><i class="fas fa-ring"></i> عروض العريس</div>
                     <div id="adminOffersContainer"></div>
                 </div>
                 <hr style="border-color:var(--border-color); margin:12px 0;" />
-                <div class="form-group"><label data-i18n="new_service_name">اسم الخدمة الجديدة</label><input type="text" id="newServiceName" placeholder="مثل: حلاقة مميزة" /></div>
-                <div class="form-group"><label data-i18n="new_service_price">السعر (جنيه)</label><input type="number" id="newServicePrice" placeholder="مثل: 60" /></div>
-                <button class="btn btn-gold btn-sm" id="addServiceBtn"><i class="fas fa-plus"></i> <span data-i18n="add_service">إضافة خدمة</span></button>
+                <div class="form-group"><label>اسم الخدمة الجديدة</label><input type="text" id="newServiceName" placeholder="مثل: حلاقة مميزة" /></div>
+                <div class="form-group"><label>السعر (جنيه)</label><input type="number" id="newServicePrice" placeholder="مثل: 60" /></div>
+                <button class="btn btn-gold btn-sm" id="addServiceBtn"><i class="fas fa-plus"></i> إضافة خدمة</button>
                 <hr style="border-color:var(--border-color); margin:12px 0;" />
-                <div class="form-group"><label data-i18n="new_offer_name">اسم عرض العريس الجديد</label><input type="text" id="newOfferName" placeholder="مثل: حلقة العريس الفاخرة" /></div>
-                <div class="form-group"><label data-i18n="new_offer_price">سعر العرض (جنيه)</label><input type="number" id="newOfferPrice" placeholder="مثل: 600" /></div>
-                <div class="form-group"><label data-i18n="offer_details">تفاصيل العرض (افصل بينها بفاصلة)</label><input type="text" id="newOfferDetails" placeholder="مثل: حلق شعر, مساج, ماسك" /></div>
-                <button class="btn btn-gold btn-sm" id="addOfferBtn"><i class="fas fa-plus"></i> <span data-i18n="add_offer">إضافة عرض</span></button>
-                <p class="text-muted mt-8" style="font-size:11px;" data-i18n="admin_note">* التعديلات تحفظ محلياً وتظهر فوراً</p>
+                <div class="form-group"><label>اسم عرض العريس الجديد</label><input type="text" id="newOfferName" placeholder="مثل: حلقة العريس الفاخرة" /></div>
+                <div class="form-group"><label>سعر العرض (جنيه)</label><input type="number" id="newOfferPrice" placeholder="مثل: 600" /></div>
+                <div class="form-group"><label>تفاصيل العرض (افصل بينها بفاصلة)</label><input type="text" id="newOfferDetails" placeholder="مثل: حلق شعر, مساج, ماسك" /></div>
+                <button class="btn btn-gold btn-sm" id="addOfferBtn"><i class="fas fa-plus"></i> إضافة عرض</button>
+                <p class="text-muted mt-8" style="font-size:11px;">* التعديلات تحفظ محلياً وتظهر فوراً</p>
             </div>
         </section>
 
     </main>
 
-    <!-- التنقل السفلي -->
+    <!-- ===== التنقل السفلي ===== -->
     <nav class="bottom-nav">
-        <button class="nav-item active" data-page="page-home"><i class="fas fa-home"></i><span data-i18n="nav_home">الرئيسية</span></button>
-        <button class="nav-item" data-page="page-offers"><i class="fas fa-gem"></i><span data-i18n="nav_groom">العريس</span></button>
-        <button class="nav-item" data-page="page-bookings"><i class="fas fa-calendar-check"></i><span data-i18n="nav_bookings">الحجوزات</span></button>
-        <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i><span data-i18n="nav_profile">الملف</span></button>
+        <button class="nav-item active" data-page="page-home"><i class="fas fa-home"></i><span>الرئيسية</span></button>
+        <button class="nav-item" data-page="page-offers"><i class="fas fa-gem"></i><span>العريس</span></button>
+        <button class="nav-item" data-page="page-orders" id="ordersNav"><i class="fas fa-clipboard-list"></i><span>الطلبات</span></button>
+        <button class="nav-item" data-page="page-myorders" id="myOrdersNav"><i class="fas fa-history"></i><span>طلباتي</span></button>
+        <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i><span>الملف</span></button>
     </nav>
 </div>
 
-<!-- مودال التفاصيل -->
+<!-- ===== مودال التفاصيل ===== -->
 <div class="modal-overlay" id="offerModal">
     <div class="modal-box">
         <h3 id="modalTitle">تفاصيل العرض</h3>
         <ul id="modalDetails"></ul>
-        <button class="btn btn-gold modal-close" id="modalCloseBtn"><span data-i18n="close">إغلاق</span></button>
+        <button class="btn btn-gold modal-close" id="modalCloseBtn">إغلاق</button>
     </div>
 </div>
 
 <script>
-    // ====================================================================
-    //  🔐 إعدادات تيليجرام - ضع التوكن ورقم المعرف هنا
-    // ====================================================================
-    const TELEGRAM_BOT_TOKEN = "8335479829:AAGky4CQKnRsCoUfI-znNz6FqIsgreetSSw"; // ضع التوكن هنا
-    const TELEGRAM_CHAT_ID = "123456789"; // ⚠️ استبدل هذا برقم المعرف الخاص بك (احصل عليه من getUpdates)
-
     // ====================================================================
     //  1. البيانات الأساسية
     // ====================================================================
@@ -476,7 +642,7 @@
         {
             name: '👑 حلقة العريس (حنة ودخلة)',
             price: 500,
-            details: ['حلق شعر الرأس', 'حلق الدقن', 'مساج للبشرة', 'ماسك لتفتيح البشرة', 'بخار ساخن وبارد', 'علاج للشعر', 'استشوار وكريم لتفتيح البشرة', 'تاكيدات امتيازات إضافية', 'يوم الدخلة مجاناً']
+            details: ['حلق شعر الرأس', 'حلق الدقن', 'مساج للبشرة', 'ماسك لتفتيح البشرة', 'بخار ساخن وبارد', 'علاج للشعر', 'استشوار وكريم لتفتيح البشرة', 'تأكيدات امتيازات إضافية', 'يوم الدخلة مجاناً']
         }
     ];
 
@@ -484,34 +650,35 @@
     //  2. التخزين المحلي
     // ====================================================================
     function loadServices() {
-        const stored = localStorage.getItem('kareem_services');
+        const stored = localStorage.getItem('zero_services');
         if (stored) { try { return JSON.parse(stored); } catch(e) {} }
         return DEFAULT_SERVICES.slice();
     }
-    function saveServices(s) { localStorage.setItem('kareem_services', JSON.stringify(s)); }
+    function saveServices(s) { localStorage.setItem('zero_services', JSON.stringify(s)); }
     let services = loadServices();
 
     function loadOffers() {
-        const stored = localStorage.getItem('kareem_offers');
+        const stored = localStorage.getItem('zero_offers');
         if (stored) { try { return JSON.parse(stored); } catch(e) {} }
         return DEFAULT_OFFERS.slice();
     }
-    function saveOffers(o) { localStorage.setItem('kareem_offers', JSON.stringify(o)); }
+    function saveOffers(o) { localStorage.setItem('zero_offers', JSON.stringify(o)); }
     let offers = loadOffers();
 
-    function loadBookings() {
-        const data = localStorage.getItem('kareem_bookings');
-        if (data) { try { return JSON.parse(data); } catch(e) {} }
+    // الطلبات: { id, name, phone, service, time, status: 'pending'|'accepted'|'rejected', userId }
+    function loadOrders() {
+        const stored = localStorage.getItem('zero_orders');
+        if (stored) { try { return JSON.parse(stored); } catch(e) {} }
         return [];
     }
-    function saveBookings(b) { localStorage.setItem('kareem_bookings', JSON.stringify(b)); }
-    let bookings = loadBookings();
+    function saveOrders(o) { localStorage.setItem('zero_orders', JSON.stringify(o)); }
+    let orders = loadOrders();
 
     // ====================================================================
     //  3. إدارة المستخدم
     // ====================================================================
     const ADMIN_EMAIL = "swlyd3393@gmail.com";
-    const STORAGE_USER_KEY = 'kareem_user';
+    const STORAGE_USER_KEY = 'zero_user';
     function loadUser() {
         const data = localStorage.getItem(STORAGE_USER_KEY);
         if (data) { try { return JSON.parse(data); } catch(e) {} }
@@ -524,92 +691,7 @@
     let currentUser = loadUser();
 
     // ====================================================================
-    //  4. الترجمة (i18n)
-    // ====================================================================
-    const translations = {
-        ar: {
-            app_name: 'كريم العالمي', app_sub: 'صالون الحلاقة',
-            install: 'تثبيت', guest: 'زائر', welcome: 'مرحباً بك 👋',
-            welcome_sub: 'اختر خدمتك واضغط "طلب"', services_title: 'خدماتنا',
-            instant_order: 'طلب فوري', groom_title: 'عروض العريس المميزة',
-            bookings_title: 'سجل الحجوزات', no_bookings: 'لا توجد حجوزات حتى الآن',
-            not_registered: 'غير مسجل', login: 'تسجيل دخول', logout: 'خروج',
-            lang_switch: 'English', admin_panel: 'لوحة التحكم (أدمن)',
-            admin_offers: 'عروض العريس', new_service_name: 'اسم الخدمة الجديدة',
-            new_service_price: 'السعر (جنيه)', add_service: 'إضافة خدمة',
-            new_offer_name: 'اسم عرض العريس الجديد', new_offer_price: 'سعر العرض (جنيه)',
-            offer_details: 'تفاصيل العرض (افصل بينها بفاصلة)',
-            add_offer: 'إضافة عرض', admin_note: '* التعديلات تحفظ محلياً وتظهر فوراً',
-            close: 'إغلاق', nav_home: 'الرئيسية', nav_groom: 'العريس',
-            nav_bookings: 'الحجوزات', nav_profile: 'الملف',
-            order_now: 'طلب الآن', details: 'تفاصيل', edit: 'تعديل', delete: 'حذف',
-            phone_hidden: 'رقم الهاتف مخفي', name_required: 'الاسم مطلوب',
-            name_invalid: 'الاسم يجب أن يحتوي على حروف فقط',
-            email_invalid: 'يرجى إدخال بريد إلكتروني صحيح',
-            phone_invalid: 'رقم الهاتف يجب أن يكون 11 رقماً ويبدأ بـ 010/011/012/015',
-            login_success: 'تم تسجيل الدخول بنجاح',
-            login_fail: 'فشل تسجيل الدخول، تحقق من البيانات',
-            logout_success: 'تم تسجيل الخروج',
-            order_sent: 'تم إرسال الطلب إلى تيليجرام',
-            order_fail: 'الرجاء تسجيل الدخول أولاً',
-            offer_ordered: 'تم طلب العرض بنجاح'
-        },
-        en: {
-            app_name: 'Kareem Al-Alamy', app_sub: 'Barbershop',
-            install: 'Install', guest: 'Guest', welcome: 'Welcome 👋',
-            welcome_sub: 'Choose your service and click "Order"',
-            services_title: 'Our Services', instant_order: 'Instant Order',
-            groom_title: 'Groom Special Offers', bookings_title: 'Booking History',
-            no_bookings: 'No bookings yet', not_registered: 'Not registered',
-            login: 'Login', logout: 'Logout', lang_switch: 'العربية',
-            admin_panel: 'Admin Panel', admin_offers: 'Groom Offers',
-            new_service_name: 'New Service Name', new_service_price: 'Price (EGP)',
-            add_service: 'Add Service', new_offer_name: 'New Offer Name',
-            new_offer_price: 'Offer Price (EGP)',
-            offer_details: 'Offer Details (separate with comma)',
-            add_offer: 'Add Offer', admin_note: '* Changes saved locally and appear instantly',
-            close: 'Close', nav_home: 'Home', nav_groom: 'Groom',
-            nav_bookings: 'Bookings', nav_profile: 'Profile',
-            order_now: 'Order Now', details: 'Details', edit: 'Edit', delete: 'Delete',
-            phone_hidden: 'Phone number hidden',
-            name_required: 'Name is required',
-            name_invalid: 'Name must contain only letters',
-            email_invalid: 'Please enter a valid email',
-            phone_invalid: 'Phone must be 11 digits and start with 010/011/012/015',
-            login_success: 'Login successful',
-            login_fail: 'Login failed, check your data',
-            logout_success: 'Logged out successfully',
-            order_sent: 'Order sent to Telegram',
-            order_fail: 'Please login first',
-            offer_ordered: 'Offer ordered successfully'
-        }
-    };
-
-    let currentLang = localStorage.getItem('kareem_lang') || 'ar';
-
-    function t(key) {
-        return translations[currentLang]?.[key] || key;
-    }
-
-    function applyLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('kareem_lang', lang);
-        const isRTL = lang === 'ar';
-        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-        document.body.classList.toggle('ltr', !isRTL);
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.dataset.i18n;
-            if (translations[lang] && translations[lang][key] !== undefined) {
-                el.textContent = translations[lang][key];
-            }
-        });
-        const langBtn = document.getElementById('langToggle').querySelector('span');
-        if (langBtn) langBtn.textContent = lang === 'ar' ? 'English' : 'العربية';
-        renderAll();
-    }
-
-    // ====================================================================
-    //  5. التحقق من صحة البيانات
+    //  4. التحقق من صحة البيانات
     // ====================================================================
     function isValidName(name) {
         return /^[\u0600-\u06FFa-zA-Z\s]{2,}$/.test(name.trim());
@@ -627,101 +709,72 @@
     }
 
     // ====================================================================
-    //  6. إرسال الرسائل إلى تيليجرام
+    //  5. وظائف الطلبات
     // ====================================================================
-    async function sendTelegramMessage(text) {
-        if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_ID === "123456789") {
-            console.warn('⚠️ لم يتم إعداد تيليجرام بشكل صحيح. الرجاء وضع التوكن ورقم المعرف.');
-            alert('⚠️ الرجاء إعداد تيليجرام أولاً (ضع التوكن ورقم المعرف في الكود).');
-            return false;
-        }
-        try {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: text,
-                    parse_mode: 'HTML'
-                })
-            });
-            const result = await response.json();
-            if (result.ok) {
-                console.log('✅ تم إرسال الرسالة إلى تيليجرام');
-                return true;
-            } else {
-                console.error('❌ فشل الإرسال:', result);
-                alert('❌ فشل إرسال الرسالة إلى تيليجرام. تأكد من التوكن ورقم المعرف.');
-                return false;
-            }
-        } catch (error) {
-            console.error('❌ خطأ في الاتصال:', error);
-            alert('❌ خطأ في الاتصال بخادم تيليجرام.');
-            return false;
-        }
-    }
-
-    // ====================================================================
-    //  7. طلب الخدمة أو العرض (نقرة واحدة)
-    // ====================================================================
-    async function requestService(item, type) {
+    function createOrder(serviceName, price) {
         if (!currentUser) {
-            alert(t('order_fail'));
-            navigateTo('page-profile');
-            return;
+            alert('الرجاء تسجيل الدخول أولاً');
+            return false;
         }
-        const name = currentUser.name || 'عميل';
-        const phone = currentUser.phone || 'غير مسجل';
-        const now = new Date();
-        const time = now.toLocaleString('ar-EG', { hour12: true });
-        const itemName = item.name;
-        const price = item.price;
-        const typeLabel = type === 'offer' ? 'عرض عريس' : 'خدمة';
+        const order = {
+            id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            name: currentUser.name,
+            phone: currentUser.phone,
+            email: currentUser.email,
+            service: serviceName,
+            price: price,
+            time: new Date().toLocaleString('ar-EG', { hour12: true }),
+            status: 'pending', // pending, accepted, rejected
+            userId: currentUser.email
+        };
+        orders.push(order);
+        saveOrders(orders);
+        showToast('✅ تم إرسال الطلب بنجاح في انتظار الموافقة');
+        renderAll();
+        return true;
+    }
 
-        // حفظ الحجز
-        const booking = { name, phone, service: itemName + ' (' + typeLabel + ')', time, price };
-        bookings.push(booking);
-        saveBookings(bookings);
-
-        // بناء رسالة تيليجرام
-        const message = `
-📢 <b>طلب جديد من كريم العالمي</b>
-🧑 <b>العميل:</b> ${name}
-📞 <b>الهاتف:</b> ${phone}
-✂️ <b>النوع:</b> ${typeLabel}
-📌 <b>الخدمة:</b> ${itemName}
-💰 <b>السعر:</b> ${price} ج.م
-🕒 <b>الوقت:</b> ${time}
-        `;
-
-        // إرسال إلى تيليجرام
-        const sent = await sendTelegramMessage(message);
-
-        if (sent) {
-            alert('✅ ' + t('order_sent'));
-        } else {
-            // إذا فشل الإرسال، نحاول مرة أخرى أو نعطي تنبيه
-            alert('⚠️ حدثت مشكلة في الإرسال، لكن الحجز تم حفظه محلياً.');
+    function updateOrderStatus(orderId, newStatus) {
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = newStatus;
+            saveOrders(orders);
+            renderAll();
+            showToast(`✅ تم ${newStatus === 'accepted' ? 'قبول' : 'رفض'} الطلب`);
         }
+    }
 
-        renderBookings();
+    function getOrdersForUser(email) {
+        return orders.filter(o => o.userId === email);
+    }
+
+    function getOrdersForAdmin() {
+        return orders;
     }
 
     // ====================================================================
-    //  8. عناصر DOM والوظائف الأخرى (نفس الكود السابق مع تحسينات)
+    //  6. عناصر DOM
     // ====================================================================
     const $ = id => document.getElementById(id);
-    const pageHome = $('page-home'), pageOffers = $('page-offers'), pageBookings = $('page-bookings'), pageProfile = $('page-profile');
-    const allPages = [pageHome, pageOffers, pageBookings, pageProfile];
+    const pageHome = $('page-home'), pageOffers = $('page-offers');
+    const pageOrders = $('page-orders'), pageMyOrders = $('page-myorders'), pageProfile = $('page-profile');
+    const allPages = [pageHome, pageOffers, pageOrders, pageMyOrders, pageProfile];
     const navItems = document.querySelectorAll('.nav-item');
+    const ordersNav = $('ordersNav'), myOrdersNav = $('myOrdersNav');
+
     const serviceListEl = $('serviceList');
     const offersContainer = $('offersContainer');
-    const bookingsList = $('bookingsList');
+    const ordersList = $('ordersList');
+    const myOrdersList = $('myOrdersList');
+
+    const loginCard = $('loginCard');
+    const profileCard = $('profileCard');
     const profileName = $('profileName'), profileEmail = $('profileEmail'), profilePhone = $('profilePhone');
     const profileAvatar = $('profileAvatar');
     const userBadgeName = $('userBadgeName');
-    const loginBtn = $('loginBtn'), logoutBtn = $('logoutBtn');
+    const loginName = $('loginName'), loginEmail = $('loginEmail'), loginPhone = $('loginPhone');
+    const loginSubmitBtn = $('loginSubmitBtn');
+    const logoutBtn = $('logoutBtn');
     const adminPanel = $('adminPanel'), adminServiceList = $('adminServiceList'), adminOffersContainer = $('adminOffersContainer');
     const addServiceBtn = $('addServiceBtn'), newServiceName = $('newServiceName'), newServicePrice = $('newServicePrice');
     const addOfferBtn = $('addOfferBtn'), newOfferName = $('newOfferName'), newOfferPrice = $('newOfferPrice'), newOfferDetails = $('newOfferDetails');
@@ -729,7 +782,11 @@
     const userBadge = $('userBadge');
     const installBtn = $('installAppBtn');
     const modalOverlay = $('offerModal'), modalTitle = $('modalTitle'), modalDetails = $('modalDetails'), modalCloseBtn = $('modalCloseBtn');
+    const nameError = $('nameError'), emailError = $('emailError'), phoneError = $('phoneError');
 
+    // ====================================================================
+    //  7. عرض الخدمات والعروض والطلبات
+    // ====================================================================
     function renderServices() {
         let html = '';
         services.forEach((s, idx) => {
@@ -741,7 +798,7 @@
                     </div>
                     <div class="service-actions">
                         <span class="service-price">${s.price} ج.م</span>
-                        <button class="btn-order" data-index="${idx}"><i class="fas fa-shopping-cart"></i> ${t('order_now')}</button>
+                        <button class="btn-order" data-index="${idx}"><i class="fas fa-shopping-cart"></i> طلب</button>
                     </div>
                 </div>
             `;
@@ -750,7 +807,8 @@
         document.querySelectorAll('.btn-order').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
-                requestService(services[idx], 'service');
+                const service = services[idx];
+                createOrder(service.name, service.price);
             });
         });
     }
@@ -768,8 +826,8 @@
                         <div class="offer-price">${offer.price} ج.م</div>
                     </div>
                     <div class="offer-actions">
-                        <button class="offer-details-btn" data-index="${idx}"><i class="fas fa-info-circle"></i> ${t('details')}</button>
-                        <button class="offer-order-btn" data-index="${idx}"><i class="fas fa-shopping-cart"></i> ${t('order_now')}</button>
+                        <button class="offer-details-btn" data-index="${idx}"><i class="fas fa-info-circle"></i> تفاصيل</button>
+                        <button class="offer-order-btn" data-index="${idx}"><i class="fas fa-shopping-cart"></i> طلب</button>
                     </div>
                 </div>
             `;
@@ -786,24 +844,91 @@
         document.querySelectorAll('.offer-order-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
-                requestService(offers[idx], 'offer');
+                const offer = offers[idx];
+                createOrder(offer.name, offer.price);
             });
         });
     }
 
-    function renderBookings() {
-        if (bookings.length === 0) {
-            bookingsList.innerHTML = `<p class="text-muted text-center">${t('no_bookings')}</p>`;
-            return;
-        }
+    function renderOrders() {
+        // صفحة الطلبات (للأدمن فقط)
         const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-        let html = `<table class="booking-table"><thead><tr><th>${t('nav_profile')}</th><th>${t('phone_hidden')}</th><th>${t('services_title')}</th><th>${t('nav_bookings')}</th></tr></thead><tbody>`;
-        bookings.slice().reverse().forEach(b => {
-            const maskedPhone = maskPhone(b.phone, isAdmin);
-            html += `<tr><td>${b.name}</td><td class="phone-masked">${maskedPhone}</td><td>${b.service}</td><td>${b.time}</td></tr>`;
-        });
-        html += `</tbody></table>`;
-        bookingsList.innerHTML = html;
+        if (isAdmin) {
+            ordersNav.classList.remove('hidden');
+            const allOrders = getOrdersForAdmin();
+            if (allOrders.length === 0) {
+                ordersList.innerHTML = `<p class="text-muted text-center">لا توجد طلبات حالياً</p>`;
+            } else {
+                let html = '';
+                allOrders.slice().reverse().forEach(o => {
+                    const statusMap = {
+                        'pending': 'قيد الانتظار',
+                        'accepted': '✅ مقبول',
+                        'rejected': '❌ مرفوض'
+                    };
+                    const statusClass = o.status;
+                    html += `
+                        <div class="order-item slide-up">
+                            <div class="order-header">
+                                <span class="order-name">👤 ${o.name}</span>
+                                <span class="order-status ${statusClass}">${statusMap[o.status]}</span>
+                            </div>
+                            <div class="order-phone"><i class="fas fa-phone"></i> ${o.phone}</div>
+                            <div class="order-service"><i class="fas fa-cut"></i> ${o.service} - <strong>${o.price} ج.م</strong></div>
+                            <div class="order-time"><i class="fas fa-clock"></i> ${o.time}</div>
+                            ${o.status === 'pending' ? `
+                            <div class="order-actions">
+                                <button class="btn-call" onclick="window.location.href='tel:${o.phone}'"><i class="fas fa-phone"></i> اتصال</button>
+                                <button class="btn-accept" onclick="updateOrderStatus('${o.id}','accepted')"><i class="fas fa-check"></i> قبول</button>
+                                <button class="btn-reject" onclick="updateOrderStatus('${o.id}','rejected')"><i class="fas fa-times"></i> رفض</button>
+                            </div>
+                            ` : `
+                            <div class="order-actions">
+                                <button class="btn-call" onclick="window.location.href='tel:${o.phone}'"><i class="fas fa-phone"></i> اتصال</button>
+                            </div>
+                            `}
+                        </div>
+                    `;
+                });
+                ordersList.innerHTML = html;
+            }
+        } else {
+            ordersNav.classList.add('hidden');
+            ordersList.innerHTML = `<p class="text-muted text-center">هذه الصفحة خاصة بالأدمن فقط</p>`;
+        }
+
+        // صفحة طلباتي (للعميل)
+        if (currentUser) {
+            myOrdersNav.classList.remove('hidden');
+            const userOrders = getOrdersForUser(currentUser.email);
+            if (userOrders.length === 0) {
+                myOrdersList.innerHTML = `<p class="text-muted text-center">ليس لديك طلبات سابقة</p>`;
+            } else {
+                let html = '';
+                userOrders.slice().reverse().forEach(o => {
+                    const statusMap = {
+                        'pending': '⏳ قيد الانتظار',
+                        'accepted': '✅ تم القبول',
+                        'rejected': '❌ تم الرفض'
+                    };
+                    const statusClass = o.status;
+                    html += `
+                        <div class="order-item slide-up">
+                            <div class="order-header">
+                                <span class="order-name">✂️ ${o.service}</span>
+                                <span class="order-status ${statusClass}">${statusMap[o.status]}</span>
+                            </div>
+                            <div class="order-service"><strong>${o.price} ج.م</strong></div>
+                            <div class="order-time"><i class="fas fa-clock"></i> ${o.time}</div>
+                        </div>
+                    `;
+                });
+                myOrdersList.innerHTML = html;
+            }
+        } else {
+            myOrdersNav.classList.add('hidden');
+            myOrdersList.innerHTML = `<p class="text-muted text-center">الرجاء تسجيل الدخول لعرض طلباتك</p>`;
+        }
     }
 
     function renderAdminPanel() {
@@ -822,8 +947,8 @@
                     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                         <span class="service-price" style="font-size:13px;">${s.price} ج.م</span>
                         <div class="admin-actions">
-                            <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="service" data-action="edit"><i class="fas fa-edit"></i> ${t('edit')}</button>
-                            <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="service" data-action="delete"><i class="fas fa-trash"></i> ${t('delete')}</button>
+                            <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="service" data-action="edit"><i class="fas fa-edit"></i> تعديل</button>
+                            <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="service" data-action="delete"><i class="fas fa-trash"></i> حذف</button>
                         </div>
                     </div>
                 </div>
@@ -839,8 +964,8 @@
                     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                         <span class="service-price" style="font-size:13px;">${o.price} ج.م</span>
                         <div class="admin-actions">
-                            <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="offer" data-action="edit"><i class="fas fa-edit"></i> ${t('edit')}</button>
-                            <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="offer" data-action="delete"><i class="fas fa-trash"></i> ${t('delete')}</button>
+                            <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="offer" data-action="edit"><i class="fas fa-edit"></i> تعديل</button>
+                            <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="offer" data-action="delete"><i class="fas fa-trash"></i> حذف</button>
                         </div>
                     </div>
                 </div>
@@ -943,6 +1068,9 @@
         renderAll();
     });
 
+    // ====================================================================
+    //  8. عرض تفاصيل العروض
+    // ====================================================================
     function showOfferDetails(index) {
         const offer = offers[index];
         modalTitle.textContent = offer.name;
@@ -958,6 +1086,9 @@
         if (e.target === modalOverlay) modalOverlay.classList.remove('show');
     });
 
+    // ====================================================================
+    //  9. التنقل بين الصفحات
+    // ====================================================================
     function navigateTo(pageId) {
         allPages.forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
@@ -965,12 +1096,10 @@
         navItems.forEach(item => {
             item.classList.toggle('active', item.dataset.page === pageId);
         });
-        if (pageId === 'page-profile') {
-            updateProfileUI();
-            renderAdminPanel();
-        }
-        if (pageId === 'page-bookings') renderBookings();
-        if (pageId === 'page-offers') renderOffers();
+        // إظهار/إخفاء أزرار التنقل حسب المستخدم
+        renderOrders();
+        if (pageId === 'page-profile') updateProfileUI();
+        if (pageId === 'page-orders' || pageId === 'page-myorders') renderOrders();
     }
 
     navItems.forEach(item => {
@@ -980,75 +1109,162 @@
     });
     userBadge.addEventListener('click', () => navigateTo('page-profile'));
 
+    // ====================================================================
+    //  10. تحديث واجهة المستخدم
+    // ====================================================================
     function updateProfileUI() {
         if (currentUser) {
+            loginCard.classList.add('hidden');
+            profileCard.classList.remove('hidden');
             profileName.textContent = currentUser.name || 'مستخدم';
             profileEmail.textContent = currentUser.email || 'غير مسجل';
             const isAdmin = currentUser.email === ADMIN_EMAIL;
             profilePhone.textContent = '📞 ' + maskPhone(currentUser.phone || 'غير مسجل', isAdmin);
             profileAvatar.innerHTML = `<i class="fas fa-user-circle" style="font-size:60px;"></i>`;
             userBadgeName.textContent = (currentUser.name || currentUser.email || 'مستخدم').slice(0,10);
+            renderAdminPanel();
+            renderOrders();
         } else {
-            profileName.textContent = t('guest');
-            profileEmail.textContent = t('not_registered');
+            loginCard.classList.remove('hidden');
+            profileCard.classList.add('hidden');
+            profileName.textContent = 'زائر';
+            profileEmail.textContent = 'غير مسجل';
             profilePhone.textContent = '';
             profileAvatar.innerHTML = `<i class="fas fa-user"></i>`;
-            userBadgeName.textContent = t('guest');
+            userBadgeName.textContent = 'زائر';
+            adminPanel.classList.add('hidden');
+            renderOrders();
         }
     }
 
-    function showLoginDialog() {
-        const name = prompt('أدخل اسمك الكامل (حروف فقط):', currentUser ? currentUser.name : '');
-        if (name === null) return;
-        if (!isValidName(name)) { alert(t('name_invalid')); return; }
+    // ====================================================================
+    //  11. تسجيل الدخول مع التحقق المحسن
+    // ====================================================================
+    function validateLoginForm() {
+        let valid = true;
+        const name = loginName.value.trim();
+        const email = loginEmail.value.trim();
+        const phone = loginPhone.value.trim();
 
-        const email = prompt('أدخل بريدك الإلكتروني:', currentUser ? currentUser.email : '');
-        if (email === null) return;
-        if (!isValidEmail(email)) { alert(t('email_invalid')); return; }
-
-        const phone = prompt('أدخل رقم هاتفك (11 رقماً يبدأ بـ 010/011/012/015):', currentUser ? currentUser.phone : '');
-        if (phone === null) return;
-        if (!isValidPhone(phone)) { alert(t('phone_invalid')); return; }
-
-        currentUser = { name: name.trim(), email: email.trim(), phone: phone.trim() };
-        saveUser(currentUser);
-        renderAll();
-        if (currentUser.email === ADMIN_EMAIL) {
-            alert('✅ مرحباً أيها الأدمن! لوحة التحكم متاحة.');
+        // التحقق من الاسم
+        if (!isValidName(name)) {
+            nameError.style.display = 'block';
+            loginName.style.borderColor = 'var(--danger)';
+            valid = false;
         } else {
-            alert('✅ ' + t('login_success'));
+            nameError.style.display = 'none';
+            loginName.style.borderColor = 'var(--border-color)';
         }
-        navigateTo('page-profile');
+
+        // التحقق من البريد
+        if (!isValidEmail(email)) {
+            emailError.style.display = 'block';
+            loginEmail.style.borderColor = 'var(--danger)';
+            valid = false;
+        } else {
+            emailError.style.display = 'none';
+            loginEmail.style.borderColor = 'var(--border-color)';
+        }
+
+        // التحقق من رقم الهاتف
+        if (!isValidPhone(phone)) {
+            phoneError.style.display = 'block';
+            loginPhone.style.borderColor = 'var(--danger)';
+            valid = false;
+        } else {
+            phoneError.style.display = 'none';
+            loginPhone.style.borderColor = 'var(--border-color)';
+        }
+
+        return valid;
     }
 
-    loginBtn.addEventListener('click', showLoginDialog);
+    loginSubmitBtn.addEventListener('click', function() {
+        if (!validateLoginForm()) return;
+
+        const name = loginName.value.trim();
+        const email = loginEmail.value.trim();
+        const phone = loginPhone.value.trim();
+
+        currentUser = { name, email, phone };
+        saveUser(currentUser);
+        updateProfileUI();
+        showToast('✅ تم تسجيل الدخول بنجاح');
+        if (currentUser.email === ADMIN_EMAIL) {
+            showToast('👑 مرحباً أيها الأدمن! لوحة التحكم متاحة.');
+        }
+        navigateTo('page-home');
+    });
+
+    // إضافة حدث Enter للحقول
+    [loginName, loginEmail, loginPhone].forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loginSubmitBtn.click();
+        });
+        input.addEventListener('input', function() {
+            // إخفاء الأخطاء عند الكتابة
+            if (this.id === 'loginName') nameError.style.display = 'none';
+            if (this.id === 'loginEmail') emailError.style.display = 'none';
+            if (this.id === 'loginPhone') phoneError.style.display = 'none';
+            this.style.borderColor = 'var(--border-color)';
+        });
+    });
 
     logoutBtn.addEventListener('click', function() {
         if (confirm('هل تريد تسجيل الخروج؟')) {
             currentUser = null;
             saveUser(null);
-            renderAll();
-            alert(t('logout_success'));
+            updateProfileUI();
+            showToast('تم تسجيل الخروج');
             navigateTo('page-home');
         }
     });
 
-    let currentTheme = localStorage.getItem('kareem_theme') || 'dark';
+    // ====================================================================
+    //  12. الثيم واللغة
+    // ====================================================================
+    let currentTheme = localStorage.getItem('zero_theme') || 'dark';
     function applyTheme(theme) {
         document.body.classList.toggle('light-theme', theme === 'light');
         themeToggle.innerHTML = theme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        localStorage.setItem('kareem_theme', theme);
+        localStorage.setItem('zero_theme', theme);
         currentTheme = theme;
     }
     themeToggle.addEventListener('click', function() {
         applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
     });
 
+    // تبديل اللغة (تبسيط)
+    let currentLang = localStorage.getItem('zero_lang') || 'ar';
     langToggle.addEventListener('click', function() {
-        applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        localStorage.setItem('zero_lang', currentLang);
+        const isRTL = currentLang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.classList.toggle('ltr', !isRTL);
+        langToggle.innerHTML = isRTL ? '<i class="fas fa-globe"></i> English' : '<i class="fas fa-globe"></i> عربي';
+        // تغيير بعض النصوص الثابتة (يمكن توسيعها)
+        document.querySelector('.brand-name').textContent = isRTL ? 'حلاق زيرو' : 'Zero Barber';
+        document.querySelector('.brand-sub').textContent = isRTL ? 'صالون الحلاقة' : 'Barbershop';
     });
 
-    // PWA Installation
+    // ====================================================================
+    //  13. الإشعارات الداخلية (Toast)
+    // ====================================================================
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast show';
+        toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+        document.querySelector('.card')?.parentNode?.insertBefore(toast, document.querySelector('.card')?.nextSibling);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // ====================================================================
+    //  14. تثبيت التطبيق (PWA)
+    // ====================================================================
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -1061,17 +1277,18 @@
             deferredPrompt.prompt();
             const result = await deferredPrompt.userChoice;
             if (result.outcome === 'accepted') {
-                alert('✅ تم تثبيت التطبيق بنجاح');
+                showToast('✅ تم تثبيت التطبيق بنجاح');
             } else {
-                alert('❌ تم إلغاء التثبيت');
+                showToast('❌ تم إلغاء التثبيت');
             }
             deferredPrompt = null;
             installBtn.style.display = 'none';
         } else {
-            alert('يمكنك تثبيت التطبيق من قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
+            showToast('يمكنك تثبيت التطبيق من قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
         }
     });
 
+    // Service Worker للتثبيت
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
             self.addEventListener('install', e => e.waitUntil(skipWaiting()));
@@ -1080,21 +1297,30 @@
         `)).then(() => console.log('SW registered')).catch(() => {});
     }
 
+    // ====================================================================
+    //  15. التحديث الشامل والتهيئة
+    // ====================================================================
     function renderAll() {
         renderServices();
         renderOffers();
-        renderBookings();
+        renderOrders();
         renderAdminPanel();
         updateProfileUI();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
         applyTheme(currentTheme);
-        applyLanguage(currentLang);
+        // تطبيق اللغة المحفوظة
+        const isRTL = currentLang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.classList.toggle('ltr', !isRTL);
+        langToggle.innerHTML = isRTL ? '<i class="fas fa-globe"></i> English' : '<i class="fas fa-globe"></i> عربي';
+        document.querySelector('.brand-name').textContent = isRTL ? 'حلاق زيرو' : 'Zero Barber';
+        document.querySelector('.brand-sub').textContent = isRTL ? 'صالون الحلاقة' : 'Barbershop';
+
         renderAll();
         navigateTo('page-home');
-        console.log('✅ تطبيق كريم العالمي - نسخة تيليجرام جاهزة');
-        console.log('⚠️ تأكد من وضع التوكن ورقم المعرف الصحيح في الكود!');
+        console.log('✅ حلاق زيرو - النسخة النهائية جاهزة');
     });
 </script>
 </body>
