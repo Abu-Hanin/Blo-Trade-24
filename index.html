@@ -22,6 +22,7 @@
             --nav-height: 72px;
             --header-height: 64px;
             --transition: 0.3s ease;
+            --max-width: 430px;
         }
         body.light-theme {
             --bg-primary: #f5f5f5;
@@ -40,7 +41,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 10px;
             margin: 0;
             direction: rtl;
             transition: background var(--transition), color var(--transition);
@@ -50,14 +51,15 @@
         body.ltr .card-gold { border-right: none; border-left: 5px solid var(--gold); }
 
         .app-container {
-            max-width: 430px;
+            max-width: var(--max-width);
             width: 100%;
             background: var(--bg-primary);
             border-radius: 32px;
             box-shadow: var(--shadow);
             overflow: hidden;
             position: relative;
-            height: 820px;
+            height: 95vh;
+            max-height: 820px;
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border-color);
@@ -66,189 +68,200 @@
         /* الهيدر */
         .app-header {
             background: var(--bg-secondary);
-            padding: 8px 14px;
+            padding: 6px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
-            height: var(--header-height);
+            min-height: var(--header-height);
             transition: background var(--transition);
+            gap: 6px;
+            flex-wrap: wrap;
         }
-        .brand { display: flex; align-items: center; gap: 8px; }
-        .brand i { font-size: 26px; color: var(--gold); }
+        .brand { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .brand i { font-size: 22px; color: var(--gold); }
         .brand-name {
-            font-size: 20px; font-weight: 800;
+            font-size: 18px; font-weight: 800;
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .brand-sub { font-size: 10px; color: var(--text-secondary); display: block; -webkit-text-fill-color: var(--text-secondary); background: none; }
-        .header-actions { display: flex; gap: 8px; align-items: center; }
+        .brand-sub { font-size: 9px; color: var(--text-secondary); display: block; -webkit-text-fill-color: var(--text-secondary); background: none; }
+        .header-actions { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
         .header-btn {
             background: var(--bg-primary); border: 1px solid var(--border-color);
-            color: var(--text-secondary); width: 36px; height: 36px;
+            color: var(--text-secondary); width: 34px; height: 34px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; font-size: 16px;
+            cursor: pointer; transition: 0.2s; font-size: 15px;
         }
         .header-btn:hover { border-color: var(--gold); color: var(--gold); }
         .user-badge {
-            display: flex; align-items: center; gap: 6px;
-            background: var(--bg-primary); padding: 2px 12px 2px 8px;
+            display: flex; align-items: center; gap: 4px;
+            background: var(--bg-primary); padding: 2px 10px 2px 6px;
             border-radius: 30px; border: 1px solid var(--border-color);
-            cursor: pointer; transition: 0.2s; font-size: 12px; color: var(--text-secondary);
+            cursor: pointer; transition: 0.2s; font-size: 11px; color: var(--text-secondary);
         }
         .user-badge:hover { border-color: var(--gold); }
-        .user-badge i { font-size: 20px; color: var(--gold); }
+        .user-badge i { font-size: 18px; color: var(--gold); }
+        .install-btn {
+            background: var(--gold); color: var(--bg-primary);
+            border: none; padding: 4px 12px; border-radius: 30px;
+            font-weight: 700; font-size: 11px; cursor: pointer;
+            display: flex; align-items: center; gap: 4px;
+            transition: 0.2s;
+        }
+        .install-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 14px 14px 8px; scroll-behavior: smooth; }
+        .main-content { flex: 1; overflow-y: auto; padding: 12px 12px 6px; scroll-behavior: smooth; }
         .main-content::-webkit-scrollbar { width: 4px; }
         .main-content::-webkit-scrollbar-track { background: var(--bg-primary); }
         .main-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
         .page { display: none; animation: fadeUp 0.3s ease; }
         .page.active { display: block; }
-        @keyframes fadeUp { 0% { opacity:0; transform:translateY(10px); } 100% { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp { 0% { opacity:0; transform:translateY(8px); } 100% { opacity:1; transform:translateY(0); } }
 
-        /* بطاقات محسنة */
+        /* بطاقات */
         .card {
             background: var(--bg-card);
             border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
             transition: background var(--transition), border var(--transition), transform 0.2s;
         }
         .card:hover { transform: translateY(-2px); }
         .card-gold { border-right: 5px solid var(--gold); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .card-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 4px; }
+        .card-title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .card-title i { color: var(--gold); }
 
-        /* خدمة محسنة */
+        /* خدمة */
         .service-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 0; border-bottom: 1px solid var(--border-color);
-            transition: 0.2s;
+            padding: 10px 0; border-bottom: 1px solid var(--border-color);
+            transition: 0.2s; gap: 6px; flex-wrap: wrap;
         }
         .service-item:last-child { border-bottom: none; }
-        .service-item:hover { background: rgba(252,213,53,0.03); border-radius: 10px; padding-left: 8px; padding-right: 8px; }
-        .service-info { display: flex; align-items: center; gap: 12px; }
+        .service-item:hover { background: rgba(252,213,53,0.03); border-radius: 10px; padding-left: 6px; padding-right: 6px; }
+        .service-info { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
         .service-icon {
-            width: 44px; height: 44px;
+            width: 36px; height: 36px;
             background: rgba(252,213,53,0.12);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: var(--gold); font-size: 20px;
+            color: var(--gold); font-size: 16px; flex-shrink: 0;
         }
-        .service-name { font-weight: 600; font-size: 16px; }
+        .service-name { font-weight: 600; font-size: 14px; }
         .service-price {
-            color: var(--gold); font-weight: 800; font-size: 22px;
+            color: var(--gold); font-weight: 800; font-size: 18px;
             background: rgba(252,213,53,0.08);
-            padding: 2px 16px; border-radius: 30px;
+            padding: 2px 12px; border-radius: 30px;
             border: 1px solid rgba(252,213,53,0.2);
         }
-        .service-actions { display: flex; gap: 10px; align-items: center; }
+        .service-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .btn-order {
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: var(--bg-primary);
-            border: none; padding: 8px 20px; border-radius: 30px;
-            font-weight: 700; font-size: 14px; cursor: pointer;
-            transition: all 0.3s; display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 4px 15px rgba(252,213,53,0.3);
+            border: none; padding: 6px 14px; border-radius: 30px;
+            font-weight: 700; font-size: 12px; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; gap: 4px;
+            box-shadow: 0 4px 12px rgba(252,213,53,0.3);
         }
-        .btn-order:hover { transform: scale(1.08); box-shadow: 0 6px 25px rgba(252,213,53,0.5); }
+        .btn-order:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(252,213,53,0.5); }
 
         /* عروض العريس */
         .offer-card {
             background: linear-gradient(145deg, #2b313a, #1e2329);
             border: 2px solid var(--gold);
             border-radius: var(--radius);
-            padding: 18px; margin-bottom: 14px;
+            padding: 16px; margin-bottom: 12px;
             position: relative; overflow: hidden;
             transition: all 0.3s;
         }
-        .offer-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(252,213,53,0.25); }
-        .offer-card::before { content: '👑'; position: absolute; top: -8px; left: -8px; font-size: 60px; opacity: 0.1; transform: rotate(-15deg); }
-        .offer-title { font-size: 20px; font-weight: 700; color: var(--gold); }
-        .offer-price { font-size: 26px; font-weight: 800; color: #fff; }
-        .offer-desc { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
-        .offer-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .offer-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(252,213,53,0.2); }
+        .offer-card::before { content: '👑'; position: absolute; top: -8px; left: -8px; font-size: 50px; opacity: 0.1; transform: rotate(-15deg); }
+        .offer-title { font-size: 18px; font-weight: 700; color: var(--gold); }
+        .offer-price { font-size: 22px; font-weight: 800; color: #fff; }
+        .offer-desc { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
+        .offer-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
         .offer-details-btn {
             background: transparent; border: 2px solid var(--gold);
-            color: var(--gold); padding: 6px 18px; border-radius: 30px;
-            cursor: pointer; transition: 0.3s; font-weight: 600;
+            color: var(--gold); padding: 5px 14px; border-radius: 30px;
+            cursor: pointer; transition: 0.3s; font-weight: 600; font-size: 12px;
         }
         .offer-details-btn:hover { background: var(--gold); color: var(--bg-primary); }
         .offer-order-btn {
             background: var(--gold); border: none;
-            color: var(--bg-primary); padding: 6px 18px; border-radius: 30px;
-            cursor: pointer; transition: 0.3s; font-weight: 700;
+            color: var(--bg-primary); padding: 5px 14px; border-radius: 30px;
+            cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 12px;
         }
         .offer-order-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
 
         /* الحجوزات */
-        .booking-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .booking-table th { background: var(--gold); color: var(--bg-primary); padding: 8px; text-align: center; }
-        .booking-table td { padding: 8px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        .booking-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .booking-table th { background: var(--gold); color: var(--bg-primary); padding: 6px; text-align: center; }
+        .booking-table td { padding: 6px; border-bottom: 1px solid var(--border-color); text-align: center; }
         .booking-table tr:hover { background: rgba(252,213,53,0.05); }
         .phone-masked { font-family: monospace; letter-spacing: 2px; }
 
         /* الملف الشخصي */
         .profile-avatar {
-            width: 90px; height: 90px; background: var(--gold);
+            width: 80px; height: 80px; background: var(--gold);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 44px; color: var(--bg-primary); margin: 0 auto 14px;
+            font-size: 38px; color: var(--bg-primary); margin: 0 auto 12px;
             border: 4px solid var(--gold-dark);
         }
-        .profile-name { font-size: 22px; font-weight: 700; text-align: center; }
-        .profile-email { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
+        .profile-name { font-size: 20px; font-weight: 700; text-align: center; }
+        .profile-email { text-align: center; color: var(--text-secondary); font-size: 13px; margin-bottom: 12px; }
 
         .admin-panel {
             background: var(--bg-secondary); border: 1px solid var(--gold);
-            border-radius: var(--radius); padding: 16px; margin-top: 10px;
+            border-radius: var(--radius); padding: 14px; margin-top: 10px;
         }
         .admin-service-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0; border-bottom: 1px solid var(--border-color);
+            padding: 8px 0; border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap; gap: 4px;
         }
         .admin-service-item:last-child { border-bottom: none; }
-        .admin-actions { display: flex; gap: 6px; }
-        .btn-sm { padding: 4px 14px; font-size: 12px; border-radius: 30px; }
+        .admin-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+        .btn-sm { padding: 3px 10px; font-size: 11px; border-radius: 30px; }
 
         .btn {
-            padding: 12px 20px; border: none; border-radius: 14px;
-            font-weight: 700; font-size: 15px; cursor: pointer;
+            padding: 10px 16px; border: none; border-radius: 14px;
+            font-weight: 700; font-size: 14px; cursor: pointer;
             transition: all 0.25s; display: inline-flex;
-            align-items: center; justify-content: center; gap: 8px;
+            align-items: center; justify-content: center; gap: 6px;
             width: 100%;
         }
         .btn-gold { background: var(--gold); color: var(--bg-primary); }
-        .btn-gold:hover { background: var(--gold-dark); transform: scale(1.02); box-shadow: 0 8px 20px rgba(252,213,53,0.3); }
+        .btn-gold:hover { background: var(--gold-dark); transform: scale(1.02); box-shadow: 0 6px 16px rgba(252,213,53,0.3); }
         .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
         .btn-outline:hover { background: var(--gold); color: var(--bg-primary); }
         .btn-danger { background: #e74c3c; color: #fff; }
         .btn-danger:hover { background: #c0392b; }
-        .btn-sm { padding: 6px 16px; font-size: 13px; width: auto; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; width: auto; }
 
         .toast {
             background: var(--gold); color: var(--bg-primary);
-            padding: 12px 16px; border-radius: 14px; font-weight: 600;
-            font-size: 14px; display: none; align-items: center; gap: 10px;
-            margin-top: 12px;
+            padding: 10px 14px; border-radius: 14px; font-weight: 600;
+            font-size: 13px; display: none; align-items: center; gap: 8px;
+            margin-top: 10px;
         }
         .toast.show { display: flex; }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 3px; color: var(--text-secondary); }
         .form-group input, .form-group select {
-            width: 100%; padding: 12px 14px;
+            width: 100%; padding: 10px 12px;
             background: var(--bg-primary); border: 1px solid var(--border-color);
-            border-radius: 12px; color: var(--text-primary); font-size: 15px;
+            border-radius: 12px; color: var(--text-primary); font-size: 14px;
             outline: none; transition: 0.3s;
         }
         .form-group input:focus, .form-group select:focus {
             border-color: var(--gold); box-shadow: 0 0 0 4px rgba(252,213,53,0.15);
         }
-        .form-group .error-msg { color: #e74c3c; font-size: 12px; margin-top: 4px; display: none; }
+        .form-group .error-msg { color: #e74c3c; font-size: 11px; margin-top: 3px; display: none; }
 
         .bottom-nav {
             background: var(--bg-secondary); border-top: 1px solid var(--border-color);
@@ -256,13 +269,13 @@
             padding: 4px 0 6px; flex-shrink: 0; height: var(--nav-height);
         }
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
-            color: var(--text-secondary); font-size: 11px; cursor: pointer;
-            transition: 0.2s; padding: 4px 10px; border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center; gap: 1px;
+            color: var(--text-secondary); font-size: 10px; cursor: pointer;
+            transition: 0.2s; padding: 4px 6px; border-radius: 12px;
             background: transparent; border: none; font-family: inherit;
-            min-width: 50px;
+            min-width: 44px;
         }
-        .nav-item i { font-size: 22px; transition: 0.2s; }
+        .nav-item i { font-size: 20px; transition: 0.2s; }
         .nav-item.active { color: var(--gold); }
         .nav-item.active i { transform: translateY(-2px); text-shadow: 0 0 12px rgba(252,213,53,0.3); }
         .nav-item:hover { color: var(--gold); }
@@ -274,16 +287,16 @@
         }
         .modal-overlay.show { display: flex; }
         .modal-box {
-            background: var(--bg-secondary); max-width: 380px; width: 90%;
-            border-radius: var(--radius); padding: 24px; border: 1px solid var(--gold);
+            background: var(--bg-secondary); max-width: 360px; width: 92%;
+            border-radius: var(--radius); padding: 20px; border: 1px solid var(--gold);
             box-shadow: 0 20px 60px rgba(0,0,0,0.9);
             max-height: 80vh; overflow-y: auto;
         }
-        .modal-box h3 { color: var(--gold); margin-bottom: 12px; }
+        .modal-box h3 { color: var(--gold); margin-bottom: 10px; font-size: 18px; }
         .modal-box ul { list-style: none; padding: 0; }
-        .modal-box ul li { padding: 8px 0; border-bottom: 1px solid var(--border-color); display: flex; gap: 10px; align-items: center; }
-        .modal-box ul li i { color: var(--gold); width: 20px; }
-        .modal-close { margin-top: 16px; }
+        .modal-box ul li { padding: 6px 0; border-bottom: 1px solid var(--border-color); display: flex; gap: 8px; align-items: center; font-size: 14px; }
+        .modal-box ul li i { color: var(--gold); width: 18px; }
+        .modal-close { margin-top: 14px; }
 
         .text-muted { color: var(--text-secondary); }
         .text-gold { color: var(--gold); }
@@ -294,19 +307,29 @@
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-10 { gap: 10px; }
 
-        .install-btn {
-            background: var(--gold); color: var(--bg-primary);
-            border: none; padding: 6px 16px; border-radius: 30px;
-            font-weight: 700; font-size: 13px; cursor: pointer;
-            display: flex; align-items: center; gap: 6px;
-            transition: 0.2s;
+        /* تحسين للشاشات الصغيرة جداً */
+        @media (max-width: 380px) {
+            .brand-name { font-size: 15px; }
+            .brand i { font-size: 18px; }
+            .header-btn { width: 28px; height: 28px; font-size: 13px; }
+            .user-badge { font-size: 10px; padding: 1px 8px; }
+            .install-btn { font-size: 10px; padding: 3px 10px; }
+            .service-name { font-size: 12px; }
+            .service-price { font-size: 15px; }
+            .service-icon { width: 30px; height: 30px; font-size: 14px; }
+            .btn-order { font-size: 11px; padding: 4px 10px; }
+            .offer-title { font-size: 16px; }
+            .offer-price { font-size: 18px; }
+            .nav-item { font-size: 9px; min-width: 36px; }
+            .nav-item i { font-size: 17px; }
+            .card { padding: 10px; }
+            .card-title { font-size: 15px; }
         }
-        .install-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
 
-        @media (max-width:460px) {
-            .app-container { height: 100vh; border-radius: 0; max-width:100%; }
-            .brand-name { font-size: 18px; }
-            .service-price { font-size: 18px; }
+        @media (min-width: 600px) {
+            .app-container { max-width: 480px; max-height: 900px; }
+            .brand-name { font-size: 24px; }
+            .service-price { font-size: 24px; }
         }
     </style>
 </head>
@@ -339,14 +362,14 @@
         <section class="page active" id="page-home">
             <div class="card card-gold">
                 <div class="flex-between">
-                    <div><h2 style="font-size:22px;" data-i18n="welcome">مرحباً بك 👋</h2><p class="text-muted" style="font-size:14px;" data-i18n="welcome_sub">اختر خدمتك واضغط "طلب"</p></div>
-                    <i class="fas fa-crown" style="font-size:38px; color:var(--gold);"></i>
+                    <div><h2 style="font-size:20px;" data-i18n="welcome">مرحباً بك 👋</h2><p class="text-muted" style="font-size:13px;" data-i18n="welcome_sub">اختر خدمتك واضغط "طلب"</p></div>
+                    <i class="fas fa-crown" style="font-size:34px; color:var(--gold);"></i>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list"></i> <span data-i18n="services_title">خدماتنا</span></span>
-                    <span class="text-muted" style="font-size:13px;" data-i18n="instant_order">طلب فوري</span>
+                    <span class="text-muted" style="font-size:12px;" data-i18n="instant_order">طلب فوري</span>
                 </div>
                 <div class="service-grid" id="serviceList"></div>
             </div>
@@ -376,8 +399,8 @@
                 <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
                 <div class="profile-name" id="profileName" data-i18n="guest">زائر</div>
                 <div class="profile-email" id="profileEmail" data-i18n="not_registered">غير مسجل</div>
-                <div class="profile-phone" id="profilePhone" style="text-align:center;color:var(--text-secondary);font-size:14px;"></div>
-                <div style="display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                <div class="profile-phone" id="profilePhone" style="text-align:center;color:var(--text-secondary);font-size:13px;"></div>
+                <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
                     <button class="btn btn-outline btn-sm" id="loginBtn"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">تسجيل دخول</span></button>
                     <button class="btn btn-outline btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">خروج</span></button>
                     <button class="btn btn-outline btn-sm" id="langToggle"><i class="fas fa-globe"></i> <span data-i18n="lang_switch">English</span></button>
@@ -387,20 +410,20 @@
             <div id="adminPanel" class="admin-panel hidden">
                 <div class="card-title"><i class="fas fa-cog"></i> <span data-i18n="admin_panel">لوحة التحكم (أدمن)</span></div>
                 <div id="adminServiceList"></div>
-                <div id="adminOfferList" style="margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;">
-                    <div class="card-title" style="font-size:16px;"><i class="fas fa-ring"></i> <span data-i18n="admin_offers">عروض العريس</span></div>
+                <div id="adminOfferList" style="margin-top:12px;border-top:1px solid var(--border-color);padding-top:10px;">
+                    <div class="card-title" style="font-size:15px;"><i class="fas fa-ring"></i> <span data-i18n="admin_offers">عروض العريس</span></div>
                     <div id="adminOffersContainer"></div>
                 </div>
-                <hr style="border-color:var(--border-color); margin:16px 0;" />
+                <hr style="border-color:var(--border-color); margin:12px 0;" />
                 <div class="form-group"><label data-i18n="new_service_name">اسم الخدمة الجديدة</label><input type="text" id="newServiceName" placeholder="مثل: حلاقة مميزة" /></div>
                 <div class="form-group"><label data-i18n="new_service_price">السعر (جنيه)</label><input type="number" id="newServicePrice" placeholder="مثل: 60" /></div>
                 <button class="btn btn-gold btn-sm" id="addServiceBtn"><i class="fas fa-plus"></i> <span data-i18n="add_service">إضافة خدمة</span></button>
-                <hr style="border-color:var(--border-color); margin:16px 0;" />
+                <hr style="border-color:var(--border-color); margin:12px 0;" />
                 <div class="form-group"><label data-i18n="new_offer_name">اسم عرض العريس الجديد</label><input type="text" id="newOfferName" placeholder="مثل: حلقة العريس الفاخرة" /></div>
                 <div class="form-group"><label data-i18n="new_offer_price">سعر العرض (جنيه)</label><input type="number" id="newOfferPrice" placeholder="مثل: 600" /></div>
                 <div class="form-group"><label data-i18n="offer_details">تفاصيل العرض (افصل بينها بفاصلة)</label><input type="text" id="newOfferDetails" placeholder="مثل: حلق شعر, مساج, ماسك" /></div>
                 <button class="btn btn-gold btn-sm" id="addOfferBtn"><i class="fas fa-plus"></i> <span data-i18n="add_offer">إضافة عرض</span></button>
-                <p class="text-muted mt-8" style="font-size:12px;" data-i18n="admin_note">* التعديلات تحفظ محلياً وتظهر فوراً</p>
+                <p class="text-muted mt-8" style="font-size:11px;" data-i18n="admin_note">* التعديلات تحفظ محلياً وتظهر فوراً</p>
             </div>
         </section>
 
@@ -425,6 +448,12 @@
 </div>
 
 <script>
+    // ====================================================================
+    //  🔐 إعدادات تيليجرام - ضع التوكن ورقم المعرف هنا
+    // ====================================================================
+    const TELEGRAM_BOT_TOKEN = "8335479829:AAGky4CQKnRsCoUfI-znNz6FqIsgreetSSw"; // ضع التوكن هنا
+    const TELEGRAM_CHAT_ID = "123456789"; // ⚠️ استبدل هذا برقم المعرف الخاص بك (احصل عليه من getUpdates)
+
     // ====================================================================
     //  1. البيانات الأساسية
     // ====================================================================
@@ -521,7 +550,7 @@
             login_success: 'تم تسجيل الدخول بنجاح',
             login_fail: 'فشل تسجيل الدخول، تحقق من البيانات',
             logout_success: 'تم تسجيل الخروج',
-            order_sent: 'تم إرسال الطلب إلى واتساب',
+            order_sent: 'تم إرسال الطلب إلى تيليجرام',
             order_fail: 'الرجاء تسجيل الدخول أولاً',
             offer_ordered: 'تم طلب العرض بنجاح'
         },
@@ -550,7 +579,7 @@
             login_success: 'Login successful',
             login_fail: 'Login failed, check your data',
             logout_success: 'Logged out successfully',
-            order_sent: 'Order sent to WhatsApp',
+            order_sent: 'Order sent to Telegram',
             order_fail: 'Please login first',
             offer_ordered: 'Offer ordered successfully'
         }
@@ -574,10 +603,8 @@
                 el.textContent = translations[lang][key];
             }
         });
-        // تحديث زر اللغة
         const langBtn = document.getElementById('langToggle').querySelector('span');
         if (langBtn) langBtn.textContent = lang === 'ar' ? 'English' : 'العربية';
-        // إعادة عرض القوائم التي تحتوي على نصوص مترجمة
         renderAll();
     }
 
@@ -587,25 +614,102 @@
     function isValidName(name) {
         return /^[\u0600-\u06FFa-zA-Z\s]{2,}$/.test(name.trim());
     }
-
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
     }
-
     function isValidPhone(phone) {
         return /^(010|011|012|015)\d{8}$/.test(phone.trim());
     }
-
     function maskPhone(phone, isAdmin) {
         if (isAdmin) return phone;
         if (!phone || phone.length < 11) return phone;
-        const first = phone.slice(0, 3);
-        const last = phone.slice(-3);
-        return first + '•••••' + last;
+        return phone.slice(0, 3) + '•••••' + phone.slice(-3);
     }
 
     // ====================================================================
-    //  6. عناصر DOM
+    //  6. إرسال الرسائل إلى تيليجرام
+    // ====================================================================
+    async function sendTelegramMessage(text) {
+        if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_ID === "123456789") {
+            console.warn('⚠️ لم يتم إعداد تيليجرام بشكل صحيح. الرجاء وضع التوكن ورقم المعرف.');
+            alert('⚠️ الرجاء إعداد تيليجرام أولاً (ضع التوكن ورقم المعرف في الكود).');
+            return false;
+        }
+        try {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: text,
+                    parse_mode: 'HTML'
+                })
+            });
+            const result = await response.json();
+            if (result.ok) {
+                console.log('✅ تم إرسال الرسالة إلى تيليجرام');
+                return true;
+            } else {
+                console.error('❌ فشل الإرسال:', result);
+                alert('❌ فشل إرسال الرسالة إلى تيليجرام. تأكد من التوكن ورقم المعرف.');
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ خطأ في الاتصال:', error);
+            alert('❌ خطأ في الاتصال بخادم تيليجرام.');
+            return false;
+        }
+    }
+
+    // ====================================================================
+    //  7. طلب الخدمة أو العرض (نقرة واحدة)
+    // ====================================================================
+    async function requestService(item, type) {
+        if (!currentUser) {
+            alert(t('order_fail'));
+            navigateTo('page-profile');
+            return;
+        }
+        const name = currentUser.name || 'عميل';
+        const phone = currentUser.phone || 'غير مسجل';
+        const now = new Date();
+        const time = now.toLocaleString('ar-EG', { hour12: true });
+        const itemName = item.name;
+        const price = item.price;
+        const typeLabel = type === 'offer' ? 'عرض عريس' : 'خدمة';
+
+        // حفظ الحجز
+        const booking = { name, phone, service: itemName + ' (' + typeLabel + ')', time, price };
+        bookings.push(booking);
+        saveBookings(bookings);
+
+        // بناء رسالة تيليجرام
+        const message = `
+📢 <b>طلب جديد من كريم العالمي</b>
+🧑 <b>العميل:</b> ${name}
+📞 <b>الهاتف:</b> ${phone}
+✂️ <b>النوع:</b> ${typeLabel}
+📌 <b>الخدمة:</b> ${itemName}
+💰 <b>السعر:</b> ${price} ج.م
+🕒 <b>الوقت:</b> ${time}
+        `;
+
+        // إرسال إلى تيليجرام
+        const sent = await sendTelegramMessage(message);
+
+        if (sent) {
+            alert('✅ ' + t('order_sent'));
+        } else {
+            // إذا فشل الإرسال، نحاول مرة أخرى أو نعطي تنبيه
+            alert('⚠️ حدثت مشكلة في الإرسال، لكن الحجز تم حفظه محلياً.');
+        }
+
+        renderBookings();
+    }
+
+    // ====================================================================
+    //  8. عناصر DOM والوظائف الأخرى (نفس الكود السابق مع تحسينات)
     // ====================================================================
     const $ = id => document.getElementById(id);
     const pageHome = $('page-home'), pageOffers = $('page-offers'), pageBookings = $('page-bookings'), pageProfile = $('page-profile');
@@ -626,9 +730,6 @@
     const installBtn = $('installAppBtn');
     const modalOverlay = $('offerModal'), modalTitle = $('modalTitle'), modalDetails = $('modalDetails'), modalCloseBtn = $('modalCloseBtn');
 
-    // ====================================================================
-    //  7. عرض الخدمات والعروض والحجوزات
-    // ====================================================================
     function renderServices() {
         let html = '';
         services.forEach((s, idx) => {
@@ -646,7 +747,6 @@
             `;
         });
         serviceListEl.innerHTML = html;
-
         document.querySelectorAll('.btn-order').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
@@ -714,14 +814,13 @@
         }
         adminPanel.classList.remove('hidden');
 
-        // خدمات
         let html = '';
         services.forEach((s, idx) => {
             html += `
                 <div class="admin-service-item">
                     <span>${s.name}</span>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span class="service-price" style="font-size:14px;">${s.price} ج.م</span>
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                        <span class="service-price" style="font-size:13px;">${s.price} ج.م</span>
                         <div class="admin-actions">
                             <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="service" data-action="edit"><i class="fas fa-edit"></i> ${t('edit')}</button>
                             <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="service" data-action="delete"><i class="fas fa-trash"></i> ${t('delete')}</button>
@@ -732,14 +831,13 @@
         });
         adminServiceList.innerHTML = html;
 
-        // عروض العريس
         let offerHtml = '';
         offers.forEach((o, idx) => {
             offerHtml += `
                 <div class="admin-service-item">
                     <span>${o.name}</span>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span class="service-price" style="font-size:14px;">${o.price} ج.م</span>
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                        <span class="service-price" style="font-size:13px;">${o.price} ج.م</span>
                         <div class="admin-actions">
                             <button class="btn btn-sm btn-gold" data-index="${idx}" data-type="offer" data-action="edit"><i class="fas fa-edit"></i> ${t('edit')}</button>
                             <button class="btn btn-sm btn-danger" data-index="${idx}" data-type="offer" data-action="delete"><i class="fas fa-trash"></i> ${t('delete')}</button>
@@ -750,7 +848,7 @@
         });
         adminOffersContainer.innerHTML = offerHtml;
 
-        // أحداث التعديل والحذف للخدمات والعروض
+        // أحداث التعديل والحذف
         document.querySelectorAll('#adminServiceList [data-action="edit"]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
@@ -810,9 +908,6 @@
         });
     }
 
-    // ====================================================================
-    //  8. إضافة خدمة أو عرض جديد
-    // ====================================================================
     addServiceBtn.addEventListener('click', function() {
         const name = newServiceName.value.trim();
         const price = Number(newServicePrice.value);
@@ -848,39 +943,6 @@
         renderAll();
     });
 
-    // ====================================================================
-    //  9. طلب الخدمة أو العرض (نقرة واحدة)
-    // ====================================================================
-    function requestService(item, type) {
-        if (!currentUser) {
-            alert(t('order_fail'));
-            navigateTo('page-profile');
-            return;
-        }
-        const name = currentUser.name || 'عميل';
-        const phone = currentUser.phone || 'غير مسجل';
-        const now = new Date();
-        const time = now.toLocaleString('ar-EG', { hour12: true });
-        const itemName = item.name;
-        const price = item.price;
-        const typeLabel = type === 'offer' ? 'عرض عريس' : 'خدمة';
-
-        const booking = { name, phone, service: itemName + ' (' + typeLabel + ')', time, price };
-        bookings.push(booking);
-        saveBookings(bookings);
-
-        const ownerPhone = "201154846407";
-        const message = `📢 *طلب ${typeLabel} من كريم العالمي*%0A🧑 العميل: ${name}%0A📞 الهاتف: ${phone}%0A✂️ ${typeLabel}: ${itemName}%0A💰 السعر: ${price} ج.م%0A🕒 الوقت: ${time}`;
-        const waLink = `https://wa.me/${ownerPhone}?text=${message}`;
-        window.open(waLink, '_blank');
-
-        alert(`✅ ${t('order_sent')}`);
-        renderBookings();
-    }
-
-    // ====================================================================
-    //  10. عرض تفاصيل العروض (مودال)
-    // ====================================================================
     function showOfferDetails(index) {
         const offer = offers[index];
         modalTitle.textContent = offer.name;
@@ -896,9 +958,6 @@
         if (e.target === modalOverlay) modalOverlay.classList.remove('show');
     });
 
-    // ====================================================================
-    //  11. التنقل بين الصفحات
-    // ====================================================================
     function navigateTo(pageId) {
         allPages.forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
@@ -921,9 +980,6 @@
     });
     userBadge.addEventListener('click', () => navigateTo('page-profile'));
 
-    // ====================================================================
-    //  12. تحديث واجهة المستخدم
-    // ====================================================================
     function updateProfileUI() {
         if (currentUser) {
             profileName.textContent = currentUser.name || 'مستخدم';
@@ -941,30 +997,18 @@
         }
     }
 
-    // ====================================================================
-    //  13. تسجيل الدخول مع التحقق
-    // ====================================================================
     function showLoginDialog() {
         const name = prompt('أدخل اسمك الكامل (حروف فقط):', currentUser ? currentUser.name : '');
         if (name === null) return;
-        if (!isValidName(name)) {
-            alert(t('name_invalid'));
-            return;
-        }
+        if (!isValidName(name)) { alert(t('name_invalid')); return; }
 
         const email = prompt('أدخل بريدك الإلكتروني:', currentUser ? currentUser.email : '');
         if (email === null) return;
-        if (!isValidEmail(email)) {
-            alert(t('email_invalid'));
-            return;
-        }
+        if (!isValidEmail(email)) { alert(t('email_invalid')); return; }
 
         const phone = prompt('أدخل رقم هاتفك (11 رقماً يبدأ بـ 010/011/012/015):', currentUser ? currentUser.phone : '');
         if (phone === null) return;
-        if (!isValidPhone(phone)) {
-            alert(t('phone_invalid'));
-            return;
-        }
+        if (!isValidPhone(phone)) { alert(t('phone_invalid')); return; }
 
         currentUser = { name: name.trim(), email: email.trim(), phone: phone.trim() };
         saveUser(currentUser);
@@ -989,9 +1033,6 @@
         }
     });
 
-    // ====================================================================
-    //  14. الثيم واللغة
-    // ====================================================================
     let currentTheme = localStorage.getItem('kareem_theme') || 'dark';
     function applyTheme(theme) {
         document.body.classList.toggle('light-theme', theme === 'light');
@@ -1007,9 +1048,7 @@
         applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
     });
 
-    // ====================================================================
-    //  15. تثبيت التطبيق (PWA)
-    // ====================================================================
+    // PWA Installation
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -1033,20 +1072,14 @@
         }
     });
 
-    // إنشاء Service Worker ديناميكي للتثبيت
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
             self.addEventListener('install', e => e.waitUntil(skipWaiting()));
             self.addEventListener('activate', e => e.waitUntil(clients.claim()));
             self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
-        `)).then(() => {
-            console.log('SW registered');
-        }).catch(() => {});
+        `)).then(() => console.log('SW registered')).catch(() => {});
     }
 
-    // ====================================================================
-    //  16. التحديث الشامل والتهيئة
-    // ====================================================================
     function renderAll() {
         renderServices();
         renderOffers();
@@ -1060,7 +1093,8 @@
         applyLanguage(currentLang);
         renderAll();
         navigateTo('page-home');
-        console.log('✅ تطبيق كريم العالمي - النسخة النهائية جاهزة');
+        console.log('✅ تطبيق كريم العالمي - نسخة تيليجرام جاهزة');
+        console.log('⚠️ تأكد من وضع التوكن ورقم المعرف الصحيح في الكود!');
     });
 </script>
 </body>
