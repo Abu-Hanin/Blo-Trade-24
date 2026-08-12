@@ -4,11 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>كريم العالمي - صالون الحلاقة</title>
+    <link rel="manifest" href="data:application/json,{}" id="manifest-placeholder" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* ===== نفس التصميم السابق مع تحسينات بسيطة ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* ===== متغيرات الثيم ===== */
         :root {
             --bg-primary: #181a20;
             --bg-secondary: #1e2329;
@@ -22,109 +21,296 @@
             --radius: 20px;
             --nav-height: 72px;
             --header-height: 64px;
+            --transition: 0.3s ease;
         }
-        body { background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 12px; margin: 0; direction: rtl; }
-        .app-container { max-width: 430px; width: 100%; background: var(--bg-primary); border-radius: 32px; box-shadow: var(--shadow); overflow: hidden; position: relative; height: 820px; display: flex; flex-direction: column; border: 1px solid var(--border-color); }
-        .app-header { background: var(--bg-secondary); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; height: var(--header-height); }
-        .brand { display: flex; align-items: center; gap: 10px; }
-        .brand i { font-size: 28px; color: var(--gold); }
-        .brand-name { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
-        .brand-sub { font-size: 11px; color: var(--text-secondary); display: block; -webkit-text-fill-color: var(--text-secondary); background: none; font-weight: 300; }
-        .user-badge { display: flex; align-items: center; gap: 8px; background: var(--bg-primary); padding: 4px 14px 4px 10px; border-radius: 30px; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; font-size: 13px; color: var(--text-secondary); }
-        .user-badge:hover { border-color: var(--gold); }
-        .user-badge i { font-size: 24px; color: var(--gold); }
+        /* الثيم الفاتح */
+        body.light-theme {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e8e8e8;
+            --bg-card: #ffffff;
+            --text-primary: #222;
+            --text-secondary: #555;
+            --border-color: #ccc;
+            --shadow: 0 12px 40px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            margin: 0;
+            direction: rtl;
+            transition: background var(--transition), color var(--transition);
+        }
+        body.ltr { direction: ltr; }
+        body.ltr .app-container { direction: ltr; }
+        body.ltr .card-gold { border-right: none; border-left: 5px solid var(--gold); }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 16px 16px 10px; scroll-behavior: smooth; }
+        .app-container {
+            max-width: 430px;
+            width: 100%;
+            background: var(--bg-primary);
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            height: 820px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border var(--transition);
+        }
+        /* الهيدر */
+        .app-header {
+            background: var(--bg-secondary);
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            height: var(--header-height);
+            transition: background var(--transition);
+        }
+        .brand { display: flex; align-items: center; gap: 8px; }
+        .brand i { font-size: 26px; color: var(--gold); }
+        .brand-name {
+            font-size: 20px; font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .brand-sub { font-size: 10px; color: var(--text-secondary); display: block; -webkit-text-fill-color: var(--text-secondary); background: none; }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+        .header-btn {
+            background: var(--bg-primary); border: 1px solid var(--border-color);
+            color: var(--text-secondary); width: 36px; height: 36px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; font-size: 16px;
+        }
+        .header-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .user-badge {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-primary); padding: 2px 12px 2px 8px;
+            border-radius: 30px; border: 1px solid var(--border-color);
+            cursor: pointer; transition: 0.2s; font-size: 12px; color: var(--text-secondary);
+        }
+        .user-badge:hover { border-color: var(--gold); }
+        .user-badge i { font-size: 20px; color: var(--gold); }
+
+        /* المحتوى */
+        .main-content { flex: 1; overflow-y: auto; padding: 14px 14px 8px; scroll-behavior: smooth; }
         .main-content::-webkit-scrollbar { width: 4px; }
         .main-content::-webkit-scrollbar-track { background: var(--bg-primary); }
         .main-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
 
         .page { display: none; animation: fadeUp 0.3s ease; }
         .page.active { display: block; }
-        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { 0% { opacity:0; transform:translateY(10px); } 100% { opacity:1; transform:translateY(0); } }
 
-        .card { background: var(--bg-card); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; border: 1px solid var(--border-color); }
+        /* البطاقات */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border var(--transition);
+        }
         .card-gold { border-right: 5px solid var(--gold); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--gold); }
 
-        .service-grid { display: flex; flex-direction: column; gap: 4px; }
-        .service-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        /* الخدمات في الرئيسية */
+        .service-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid var(--border-color);
+        }
         .service-item:last-child { border-bottom: none; }
         .service-info { display: flex; align-items: center; gap: 12px; }
-        .service-icon { width: 36px; height: 36px; background: rgba(252,213,53,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); }
-        .service-name { font-weight: 500; font-size: 15px; }
-        .service-price { color: var(--gold); font-weight: 700; font-size: 16px; background: rgba(252,213,53,0.08); padding: 4px 14px; border-radius: 30px; border: 1px solid rgba(252,213,53,0.2); }
+        .service-icon {
+            width: 40px; height: 40px;
+            background: rgba(252,213,53,0.12);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 18px;
+        }
+        .service-name { font-weight: 600; font-size: 16px; }
+        .service-price {
+            color: var(--gold); font-weight: 800; font-size: 20px;
+            background: rgba(252,213,53,0.08);
+            padding: 2px 14px; border-radius: 30px;
+            border: 1px solid rgba(252,213,53,0.2);
+        }
+        .service-actions { display: flex; gap: 8px; align-items: center; }
+        .btn-order {
+            background: var(--gold); color: var(--bg-primary);
+            border: none; padding: 6px 16px; border-radius: 30px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-order:hover { background: var(--gold-dark); transform: scale(1.05); }
 
-        .offer-card { background: linear-gradient(145deg, #2b313a, #1e2329); border: 1px solid var(--gold); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
-        .offer-card::before { content: '👑'; position: absolute; top: -10px; left: -10px; font-size: 60px; opacity: 0.1; transform: rotate(-15deg); }
+        /* العروض */
+        .offer-card {
+            background: linear-gradient(145deg, #2b313a, #1e2329);
+            border: 1px solid var(--gold);
+            border-radius: var(--radius);
+            padding: 18px; margin-bottom: 14px;
+            position: relative; overflow: hidden;
+            transition: 0.3s;
+        }
+        .offer-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(252,213,53,0.2); }
+        .offer-card::before { content: '👑'; position: absolute; top: -8px; left: -8px; font-size: 60px; opacity: 0.1; transform: rotate(-15deg); }
         .offer-title { font-size: 20px; font-weight: 700; color: var(--gold); }
-        .offer-price { font-size: 24px; font-weight: 800; color: #fff; }
+        .offer-price { font-size: 26px; font-weight: 800; color: #fff; }
         .offer-desc { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+        .offer-details-btn {
+            background: transparent; border: 2px solid var(--gold);
+            color: var(--gold); padding: 6px 18px; border-radius: 30px;
+            cursor: pointer; transition: 0.3s; font-weight: 600; margin-top: 8px;
+        }
+        .offer-details-btn:hover { background: var(--gold); color: var(--bg-primary); }
 
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
-        .form-group input, .form-group select { width: 100%; padding: 14px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 14px; color: var(--text-primary); font-size: 15px; outline: none; transition: 0.3s; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(252,213,53,0.15); }
-        .form-group input::placeholder { color: var(--text-secondary); }
-        .form-group select option { background: var(--bg-secondary); }
+        /* الحجوزات - جدول */
+        .booking-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .booking-table th { background: var(--gold); color: var(--bg-primary); padding: 8px; text-align: center; }
+        .booking-table td { padding: 8px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        .booking-table tr:hover { background: rgba(252,213,53,0.05); }
 
-        .btn { padding: 14px 24px; border: none; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.25s; display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+        /* الملف الشخصي */
+        .profile-avatar {
+            width: 90px; height: 90px; background: var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 44px; color: var(--bg-primary); margin: 0 auto 14px;
+            border: 4px solid var(--gold-dark);
+        }
+        .profile-name { font-size: 22px; font-weight: 700; text-align: center; }
+        .profile-email { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
+
+        /* لوحة الأدمن */
+        .admin-panel {
+            background: var(--bg-secondary); border: 1px solid var(--gold);
+            border-radius: var(--radius); padding: 16px; margin-top: 10px;
+        }
+        .admin-service-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid var(--border-color);
+        }
+        .admin-service-item:last-child { border-bottom: none; }
+        .admin-actions { display: flex; gap: 6px; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 30px; }
+
+        /* الأزرار العامة */
+        .btn {
+            padding: 12px 20px; border: none; border-radius: 14px;
+            font-weight: 700; font-size: 15px; cursor: pointer;
+            transition: all 0.25s; display: inline-flex;
+            align-items: center; justify-content: center; gap: 8px;
+            width: 100%;
+        }
         .btn-gold { background: var(--gold); color: var(--bg-primary); }
         .btn-gold:hover { background: var(--gold-dark); transform: scale(1.02); box-shadow: 0 8px 20px rgba(252,213,53,0.3); }
         .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
         .btn-outline:hover { background: var(--gold); color: var(--bg-primary); }
-        .btn-google { background: #ffffff; color: #222; border: 1px solid #ccc; }
+        .btn-google { background: #fff; color: #222; border: 1px solid #ccc; }
         .btn-google:hover { background: #f0f0f0; }
         .btn-danger { background: #e74c3c; color: #fff; }
         .btn-danger:hover { background: #c0392b; }
-        .btn-sm { padding: 8px 16px; font-size: 13px; width: auto; }
+        .btn-sm { padding: 6px 16px; font-size: 13px; width: auto; }
 
-        .toast { background: var(--gold); color: var(--bg-primary); padding: 14px 18px; border-radius: 14px; font-weight: 600; font-size: 14px; display: none; align-items: center; gap: 12px; margin-top: 14px; }
+        .toast {
+            background: var(--gold); color: var(--bg-primary);
+            padding: 12px 16px; border-radius: 14px; font-weight: 600;
+            font-size: 14px; display: none; align-items: center; gap: 10px;
+            margin-top: 12px;
+        }
         .toast.show { display: flex; }
 
-        .qr-wrapper { display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
-        #qrcode { background: #fff; padding: 16px; border-radius: var(--radius); box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-        #qrcode img, #qrcode canvas { display: block; width: 200px; height: 200px; }
-        .qr-label { color: var(--text-secondary); margin-top: 16px; font-size: 14px; }
+        /* النماذج */
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 14px;
+            background: var(--bg-primary); border: 1px solid var(--border-color);
+            border-radius: 12px; color: var(--text-primary); font-size: 15px;
+            outline: none; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--gold); box-shadow: 0 0 0 4px rgba(252,213,53,0.15);
+        }
 
-        .profile-avatar { width: 90px; height: 90px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 44px; color: var(--bg-primary); margin: 0 auto 14px; border: 4px solid var(--gold-dark); }
-        .profile-name { font-size: 22px; font-weight: 700; text-align: center; }
-        .profile-email { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
-
-        .admin-panel { background: var(--bg-secondary); border: 1px solid var(--gold); border-radius: var(--radius); padding: 16px; margin-top: 10px; }
-        .admin-panel .card-title { color: var(--gold); }
-        .admin-service-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
-        .admin-service-item:last-child { border-bottom: none; }
-        .admin-actions { display: flex; gap: 8px; }
-        .admin-actions .btn-sm { padding: 4px 12px; font-size: 12px; }
-
-        .bottom-nav { background: var(--bg-secondary); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 6px 0 8px; flex-shrink: 0; height: var(--nav-height); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text-secondary); font-size: 11px; cursor: pointer; transition: 0.2s; padding: 4px 12px; border-radius: 12px; background: transparent; border: none; font-family: inherit; min-width: 50px; }
-        .nav-item i { font-size: 24px; transition: 0.2s; }
+        /* التنقل السفلي */
+        .bottom-nav {
+            background: var(--bg-secondary); border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around;
+            padding: 4px 0 6px; flex-shrink: 0; height: var(--nav-height);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            color: var(--text-secondary); font-size: 11px; cursor: pointer;
+            transition: 0.2s; padding: 4px 10px; border-radius: 12px;
+            background: transparent; border: none; font-family: inherit;
+            min-width: 50px;
+        }
+        .nav-item i { font-size: 22px; transition: 0.2s; }
         .nav-item.active { color: var(--gold); }
         .nav-item.active i { transform: translateY(-2px); text-shadow: 0 0 12px rgba(252,213,53,0.3); }
         .nav-item:hover { color: var(--gold); }
 
-        .text-center { text-align: center; }
-        .text-gold { color: var(--gold); }
+        /* مودال التفاصيل */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center;
+            z-index: 1000; backdrop-filter: blur(4px);
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-secondary); max-width: 380px; width: 90%;
+            border-radius: var(--radius); padding: 24px; border: 1px solid var(--gold);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            max-height: 80vh; overflow-y: auto;
+        }
+        .modal-box h3 { color: var(--gold); margin-bottom: 12px; }
+        .modal-box ul { list-style: none; padding: 0; }
+        .modal-box ul li { padding: 8px 0; border-bottom: 1px solid var(--border-color); display: flex; gap: 10px; align-items: center; }
+        .modal-box ul li i { color: var(--gold); width: 20px; }
+        .modal-close { margin-top: 16px; }
+
+        /* تذييل */
         .text-muted { color: var(--text-secondary); }
+        .text-gold { color: var(--gold); }
+        .text-center { text-align: center; }
         .mt-8 { margin-top: 8px; }
         .mt-12 { margin-top: 12px; }
-        .mb-8 { margin-bottom: 8px; }
+        .hidden { display: none !important; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-10 { gap: 10px; }
-        .hidden { display: none !important; }
-        .w-full { width: 100%; }
 
-        @media (max-width: 460px) { .app-container { height: 100vh; border-radius: 0; max-width: 100%; } .brand-name { font-size: 18px; } }
+        /* زر تثبيت التطبيق */
+        .install-btn {
+            background: var(--gold); color: var(--bg-primary);
+            border: none; padding: 6px 16px; border-radius: 30px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            transition: 0.2s;
+        }
+        .install-btn:hover { background: var(--gold-dark); transform: scale(1.05); }
+
+        @media (max-width:460px) {
+            .app-container { height: 100vh; border-radius: 0; max-width:100%; }
+            .brand-name { font-size: 18px; }
+            .service-price { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    <!-- ====== الهيدر ====== -->
+    <!-- الهيدر -->
     <header class="app-header">
         <div class="brand">
             <i class="fas fa-scissors"></i>
@@ -133,91 +319,70 @@
                 <span class="brand-sub">صالون الحلاقة</span>
             </div>
         </div>
-        <div class="user-badge" id="userBadge" title="الملف الشخصي">
-            <i class="fas fa-user-circle"></i>
-            <span id="userBadgeName">زائر</span>
+        <div class="header-actions">
+            <button class="header-btn" id="themeToggle" title="الوضع الليلي/النهاري"><i class="fas fa-moon"></i></button>
+            <button class="install-btn" id="installAppBtn"><i class="fas fa-download"></i> تثبيت</button>
+            <div class="user-badge" id="userBadge" title="الملف الشخصي">
+                <i class="fas fa-user-circle"></i>
+                <span id="userBadgeName">زائر</span>
+            </div>
         </div>
     </header>
 
-    <!-- ====== المحتوى ====== -->
+    <!-- المحتوى -->
     <main class="main-content" id="mainContent">
 
-        <!-- الصفحة الرئيسية -->
+        <!-- ===== الصفحة الرئيسية ===== -->
         <section class="page active" id="page-home">
             <div class="card card-gold">
                 <div class="flex-between">
-                    <div><h2 style="font-size:22px;">مرحباً بك 👋</h2><p class="text-muted" style="font-size:14px;">أفضل خدمة حلاقة في المدينة</p></div>
+                    <div><h2 style="font-size:22px;">مرحباً بك 👋</h2><p class="text-muted" style="font-size:14px;">اختر خدمتك واضغط "طلب"</p></div>
                     <i class="fas fa-crown" style="font-size:38px; color:var(--gold);"></i>
                 </div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title"><i class="fas fa-list"></i> خدماتنا</span><span class="text-muted" style="font-size:13px;">اختر ما يناسبك</span></div>
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-list"></i> خدماتنا</span>
+                    <span class="text-muted" style="font-size:13px;">طلب فوري</span>
+                </div>
                 <div class="service-grid" id="serviceList"></div>
-            </div>
-            <div style="padding:0;">
-                <div class="offer-card"><div class="flex-between"><div><div class="offer-title">💍 حلقة العريس (حنة)</div><div class="offer-desc">خدمة حصرية للعرسان</div></div><div class="offer-price">300 ج.م</div></div></div>
-                <div class="offer-card" style="border-color:var(--gold-dark);"><div class="flex-between"><div><div class="offer-title">👑 حلقة العريس (حنة ودخلة)</div><div class="offer-desc">شامل كل شيء</div></div><div class="offer-price">500 ج.م</div></div></div>
             </div>
         </section>
 
-        <!-- صفحة العروض -->
+        <!-- ===== صفحة العروض ===== -->
         <section class="page" id="page-offers">
             <div class="card card-gold">
                 <div class="card-title"><i class="fas fa-ring"></i> عروض العريس المميزة</div>
-                <div style="background:var(--bg-primary);border-radius:14px;padding:16px;margin-top:8px;">
-                    <div class="service-item"><span class="service-name">💍 حلقة العريس (حنة)</span><span class="service-price">300 ج.م</span></div>
-                    <div class="service-item" style="border-bottom:none;"><span class="service-name">👑 حلقة العريس (حنة ودخلة - شامل كل شيء)</span><span class="service-price" style="font-size:18px;">500 ج.م</span></div>
-                </div>
-                <p class="text-muted mt-8" style="font-size:13px;"><i class="fas fa-star text-gold"></i> حصرية للعرسان مع خدمات إضافية</p>
+                <div id="offersContainer"></div>
             </div>
+        </section>
+
+        <!-- ===== صفحة الحجوزات ===== -->
+        <section class="page" id="page-bookings">
             <div class="card">
-                <div class="card-title"><i class="fas fa-gift"></i> مميزات العروض</div>
-                <ul style="list-style:none;padding:0;">
-                    <li style="padding:8px 0;border-bottom:1px solid var(--border-color);">✅ حنة احترافية بأجود الأنواع</li>
-                    <li style="padding:8px 0;border-bottom:1px solid var(--border-color);">✅ دخلة خاصة مع فريق متكامل</li>
-                    <li style="padding:8px 0;">✅ عناية فائقة بالبشرة والشعر</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- صفحة الحجز -->
-        <section class="page" id="page-booking">
-            <div class="card">
-                <div class="card-title"><i class="fas fa-calendar-check"></i> حجز موعد</div>
-                <form id="bookingForm">
-                    <div class="form-group"><label><i class="fas fa-user"></i> الاسم الكامل</label><input type="text" id="custName" placeholder="أدخل اسمك" required /></div>
-                    <div class="form-group"><label><i class="fas fa-phone"></i> رقم الهاتف</label><input type="tel" id="custPhone" placeholder="مثال: 01012345678" required /></div>
-                    <div class="form-group"><label><i class="fas fa-cut"></i> الخدمة</label><select id="custService" required><option value="">-- اختر --</option></select></div>
-                    <div class="form-group"><label><i class="fas fa-clock"></i> الموعد</label><input type="datetime-local" id="custTime" required /></div>
-                    <button type="submit" class="btn btn-gold"><i class="fas fa-check"></i> تأكيد الحجز</button>
-                </form>
-                <div id="loginSection" class="mt-12">
-                    <button class="btn btn-google" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول / إنشاء حساب</button>
-                    <p class="text-muted text-center mt-8" style="font-size:12px;">سجل دخولك لحفظ بياناتك تلقائياً</p>
+                <div class="card-title"><i class="fas fa-history"></i> سجل الحجوزات</div>
+                <div id="bookingsList">
+                    <p class="text-muted text-center">لا توجد حجوزات حتى الآن</p>
                 </div>
-                <div id="bookingResult" class="hidden mt-12"></div>
-                <div class="toast" id="notifToast"><i class="fas fa-bell"></i><span id="notifMsg">تم إرسال التفاصيل عبر واتساب</span></div>
             </div>
         </section>
 
-        <!-- صفحة الباركود -->
-        <section class="page" id="page-qr">
-            <div class="card text-center">
-                <div class="card-title" style="justify-content:center;"><i class="fas fa-qrcode"></i> الباركود التفاعلي</div>
-                <div class="qr-wrapper"><div id="qrcode"></div><p class="qr-label"><i class="fas fa-camera text-gold"></i> امسح الباركود بكاميرا هاتفك</p><button class="btn btn-outline btn-sm mt-8" id="refreshQrBtn"><i class="fas fa-sync-alt"></i> تحديث</button></div>
-            </div>
-        </section>
-
-        <!-- صفحة الملف الشخصي -->
+        <!-- ===== صفحة الملف الشخصي ===== -->
         <section class="page" id="page-profile">
             <div class="card text-center">
                 <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
                 <div class="profile-name" id="profileName">زائر</div>
                 <div class="profile-email" id="profileEmail">غير مسجل</div>
-                <button class="btn btn-outline" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                <div class="profile-phone" id="profilePhone" style="text-align:center;color:var(--text-secondary);font-size:14px;"></div>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                    <button class="btn btn-outline btn-sm" id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
+                    <button class="btn btn-outline btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+                    <button class="btn btn-outline btn-sm" id="langToggle"><i class="fas fa-globe"></i> English</button>
+                </div>
             </div>
+            <!-- لوحة الأدمن -->
             <div id="adminPanel" class="admin-panel hidden">
-                <div class="card-title"><i class="fas fa-cog"></i> لوحة التحكم</div>
+                <div class="card-title"><i class="fas fa-cog"></i> لوحة التحكم (أدمن)</div>
                 <div id="adminServiceList"></div>
                 <hr style="border-color:var(--border-color); margin:16px 0;" />
                 <div class="form-group"><label>اسم الخدمة الجديدة</label><input type="text" id="newServiceName" placeholder="مثل: حلاقة مميزة" /></div>
@@ -229,14 +394,22 @@
 
     </main>
 
-    <!-- ====== شريط التنقل السفلي ====== -->
+    <!-- التنقل السفلي -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-page="page-home"><i class="fas fa-home"></i><span>الرئيسية</span></button>
         <button class="nav-item" data-page="page-offers"><i class="fas fa-gem"></i><span>العروض</span></button>
-        <button class="nav-item" data-page="page-booking"><i class="fas fa-calendar-plus"></i><span>الحجز</span></button>
-        <button class="nav-item" data-page="page-qr"><i class="fas fa-qrcode"></i><span>الباركود</span></button>
+        <button class="nav-item" data-page="page-bookings"><i class="fas fa-calendar-check"></i><span>الحجوزات</span></button>
         <button class="nav-item" data-page="page-profile"><i class="fas fa-user"></i><span>الملف</span></button>
     </nav>
+</div>
+
+<!-- مودال التفاصيل -->
+<div class="modal-overlay" id="offerModal">
+    <div class="modal-box">
+        <h3 id="modalTitle">تفاصيل العرض</h3>
+        <ul id="modalDetails"></ul>
+        <button class="btn btn-gold modal-close" id="modalCloseBtn">إغلاق</button>
+    </div>
 </div>
 
 <script>
@@ -252,102 +425,148 @@
         { name: 'حلق رأس ودقن', price: 50 },
         { name: 'فوطة سخنة', price: 30 }
     ];
+
+    // عروض العريس مع تفاصيلها
     const OFFERS = [
-        { name: 'حلقة العريس (حنة)', price: 300 },
-        { name: 'حلقة العريس (حنة ودخلة - شامل كل شيء)', price: 500 }
+        {
+            name: '💍 حلقة العريس (حنة)',
+            price: 300,
+            details: ['حلق شعر الرأس', 'حلق الدقن', 'مساج للبشرة', 'ماسك لتفتيح البشرة', 'بخار ساخن وبارد', 'علاج للشعر']
+        },
+        {
+            name: '👑 حلقة العريس (حنة ودخلة)',
+            price: 500,
+            details: ['حلق شعر الرأس', 'حلق الدقن', 'مساج للبشرة', 'ماسك لتفتيح البشرة', 'بخار ساخن وبارد', 'علاج للشعر', 'استشوار وكريم لتفتيح البشرة', 'تاكيدات امتيازات إضافية', 'يوم الدخلة مجاناً']
+        }
     ];
 
     // ====================================================================
-    //  2. إدارة التخزين المحلي
+    //  2. التخزين المحلي (الخدمات والحجوزات والمستخدم)
     // ====================================================================
     function loadServices() {
         const stored = localStorage.getItem('kareem_services');
-        if (stored) {
-            try { return JSON.parse(stored); }
-            catch (e) { return DEFAULT_SERVICES.slice(); }
-        }
+        if (stored) { try { return JSON.parse(stored); } catch(e) {} }
         return DEFAULT_SERVICES.slice();
     }
-    function saveServices(services) {
-        localStorage.setItem('kareem_services', JSON.stringify(services));
-    }
+    function saveServices(s) { localStorage.setItem('kareem_services', JSON.stringify(s)); }
     let services = loadServices();
 
-    // ====================================================================
-    //  3. إدارة المستخدم
-    // ====================================================================
+    // الحجوزات
+    function loadBookings() {
+        const data = localStorage.getItem('kareem_bookings');
+        if (data) { try { return JSON.parse(data); } catch(e) {} }
+        return [];
+    }
+    function saveBookings(b) { localStorage.setItem('kareem_bookings', JSON.stringify(b)); }
+    let bookings = loadBookings();
+
+    // المستخدم
     const ADMIN_EMAIL = "swlyd3393@gmail.com";
     const STORAGE_USER_KEY = 'kareem_user';
     function loadUser() {
         const data = localStorage.getItem(STORAGE_USER_KEY);
-        if (data) {
-            try { return JSON.parse(data); }
-            catch (e) { return null; }
-        }
+        if (data) { try { return JSON.parse(data); } catch(e) {} }
         return null;
     }
-    function saveUser(user) {
-        if (user) localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(user));
+    function saveUser(u) {
+        if (u) localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(u));
         else localStorage.removeItem(STORAGE_USER_KEY);
     }
     let currentUser = loadUser();
 
+    // تفضيلات الثيم واللغة
+    let currentTheme = localStorage.getItem('kareem_theme') || 'dark';
+    let currentLang = localStorage.getItem('kareem_lang') || 'ar';
+
     // ====================================================================
-    //  4. عناصر DOM
+    //  3. عناصر DOM
     // ====================================================================
     const $ = id => document.getElementById(id);
-    const pageHome = $('page-home');
-    const pageOffers = $('page-offers');
-    const pageBooking = $('page-booking');
-    const pageQr = $('page-qr');
-    const pageProfile = $('page-profile');
-    const allPages = [pageHome, pageOffers, pageBooking, pageQr, pageProfile];
-
+    const pageHome = $('page-home'), pageOffers = $('page-offers'), pageBookings = $('page-bookings'), pageProfile = $('page-profile');
+    const allPages = [pageHome, pageOffers, pageBookings, pageProfile];
     const navItems = document.querySelectorAll('.nav-item');
     const serviceListEl = $('serviceList');
-    const serviceSelect = $('custService');
-    const bookingForm = $('bookingForm');
-    const bookingResult = $('bookingResult');
-    const notifToast = $('notifToast');
-    const notifMsg = $('notifMsg');
-    const loginBtn = $('loginBtn');
-    const logoutBtn = $('logoutBtn');
-    const profileName = $('profileName');
-    const profileEmail = $('profileEmail');
+    const offersContainer = $('offersContainer');
+    const bookingsList = $('bookingsList');
+    const profileName = $('profileName'), profileEmail = $('profileEmail'), profilePhone = $('profilePhone');
     const profileAvatar = $('profileAvatar');
     const userBadgeName = $('userBadgeName');
-    const adminPanel = $('adminPanel');
-    const adminServiceList = $('adminServiceList');
-    const addServiceBtn = $('addServiceBtn');
-    const newServiceName = $('newServiceName');
-    const newServicePrice = $('newServicePrice');
-    const refreshQrBtn = $('refreshQrBtn');
-    const qrContainer = $('qrcode');
+    const loginBtn = $('loginBtn'), logoutBtn = $('logoutBtn');
+    const adminPanel = $('adminPanel'), adminServiceList = $('adminServiceList');
+    const addServiceBtn = $('addServiceBtn'), newServiceName = $('newServiceName'), newServicePrice = $('newServicePrice');
+    const themeToggle = $('themeToggle'), langToggle = $('langToggle');
     const userBadge = $('userBadge');
+    const installBtn = $('installAppBtn');
+    const modalOverlay = $('offerModal'), modalTitle = $('modalTitle'), modalDetails = $('modalDetails'), modalCloseBtn = $('modalCloseBtn');
 
     // ====================================================================
-    //  5. دوال العرض الأساسية
+    //  4. الوظائف الأساسية للعرض
     // ====================================================================
     function renderServices() {
         let html = '';
-        services.forEach(s => {
+        services.forEach((s, idx) => {
             html += `
                 <div class="service-item">
                     <div class="service-info">
                         <div class="service-icon"><i class="fas fa-cut"></i></div>
                         <span class="service-name">${s.name}</span>
                     </div>
-                    <span class="service-price">${s.price} ج.م</span>
+                    <div class="service-actions">
+                        <span class="service-price">${s.price} ج.م</span>
+                        <button class="btn-order" data-index="${idx}"><i class="fas fa-shopping-cart"></i> طلب</button>
+                    </div>
                 </div>
             `;
         });
         serviceListEl.innerHTML = html;
 
-        let optHtml = '<option value="">-- اختر --</option>';
-        [...services, ...OFFERS].forEach(s => {
-            optHtml += `<option value="${s.name}">${s.name} - ${s.price} ج.م</option>`;
+        // ربط أزرار الطلب
+        document.querySelectorAll('.btn-order').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                const service = services[idx];
+                requestService(service);
+            });
         });
-        serviceSelect.innerHTML = optHtml;
+    }
+
+    function renderOffers() {
+        let html = '';
+        OFFERS.forEach((offer, idx) => {
+            html += `
+                <div class="offer-card">
+                    <div class="flex-between">
+                        <div>
+                            <div class="offer-title">${offer.name}</div>
+                            <div class="offer-desc">${offer.details.slice(0,2).join('، ')} ...</div>
+                        </div>
+                        <div class="offer-price">${offer.price} ج.م</div>
+                    </div>
+                    <button class="offer-details-btn" data-index="${idx}"><i class="fas fa-info-circle"></i> تفاصيل العرض</button>
+                </div>
+            `;
+        });
+        offersContainer.innerHTML = html;
+
+        document.querySelectorAll('.offer-details-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                showOfferDetails(idx);
+            });
+        });
+    }
+
+    function renderBookings() {
+        if (bookings.length === 0) {
+            bookingsList.innerHTML = `<p class="text-muted text-center">لا توجد حجوزات حتى الآن</p>`;
+            return;
+        }
+        let html = `<table class="booking-table"><thead><tr><th>العميل</th><th>الهاتف</th><th>الخدمة</th><th>التاريخ</th></tr></thead><tbody>`;
+        bookings.slice().reverse().forEach(b => {
+            html += `<tr><td>${b.name}</td><td>${b.phone}</td><td>${b.service}</td><td>${b.time}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+        bookingsList.innerHTML = html;
     }
 
     function renderAdminPanel() {
@@ -357,15 +576,15 @@
         }
         adminPanel.classList.remove('hidden');
         let html = '';
-        services.forEach((s, index) => {
+        services.forEach((s, idx) => {
             html += `
                 <div class="admin-service-item">
                     <span>${s.name}</span>
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <span class="service-price">${s.price} ج.م</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="service-price" style="font-size:14px;">${s.price} ج.م</span>
                         <div class="admin-actions">
-                            <button class="btn btn-sm btn-gold" data-index="${index}" data-action="editPrice"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" data-index="${index}" data-action="deleteService"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-sm btn-gold" data-index="${idx}" data-action="edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" data-index="${idx}" data-action="delete"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -373,19 +592,23 @@
         });
         adminServiceList.innerHTML = html;
 
-        document.querySelectorAll('[data-action="editPrice"]').forEach(btn => {
+        document.querySelectorAll('[data-action="edit"]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
-                const newPrice = prompt('أدخل السعر الجديد للخدمة:', services[idx].price);
-                if (newPrice !== null && !isNaN(newPrice) && Number(newPrice) >= 0) {
-                    services[idx].price = Number(newPrice);
-                    saveServices(services);
-                    renderAll();
+                const newName = prompt('أدخل الاسم الجديد:', services[idx].name);
+                if (newName && newName.trim()) {
+                    const newPrice = prompt('أدخل السعر الجديد:', services[idx].price);
+                    if (newPrice !== null && !isNaN(newPrice) && Number(newPrice) >= 0) {
+                        services[idx].name = newName.trim();
+                        services[idx].price = Number(newPrice);
+                        saveServices(services);
+                        renderAll();
+                    }
                 }
             });
         });
 
-        document.querySelectorAll('[data-action="deleteService"]').forEach(btn => {
+        document.querySelectorAll('[data-action="delete"]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idx = parseInt(this.dataset.index);
                 if (confirm(`هل تريد حذف خدمة "${services[idx].name}"؟`)) {
@@ -413,78 +636,81 @@
     addServiceBtn.addEventListener('click', addNewService);
 
     // ====================================================================
-    //  6. الباركود
+    //  5. طلب الخدمة (نقرة واحدة)
     // ====================================================================
-    let qrInstance = null;
-    function generateQR() {
-        const appUrl = window.location.href;
-        qrContainer.innerHTML = '';
-        qrInstance = new QRCode(qrContainer, {
-            text: appUrl,
-            width: 200,
-            height: 200,
-            colorDark: '#181a20',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
-        });
+    function requestService(service) {
+        if (!currentUser) {
+            alert('الرجاء تسجيل الدخول أولاً');
+            navigateTo('page-profile');
+            return;
+        }
+        const name = currentUser.name || 'عميل';
+        const phone = currentUser.phone || 'غير مسجل';
+        const now = new Date();
+        const time = now.toLocaleString('ar-EG', { hour12: true });
+        const serviceName = service.name;
+        const price = service.price;
+
+        // حفظ الحجز
+        const booking = { name, phone, service: serviceName, time, price };
+        bookings.push(booking);
+        saveBookings(bookings);
+
+        // إرسال واتساب
+        const ownerPhone = "201154846407";
+        const message = `📢 *طلب خدمة فوري من كريم العالمي*%0A🧑 العميل: ${name}%0A📞 الهاتف: ${phone}%0A✂️ الخدمة: ${serviceName}%0A💰 السعر: ${price} ج.م%0A🕒 الوقت: ${time}`;
+        const waLink = `https://wa.me/${ownerPhone}?text=${message}`;
+        window.open(waLink, '_blank');
+
+        // إشعار محلي
+        alert(`✅ تم إرسال طلب "${serviceName}" إلى واتساب`);
+
+        // تحديث صفحة الحجوزات
+        renderBookings();
     }
-    refreshQrBtn.addEventListener('click', generateQR);
 
     // ====================================================================
-    //  7. وظيفة التنقل الأساسية (مع إصلاح المشكلة)
+    //  6. عرض تفاصيل العروض (مودال)
+    // ====================================================================
+    function showOfferDetails(index) {
+        const offer = OFFERS[index];
+        modalTitle.textContent = offer.name;
+        let html = '';
+        offer.details.forEach(d => {
+            html += `<li><i class="fas fa-check-circle"></i> ${d}</li>`;
+        });
+        modalDetails.innerHTML = html;
+        modalOverlay.classList.add('show');
+    }
+    modalCloseBtn.addEventListener('click', () => modalOverlay.classList.remove('show'));
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) modalOverlay.classList.remove('show');
+    });
+
+    // ====================================================================
+    //  7. التنقل بين الصفحات
     // ====================================================================
     function navigateTo(pageId) {
-        console.log('🔀 التنقل إلى:', pageId);
-
-        // إخفاء جميع الصفحات
-        allPages.forEach(page => {
-            if (page) {
-                page.classList.remove('active');
-            }
-        });
-
-        // إظهار الصفحة المطلوبة
+        allPages.forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
-        if (target) {
-            target.classList.add('active');
-            console.log('✅ تم إظهار الصفحة:', pageId);
-        } else {
-            console.warn('⚠️ الصفحة غير موجودة:', pageId);
-        }
-
-        // تحديث شريط التنقل
+        if (target) target.classList.add('active');
         navItems.forEach(item => {
-            const isActive = (item.dataset.page === pageId);
-            item.classList.toggle('active', isActive);
+            item.classList.toggle('active', item.dataset.page === pageId);
         });
-
-        // إجراءات خاصة بالصفحات
-        if (pageId === 'page-qr') {
-            setTimeout(generateQR, 150);
-        }
         if (pageId === 'page-profile') {
             updateProfileUI();
             renderAdminPanel();
         }
-        if (pageId === 'page-booking') {
-            fillUserDataInBooking();
-        }
+        if (pageId === 'page-bookings') renderBookings();
+        if (pageId === 'page-offers') renderOffers();
     }
 
-    // ربط أزرار التنقل
     navItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            const pageId = this.dataset.page;
-            if (pageId) {
-                navigateTo(pageId);
-            }
+        item.addEventListener('click', function() {
+            navigateTo(this.dataset.page);
         });
     });
-
-    // النقر على user-badge يفتح الملف الشخصي
-    userBadge.addEventListener('click', function() {
-        navigateTo('page-profile');
-    });
+    userBadge.addEventListener('click', () => navigateTo('page-profile'));
 
     // ====================================================================
     //  8. تحديث واجهة المستخدم
@@ -493,32 +719,20 @@
         if (currentUser) {
             profileName.textContent = currentUser.name || 'مستخدم';
             profileEmail.textContent = currentUser.email || 'غير مسجل';
+            profilePhone.textContent = '📞 ' + (currentUser.phone || 'غير مسجل');
             profileAvatar.innerHTML = `<i class="fas fa-user-circle" style="font-size:60px;"></i>`;
+            userBadgeName.textContent = (currentUser.name || currentUser.email || 'مستخدم').slice(0,10);
         } else {
             profileName.textContent = 'زائر';
             profileEmail.textContent = 'غير مسجل';
+            profilePhone.textContent = '';
             profileAvatar.innerHTML = `<i class="fas fa-user"></i>`;
-        }
-    }
-
-    function updateUserBadge() {
-        if (currentUser) {
-            const name = currentUser.name || currentUser.email || 'مستخدم';
-            userBadgeName.textContent = name.length > 12 ? name.slice(0, 10) + '..' : name;
-        } else {
             userBadgeName.textContent = 'زائر';
         }
     }
 
-    function fillUserDataInBooking() {
-        if (currentUser) {
-            $('custName').value = currentUser.name || '';
-            $('custPhone').value = currentUser.phone || '';
-        }
-    }
-
     // ====================================================================
-    //  9. تسجيل الدخول / الخروج
+    //  9. تسجيل الدخول والخروج
     // ====================================================================
     function showLoginDialog() {
         const name = prompt('أدخل اسمك الكامل:', currentUser ? currentUser.name : '');
@@ -527,115 +741,101 @@
         if (email === null) return;
         const phone = prompt('أدخل رقم هاتفك:', currentUser ? currentUser.phone : '');
         if (phone === null) return;
-
         if (name.trim() && email.trim() && phone.trim()) {
             currentUser = { name: name.trim(), email: email.trim(), phone: phone.trim() };
             saveUser(currentUser);
             renderAll();
-            if (currentUser.email === ADMIN_EMAIL) {
-                alert('✅ مرحباً أيها الأدمن! لوحة التحكم متاحة لك.');
-            } else {
-                alert('✅ تم تسجيل الدخول بنجاح.');
-            }
-            fillUserDataInBooking();
-        } else {
-            alert('الرجاء ملء جميع الحقول.');
-        }
+            if (currentUser.email === ADMIN_EMAIL) alert('✅ مرحباً أيها الأدمن! لوحة التحكم متاحة.');
+            else alert('✅ تم تسجيل الدخول بنجاح.');
+        } else alert('الرجاء ملء جميع الحقول.');
     }
     loginBtn.addEventListener('click', showLoginDialog);
-
     logoutBtn.addEventListener('click', function() {
         if (confirm('هل تريد تسجيل الخروج؟')) {
             currentUser = null;
             saveUser(null);
             renderAll();
-            fillUserDataInBooking();
             alert('تم تسجيل الخروج.');
         }
     });
 
     // ====================================================================
-    //  10. نظام الحجز عبر واتساب
+    //  10. الثيم واللغة
     // ====================================================================
-    const ownerPhone = "201154846407";
+    function applyTheme(theme) {
+        document.body.classList.toggle('light-theme', theme === 'light');
+        themeToggle.innerHTML = theme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        localStorage.setItem('kareem_theme', theme);
+        currentTheme = theme;
+    }
+    themeToggle.addEventListener('click', function() {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
 
-    bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const name = $('custName').value.trim();
-        const phone = $('custPhone').value.trim();
-        const service = $('custService').value;
-        const timeRaw = $('custTime').value;
-
-        if (!name || !phone || !service || !timeRaw) {
-            alert('الرجاء ملء جميع الحقول');
-            return;
-        }
-
-        const timeFormatted = new Date(timeRaw).toLocaleString('ar-EG', { hour12: true });
-        const details = { name, phone, service, time: timeFormatted };
-
-        bookingResult.classList.remove('hidden');
-        bookingResult.innerHTML = `
-            <div style="background:var(--bg-primary);border-radius:14px;padding:16px;border-right:4px solid var(--gold);">
-                <p><strong>🧑 العميل:</strong> ${details.name}</p>
-                <p><strong>📞 الهاتف:</strong> ${details.phone}</p>
-                <p><strong>✂️ الخدمة:</strong> ${details.service}</p>
-                <p><strong>🕒 الموعد:</strong> ${details.time}</p>
-            </div>
-        `;
-
-        const message = `📢 *حجز جديد في كريم العالمي*%0A🧑 الاسم: ${details.name}%0A📞 الهاتف: ${details.phone}%0A✂️ الخدمة: ${details.service}%0A🕒 الموعد: ${details.time}`;
-        const waLink = `https://wa.me/${ownerPhone}?text=${message}`;
-        window.open(waLink, '_blank');
-
-        notifMsg.textContent = `✅ تم إرسال تفاصيل الحجز إلى واتساب`;
-        notifToast.classList.add('show');
-        setTimeout(() => notifToast.classList.remove('show'), 6000);
-
-        if (currentUser && currentUser.phone !== phone) {
-            currentUser.phone = phone;
-            saveUser(currentUser);
-            updateProfileUI();
-        }
+    function applyLanguage(lang) {
+        const isRTL = lang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.classList.toggle('ltr', !isRTL);
+        langToggle.innerHTML = isRTL ? '<i class="fas fa-globe"></i> English' : '<i class="fas fa-globe"></i> عربي';
+        localStorage.setItem('kareem_lang', lang);
+        currentLang = lang;
+        // تغيير نصوص ثابتة إذا أردت (يمكن توسيعها)
+    }
+    langToggle.addEventListener('click', function() {
+        applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
     });
 
     // ====================================================================
-    //  11. ضبط وقت افتراضي للحجز
+    //  11. تثبيت التطبيق (PWA)
     // ====================================================================
-    (function setDefaultTime() {
-        const now = new Date();
-        now.setHours(now.getHours() + 2);
-        const input = $('custTime');
-        if (input) input.value = now.toISOString().slice(0, 16);
-    })();
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'flex';
+    });
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            if (result.outcome === 'accepted') {
+                alert('✅ تم تثبيت التطبيق بنجاح');
+            } else {
+                alert('❌ تم إلغاء التثبيت');
+            }
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        } else {
+            alert('يمكنك تثبيت التطبيق من قائمة المتصفح (إضافة إلى الشاشة الرئيسية)');
+        }
+    });
+    // إخفاء الزر إذا لم يكن PWA مدعوماً
+    if (!window.matchMedia('(display-mode: standalone)').matches) {
+        // نتركه ظاهراً
+    }
 
     // ====================================================================
     //  12. دالة التحديث الشامل
     // ====================================================================
     function renderAll() {
         renderServices();
+        renderOffers();
+        renderBookings();
         renderAdminPanel();
         updateProfileUI();
-        updateUserBadge();
     }
 
     // ====================================================================
-    //  13. تهيئة التطبيق عند التحميل
+    //  13. تهيئة التطبيق
     // ====================================================================
     document.addEventListener('DOMContentLoaded', function() {
+        // تطبيق الثيم واللغة المحفوظين
+        applyTheme(currentTheme);
+        applyLanguage(currentLang);
         renderAll();
-        generateQR();
-        fillUserDataInBooking();
-        // تأكد من أن الصفحة الرئيسية نشطة
         navigateTo('page-home');
-        console.log('✅ تطبيق كريم العالمي جاهز تماماً!');
+        console.log('✅ تطبيق كريم العالمي - النسخة المتكاملة جاهزة');
     });
-
-    // تأمين إضافي: إذا لم يعمل DOMContentLoaded، ننفذ فوراً
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        // لكننا نضمن أن يتم التنفيذ مرة واحدة فقط
-    }
 </script>
 </body>
 </html>
