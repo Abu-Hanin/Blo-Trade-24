@@ -16,7 +16,8 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{background:var(--bg);color:var(--tx);overflow-x:hidden}
-/* ============ AUTH (احترافي جديد) ============ */
+
+/* ============ AUTH ============ */
 #auth{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 30% 20%,#14171c,#08090b 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 #auth.hide{display:none}
 .abox{width:100%;max-width:440px;background:linear-gradient(145deg,#1c1f26,#14171d);border:1px solid #2a2e36;border-radius:28px;padding:38px 30px;box-shadow:0 30px 60px -15px rgba(0,0,0,.9),0 0 0 1px rgba(240,185,11,.08) inset;position:relative;overflow:hidden}
@@ -36,7 +37,6 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .ff input{width:100%;padding:15px 45px 15px 16px;background:#0f1216;border:2px solid #262a33;border-radius:12px;color:var(--tx);font-size:.95rem;outline:none;transition:.2s;font-family:'Cairo',sans-serif}
 .ff input:focus{border-color:var(--g);background:#12161b;box-shadow:0 0 0 3px rgba(240,185,11,.1)}
 .ff input::placeholder{color:var(--mt)}
-.ff .req{color:var(--rd);font-size:.75rem;position:absolute;left:16px;top:50%;transform:translateY(-50%)}
 .bp{background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border:none;padding:16px;border-radius:12px;font-weight:800;font-size:1rem;cursor:pointer;transition:.2s;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px -5px rgba(240,185,11,.4)}
 .bp:hover{transform:translateY(-2px);box-shadow:0 12px 25px -5px rgba(240,185,11,.5)}
 .bp:disabled{opacity:.5;cursor:not-allowed;transform:none}
@@ -46,10 +46,11 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .aerr.on,.aok.on{display:block}
 .ldr{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:currentColor;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-/* ============ APP SHELL ============ */
+
+/* ============ APP SHELL + HEADER (اسم شمال + burger يمين) ============ */
 #app{display:none;flex-direction:column;height:100vh}
 #app.on{display:flex}
-.hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(30,35,41,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(30,35,41,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
 .hd .lg{display:flex;align-items:center;gap:8px}
 .hd .lg-txt{font-size:1.35rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
 .live-dot{width:9px;height:9px;background:var(--gr);border-radius:50%;box-shadow:0 0 10px var(--gr);animation:pls 1.6s infinite}
@@ -59,7 +60,12 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .bal{background:var(--bg);border:1px solid var(--g);padding:5px 12px;border-radius:20px;font-size:.8rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:5px}
 .inst-btn{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
 .inst-btn.show{display:flex}
-/* SIDE MENU */
+.notif-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;position:relative;transition:.2s}
+.notif-btn:hover{background:var(--bg)}
+.notif-btn:active{transform:scale(.92)}
+.notif-badge{position:absolute;top:2px;left:2px;background:var(--rd);color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(246,70,93,.6);animation:pls 1.6s infinite}
+
+/* SIDE MENU (يمين) */
 #smenu{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--card);z-index:200;transition:right .3s;overflow-y:auto;border-left:1px solid var(--bd);display:flex;flex-direction:column}
 #smenu.on{right:0}
 .smh{padding:20px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
@@ -86,7 +92,8 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .bni{flex:1;text-align:center;padding:8px 4px;color:var(--mt);cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.68rem;font-weight:600}
 .bni i{font-size:1.15rem}
 .bni.on{color:var(--g)}
-/* ============ HOME (احترافي - بطايق تحت بعضها على PC) ============ */
+
+/* HOME */
 .home-wrap{position:relative}
 .hero{text-align:center;padding:30px 0 20px;position:relative}
 .hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:220px;height:220px;background:radial-gradient(circle,rgba(240,185,11,.15),transparent 70%);filter:blur(40px);pointer-events:none}
@@ -100,7 +107,6 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .visitor-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(240,185,11,.1);color:var(--g);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:8px;border:1px solid rgba(240,185,11,.3);margin-right:8px}
 .hero-title{font-size:1.15rem;font-weight:800;color:var(--tx);margin-top:16px;padding:0 20px;line-height:1.5}
 .hero-sub{font-size:.88rem;color:var(--mt);margin-top:10px;padding:0 25px;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto}
-/* بطايق احترافية - على PC تكون كاملة العرض بشكل شبكة متناسق */
 .gi{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:26px;max-width:1100px;margin-left:auto;margin-right:auto}
 .gic{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid #2a2e36;border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .28s cubic-bezier(.18,.89,.32,1.28);position:relative;color:var(--tx);display:flex;align-items:center;gap:16px;overflow:hidden;text-decoration:none}
 .gic::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:linear-gradient(180deg,var(--g),transparent);opacity:0;transition:opacity .3s}
@@ -121,7 +127,8 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
   .gic .icn{width:46px;height:46px}
   .gic .icn i{font-size:1.3rem}
 }
-/* ============ COMMON ============ */
+
+/* COMMON */
 .pt{font-size:1.4rem;font-weight:800;color:var(--g);margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--bd);display:flex;align-items:center;gap:10px}
 .bs{background:var(--card2);color:var(--tx);border:1px solid var(--bd);padding:12px 20px;border-radius:10px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
 .bs:hover{background:var(--bd)}
@@ -141,7 +148,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 #tst.on{transform:translateX(-50%) translateY(0);opacity:1}
 #tst.er{background:var(--rd);color:#fff}
 #tst.ok{background:var(--gr);color:#fff}
-/* ============ PROFILE (احترافي جديد) ============ */
+
+/* PROFILE */
 .prof-hero{background:linear-gradient(135deg,#1c1f26 0%,#14171d 100%);border:1px solid #2a2e36;border-radius:24px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden}
 .prof-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(240,185,11,.15),transparent 70%);pointer-events:none}
 .prof-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(14,203,129,.08),transparent 70%);pointer-events:none}
@@ -155,7 +163,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ps-cell{background:rgba(11,14,17,.6);border:1px solid #2a2e36;border-radius:14px;padding:14px 8px;text-align:center}
 .ps-cell .ps-v{font-size:1.3rem;font-weight:900;color:var(--g);line-height:1}
 .ps-cell .ps-l{font-size:.68rem;color:var(--mt);margin-top:6px;font-weight:600}
-/* Sub Box */
 .sub-box{background:linear-gradient(135deg,#1a1712 0%,#0f1215 100%);border:1px solid var(--g);border-radius:22px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden}
 .sub-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--g2),var(--g))}
 .sub-box h4{color:var(--g);font-size:.95rem;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -173,12 +180,12 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .info-row:last-child{border-bottom:none}
 .info-row .l{color:var(--mt)}
 .info-row .v{font-weight:700;direction:ltr;text-align:left}
-/* ============ DEPOSIT (بنفس تنسيق SMCOLE) ============ */
+
+/* DEPOSIT */
 .pm-list{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
 .pm-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:1.5px solid #2a2e36;border-radius:20px;padding:22px 24px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
 .pm-card:hover{border-color:var(--g);transform:translateY(-3px);box-shadow:0 15px 30px -10px rgba(240,185,11,.25);background:#1f232b}
 .pm-card .pm-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:2rem;font-weight:900;position:relative}
-.pm-card .pm-icon img{width:44px;height:44px;object-fit:contain}
 .pm-vf .pm-icon{background:#e60000;color:#fff}
 .pm-bin .pm-icon{background:#f0b90b;color:#0b0e11}
 .pm-cry .pm-icon{background:#26a17b;color:#fff}
@@ -195,7 +202,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
   .pm-card .pm-txt h4{font-size:1rem}
   .pm-card .pm-txt p{font-size:.78rem}
 }
-/* Payment Detail */
 .pay-head-v2{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:26px 22px;border:1px solid #2a2e36;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
 .pay-head-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .pay-head-v2.vf::before{background:linear-gradient(90deg,#e60000,transparent,#e60000)}
@@ -225,12 +231,10 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .step-v2 .num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#26a17b,#1e8c66);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;flex-shrink:0;box-shadow:0 4px 10px rgba(38,161,123,.3)}
 .step-v2 .txt{flex:1;font-size:.9rem;color:var(--tx);line-height:1.5}
 .step-v2 .txt strong{color:var(--g);font-weight:800}
-.min-amount-badge{background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.3);border-radius:12px;padding:12px 16px;text-align:center;font-size:.85rem;color:var(--g);font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px}
 .confirm-v2{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid #2a2e36;border-radius:22px;padding:22px;margin-bottom:20px}
 .confirm-v2 h4{color:var(--g);font-size:1rem;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .confirm-v2 label.lb{margin-bottom:8px;color:var(--mt);font-size:.82rem;font-weight:600}
 .confirm-v2 .ip{margin-bottom:14px;background:#0b0e11}
-/* File Upload */
 .file-zone{border:2px dashed var(--g);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;transition:.25s;background:#0b0e11;position:relative;margin-bottom:16px}
 .file-zone:hover{background:rgba(240,185,11,.04);border-color:var(--g2)}
 .file-zone input{display:none}
@@ -241,7 +245,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .file-zone.done{border-style:solid;border-color:var(--gr);background:rgba(14,203,129,.04)}
 .submit-v2{width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border:none;padding:18px;border-radius:14px;font-weight:900;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 25px -5px rgba(240,185,11,.4);font-family:'Cairo',sans-serif}
 .submit-v2:disabled{opacity:.5}
-/* DH Items */
 .dh-item{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:10px;transition:.2s}
 .dh-item:hover{border-color:rgba(240,185,11,.3)}
 .dh-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
@@ -249,22 +252,23 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .st.pd{background:rgba(240,185,11,.18);color:var(--g);border:1px solid rgba(240,185,11,.3)}
 .st.ap{background:rgba(14,203,129,.18);color:var(--gr);border:1px solid rgba(14,203,129,.3)}
 .st.rj{background:rgba(246,70,93,.18);color:var(--rd);border:1px solid rgba(246,70,93,.3)}
-/* ============ RECS (احترافي - بطاقات صغيرة على PC) ============ */
-.recs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
-@media(max-width:500px){.recs-grid{grid-template-columns:1fr}}
+
+/* RECS */
+.recs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;max-width:1300px;margin:0 auto}
+@media(max-width:520px){.recs-grid{grid-template-columns:1fr;gap:12px}}
 .rec-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid #2a2e36;border-radius:20px;overflow:hidden;position:relative;transition:.3s;display:flex;flex-direction:column}
 .rec-card:hover{border-color:rgba(240,185,11,.4);transform:translateY(-3px);box-shadow:0 15px 35px -12px rgba(240,185,11,.15)}
-.rec-head{padding:16px 18px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,rgba(240,185,11,.06),transparent)}
-.rec-sym{display:flex;align-items:center;gap:12px;cursor:pointer;padding:4px 8px;border-radius:10px;transition:.2s;position:relative}
+.rec-head{padding:16px 18px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;background:linear-gradient(135deg,rgba(240,185,11,.06),transparent);gap:12px}
+.rec-sym{position:relative;cursor:pointer;padding:6px 10px;border-radius:12px;transition:.2s;flex:1;min-width:0}
 .rec-sym:hover{background:rgba(240,185,11,.08)}
-.rec-sym::after{content:'\f0c5';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:-4px;right:-8px;font-size:.6rem;color:var(--g);opacity:0;transition:.2s}
-.rec-sym:hover::after{opacity:1}
-.rec-sym-icon{width:46px;height:46px;border-radius:12px;background:rgba(240,185,11,.12);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.05rem;border:1px solid rgba(240,185,11,.25);flex-shrink:0}
-.rec-sym-txt h3{font-size:1.1rem;font-weight:900;color:var(--tx);letter-spacing:-.3px}
-.rec-sym-txt span{font-size:.7rem;color:var(--mt);font-weight:600}
-.rec-price{text-align:left}
-.rec-price .p{font-size:1rem;font-weight:800;color:var(--tx);direction:ltr}
-.rec-price .c{font-size:.78rem;font-weight:700;margin-top:2px}
+.rec-sym:active{transform:scale(.97)}
+.rec-sym h3{font-size:1.5rem;font-weight:900;color:var(--g);letter-spacing:-.5px;line-height:1.1;display:flex;align-items:baseline;gap:6px;text-shadow:0 0 20px rgba(240,185,11,.15)}
+.rec-sym h3 span{font-size:.7rem;color:var(--mt);font-weight:600;letter-spacing:0}
+.rec-sym .copy-hint{position:absolute;top:-20px;right:0;background:var(--g);color:#0b0e11;padding:3px 9px;border-radius:8px;font-size:.65rem;font-weight:800;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 10px rgba(240,185,11,.3)}
+.rec-sym:hover .copy-hint{opacity:1;top:-24px}
+.rec-price{text-align:left;flex-shrink:0}
+.rec-price .p{font-size:1.05rem;font-weight:800;color:var(--tx);direction:ltr}
+.rec-price .c{font-size:.8rem;font-weight:700;margin-top:3px}
 .c-up{color:var(--gr)}.c-dn{color:var(--rd)}
 .rec-body{padding:16px 18px;flex:1;display:flex;flex-direction:column}
 .rec-entry{background:#0b0e11;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-right:3px solid var(--g)}
@@ -287,7 +291,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .rec-sl.hit .l,.rec-sl.hit .v{color:var(--gr)}
 .rec-notes{background:#0b0e11;border-radius:10px;padding:12px;margin-top:12px;font-size:.82rem;color:var(--mt);line-height:1.6;border-right:2px solid var(--bd)}
 .rec-time{text-align:center;color:var(--mt);font-size:.72rem;margin-top:auto;padding-top:14px;border-top:1px dashed var(--bd)}
-/* ============ WORDS ============ */
+
+/* WORDS */
 .word-card{background:linear-gradient(145deg,#1a1e26,#15181e);border:1px solid var(--bd);border-radius:22px;padding:28px 20px;margin-bottom:16px;cursor:pointer;position:relative;overflow:hidden;transition:.3s;text-align:center}
 .word-card:hover{border-color:var(--g);transform:scale(1.01);box-shadow:0 20px 45px -15px rgba(240,185,11,.25)}
 .word-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(240,185,11,.15),transparent 70%)}
@@ -295,7 +300,15 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .word-txt{font-size:1.9rem;font-weight:900;color:var(--tx);letter-spacing:2px;text-transform:uppercase;direction:ltr;margin-bottom:8px;text-shadow:0 0 30px rgba(240,185,11,.15)}
 .word-hint{color:var(--mt);font-size:.85rem;line-height:1.6;padding:0 12px;margin-top:10px}
 .word-tap{margin-top:16px;font-size:.72rem;color:var(--g);display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(240,185,11,.08);border-radius:20px}
-/* ============ EMPTY & LOCKED ============ */
+@media(min-width:768px){
+  .word-card{display:flex;align-items:center;gap:24px;padding:24px 32px;text-align:right;border-radius:20px;margin-bottom:14px}
+  .word-card .word-icn{margin:0;flex-shrink:0;width:68px;height:68px;font-size:1.7rem;border-radius:18px}
+  .word-card .word-txt{font-size:2.2rem;margin:0;flex-shrink:0;letter-spacing:3px}
+  .word-card .word-hint{margin:0;flex:1;padding:0 20px;text-align:right;border-right:2px solid var(--bd);border-left:2px solid var(--bd)}
+  .word-card .word-tap{margin:0;flex-shrink:0}
+}
+
+/* EMPTY & LOCKED */
 .es{text-align:center;padding:50px 20px;color:var(--mt)}
 .es .ei{font-size:3rem;color:var(--bd);margin-bottom:16px}
 .es p{font-size:.9rem}
@@ -304,7 +317,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ls .li{width:80px;height:80px;border-radius:50%;background:rgba(240,185,11,.1);border:2px solid rgba(240,185,11,.3);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--g);margin:0 auto 20px;position:relative}
 .ls h3{font-size:1.3rem;margin-bottom:10px;color:var(--tx);font-weight:800}
 .ls p{color:var(--mt);margin-bottom:22px;line-height:1.7;font-size:.88rem;max-width:320px;margin-left:auto;margin-right:auto}
-/* ============ ADMIN ============ */
+
+/* ADMIN */
 .adm-tabs{display:flex;background:var(--card);border-radius:14px;padding:5px;margin-bottom:16px;gap:4px;overflow-x:auto}
 .adm-tab{flex:1;min-width:75px;text-align:center;padding:11px 8px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--mt);transition:.2s;font-size:.78rem;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:4px}
 .adm-tab i{font-size:.95rem}
@@ -323,7 +337,24 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ust.ban{background:rgba(246,70,93,.2);color:var(--rd)}
 .ust.act{background:rgba(14,203,129,.2);color:var(--gr)}
 .ust.inact{background:rgba(240,185,11,.2);color:var(--g)}
-/* ============ GOLD (تنسيق احترافي على الهاتف) ============ */
+
+/* EDUCATION PAGE - PC */
+#learnGrid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:768px){
+  #learnGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
+}
+@media(min-width:1200px){
+  #learnGrid{grid-template-columns:repeat(3,1fr)}
+}
+#courseGrid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:768px){
+  #courseGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
+}
+@media(min-width:1200px){
+  #courseGrid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* GOLD PAGE */
 #goldWrap .gold-container{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:20px;border:1px solid #2a2e36}
 #goldWrap .g-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 #goldWrap .g-header h3{color:var(--g);font-size:1.1rem;font-weight:900}
@@ -359,7 +390,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 #goldWrap .g-footer .g-usd span{color:var(--g);font-weight:700}
 #goldWrap .g-subtitle{font-size:.85rem;color:#b7bdc6;background:rgba(240,185,11,.06);padding:12px 14px;border-radius:14px;border-right:3px solid var(--g);margin-bottom:18px;line-height:1.7}
 #goldWrap .g-subtitle strong{color:var(--g)}
-/* الهاتف */
 @media(max-width:480px){
   #goldWrap .gold-container{padding:14px;border-radius:18px}
   #goldWrap .g-header h3{font-size:1rem}
@@ -383,7 +413,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 </head>
 <body>
 
-<!-- ==================== AUTH ==================== -->
 <div id="auth">
 <div class="abox">
 <div class="alg">
@@ -413,15 +442,15 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 </div>
 </div>
 
-<!-- ==================== APP ==================== -->
 <div id="app">
 <header class="hd">
-<div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
-<div style="display:flex;align-items:center;gap:8px;">
+<div style="display:flex;align-items:center;gap:6px;">
+<button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
 <div class="bal" id="balB" style="display:none"><i class="fas fa-wallet"></i> <span id="balT">0</span> ج.م</div>
 <button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
 </div>
+<div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
 </header>
 <div class="ct" id="ct"></div>
 <nav class="bn">
@@ -462,9 +491,6 @@ const SUPABASE_URL = 'https://wfcizftmcclhnzgvukuy.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmY2l6ZnRtY2NsaG56Z3Z1a3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDI3ODYsImV4cCI6MjEwNDYxODc4Nn0.HZ852U2kZzHkXQveGEWT0qLra-vsVOwZOsT1Zl8nQ80';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ============================================================
-   الإعدادات العامة
-   ============================================================ */
 const TG_TOKEN='8848036284:AAGVbG_UylFYsYagJM56Fg_kIqaDdiT9AuM';
 const TG_CHAT='6242313550';
 const TG_API='https://api.telegram.org/bot'+TG_TOKEN;
@@ -477,26 +503,21 @@ const NET='Tron (TRC20)',COIN='USDT';
 const INSTA='01154846407';
 const REDOT='1770425974';
 
-/* ============================================================
-   Helpers
-   ============================================================ */
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 function toast(m,t=''){const e=$('#tst');e.textContent=m;e.className='on'+(t?' '+t:'');clearTimeout(e._t);e._t=setTimeout(()=>{e.className=t||''},3500)}
 function fmtDate(ts){return new Date(ts).toLocaleDateString('ar-EG',{year:'numeric',month:'short',day:'numeric'})}
 function fmtTime(ts){return new Date(ts).toLocaleString('ar-EG',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMonth()+1} - ${d.getFullYear()}`}
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
-/* ============================================================
-   Global State
-   ============================================================ */
 let CU=null;
 let AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
 function subDaysLeft(){if(!CU.subscription_end)return 0;return Math.max(0,Math.ceil((new Date(CU.subscription_end).getTime()-Date.now())/864e5))}
 
 /* ============================================================
-   تحميل البروفايل + إنشاؤه لو مش موجود
+   تحميل البروفايل
    ============================================================ */
 async function loadProfile(){
   if(!AUTH)return null;
@@ -621,6 +642,7 @@ function openM(h){$('#mbx').innerHTML=h;$('#mod').classList.add('on')}
 function closeM(){$('#mod').classList.remove('on');$('#mbx').innerHTML=''}
 window.closeM=closeM;window.openM=openM;
 $('#mod').onclick=e=>{if(e.target.id==='mod')closeM()};
+document.getElementById('notifBtn')?.addEventListener('click',()=>{go('notifications')});
 
 /* ============================================================
    عداد الزوار
@@ -637,7 +659,7 @@ async function incrementVisitor(){
     const key='blo_visited_'+new Date().toDateString();
     if(sessionStorage.getItem(key))return;
     sessionStorage.setItem(key,'1');
-    const {data,error}=await sb.rpc('increment_visits');
+    const {error}=await sb.rpc('increment_visits');
     if(error){
       const {data:cur}=await sb.from('site_stats').select('visits').eq('id',1).maybeSingle();
       const newVal=(cur?.visits||0)+1;
@@ -683,7 +705,7 @@ R.home=async c=>{
 };
 
 /* ============================================================
-   PROFILE (احترافي جديد)
+   PROFILE
    ============================================================ */
 let cdInterval=null;
 R.prof=c=>{
@@ -794,12 +816,12 @@ async function actPlan(){
 }
 
 /* ============================================================
-   DEPOSIT (بنفس تنسيق SMCOLE - 5 طرق)
+   DEPOSIT (5 طرق دفع)
    ============================================================ */
 R.dep=c=>{
   c.innerHTML=`
   <h2 class="pt"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h2>
-  <p style="color:var(--mt);font-size:.9rem;line-height:1.7;margin-bottom:20px;text-align:center;">نوفر في <b style="color:var(--g)">Blo Trade 24</b> مجموعة متنوعة من وسائل الدفع الآمنة والمرنة لتسهيل إتمام طلباتك بكل سرعة وراحة. اختر وسيلة الدفع المناسبة:</p>
+  <p style="color:var(--mt);font-size:.9rem;line-height:1.7;margin-bottom:20px;text-align:center;">نوفر في <b style="color:var(--g)">Blo Trade 24</b> مجموعة متنوعة من وسائل الدفع الآمنة والمرنة. اختر وسيلة الدفع المناسبة:</p>
   <div class="pm-list">
     <div class="pm-card pm-vf" data-m="vf">
       <div class="pm-icon"><i class="fas fa-mobile-alt"></i></div>
@@ -850,11 +872,11 @@ async function renderDH(){
 function showPayDetail(m){
   const c=$('#ct');c.scrollTop=0;
   const META={
-    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,minTxt:'الحد الأدنى للإيداع: 50 جنيه',val:VF,valLbl:'رقم محفظة الكاش'},
-    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,minTxt:'الحد الأدنى للإيداع: 2 دولار',val:BIN,valLbl:'Binance Pay ID'},
-    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,minTxt:'الحد الأدنى للإيداع: 2 دولار',val:CRYPTO,valLbl:'عنوان المحفظة (TRC20)'},
-    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,minTxt:'الحد الأدنى للإيداع: 50 جنيه',val:INSTA,valLbl:'رقم InstaPay'},
-    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,minTxt:'الحد الأدنى للإيداع: 2 دولار',val:REDOT,valLbl:'RedotPay ID'}
+    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:VF,valLbl:'رقم محفظة الكاش'},
+    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:BIN,valLbl:'Binance Pay ID'},
+    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:CRYPTO,valLbl:'عنوان المحفظة (TRC20)'},
+    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:INSTA,valLbl:'رقم InstaPay'},
+    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:REDOT,valLbl:'RedotPay ID'}
   };
   const meta=META[m];
   let steps=[];
@@ -865,19 +887,19 @@ function showPayDetail(m){
   }else if(m==='cry'){
     steps=['افتح محفظتك الرقمية (Binance / Trust Wallet)','اختر شبكة <strong>Tron (TRC20)</strong>','أرسل <strong>'+PRICE_USD+' USDT</strong> للعنوان','احتفظ بـ Transaction Hash','ارجع هنا واملأ البيانات'];
   }else if(m==='inst'){
-    steps=['افتح تطبيق بنكك واختر InstaPay','اختر "تحويل" واكتب الرقم: <strong>'+INSTA+'</strong>','أدخل المبلغ (1600 جنيه) وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق بنكك واختر InstaPay','اختر "تحويل" واكتب الرقم: <strong>'+INSTA+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
   }else{
-    steps=['افتح تطبيق RedotPay','اختر "Send" واكتب ID: <strong>'+REDOT+'</strong>','أدخل المبلغ (33 دولار) وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق RedotPay','اختر "Send" واكتب ID: <strong>'+REDOT+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
   }
   c.innerHTML=`
-  <button class="pay-back" id="backBtn" style="background:none;border:none;color:var(--g);font-size:.95rem;cursor:pointer;padding:8px 0;margin-bottom:16px;font-weight:700;display:inline-flex;align-items:center;gap:8px;"><i class="fas fa-arrow-right"></i> رجوع لطرق الدفع</button>
+  <button id="backBtn" style="background:none;border:none;color:var(--g);font-size:.95rem;cursor:pointer;padding:8px 0;margin-bottom:16px;font-weight:700;display:inline-flex;align-items:center;gap:8px;"><i class="fas fa-arrow-right"></i> رجوع لطرق الدفع</button>
   <div class="pay-head-v2 ${meta.cls}">
     <div class="ph-icon-v2"><i class="${meta.icon}"></i></div>
     <h3>${meta.name}</h3>
     <p class="ph-sub">${meta.sub}</p>
     <p style="color:var(--mt);font-size:.82rem;margin-bottom:14px;">قم بالتحويل على البيانات التالية</p>
     <div class="copy-box">
-      <div class="cb-lbl">${meta.val}</div>
+      <div class="cb-lbl" id="pv1">${meta.val}</div>
       <button data-copy="pv1"><i class="fas fa-copy"></i> نسخ</button>
     </div>
     <div class="pay-amt-v2"><span class="l">المبلغ المطلوب</span><span class="v">${meta.amount}</span></div>
@@ -886,7 +908,6 @@ function showPayDetail(m){
     <h4><i class="fas fa-list-ol"></i> خطوات الدفع</h4>
     ${steps.map((s,i)=>`<div class="step-v2"><div class="num">${i+1}</div><div class="txt">${s}</div></div>`).join('')}
   </div>
-  <div class="min-amount-badge"><i class="fas fa-info-circle"></i> ${meta.minTxt}</div>
   <div class="confirm-v2">
     <h4><i class="fas fa-check-circle"></i> تأكيد عملية ${m==='vf'||m==='inst'?'الإيداع':'الدفع'}</h4>
     <label class="lb">${m==='vf'||m==='inst'?'المبلغ (بالجنيه المصري)':'المبلغ (بالدولار)'}</label>
@@ -1031,9 +1052,9 @@ async function renderRecos(){
     const priceHtml=p?`<div class="p">$${p.price.toLocaleString(undefined,{maximumFractionDigits:p.price<1?6:2})}</div><div class="c ${p.change>=0?'c-up':'c-dn'}">${p.change>=0?'▲':'▼'} ${Math.abs(p.change).toFixed(2)}%</div>`:'<div class="p">--</div>';
     return `<div class="rec-card">
       <div class="rec-head">
-        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط لنسخ اسم العملة">
-          <div class="rec-sym-icon">${r.symbol.substring(0,2).toUpperCase()}</div>
-          <div class="rec-sym-txt"><h3>${r.symbol.toUpperCase()}</h3><span>/USDT</span></div>
+        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط للنسخ">
+          <h3>${r.symbol.toUpperCase()} <span>/USDT</span></h3>
+          <div class="copy-hint"><i class="fas fa-copy"></i> نسخ</div>
         </div>
         <div class="rec-price">${priceHtml}</div>
       </div>
@@ -1047,7 +1068,7 @@ async function renderRecos(){
         </div>
         <div class="rec-sl ${hitSL?'hit':''}"><span class="l">🛑 وقف الخسارة</span><span class="v">${r.stop_loss||'-'}</span></div>
         ${r.notes?`<div class="rec-notes">📝 ${r.notes}</div>`:''}
-        <div class="rec-time">${fmtTime(r.created_at)}</div>
+        <div class="rec-time">${fmtDateOnly(r.created_at)}</div>
       </div>
     </div>`;
   }).join('');
@@ -1079,7 +1100,33 @@ R.words=async c=>{
 };
 
 /* ============================================================
-   Router للصفحات (سيمتلئ بالجزء الثالث)
+   صفحة الإشعارات
+   ============================================================ */
+R.notifications=async c=>{
+  c.innerHTML=`<h2 class="pt"><i class="fas fa-bell"></i> الإشعارات</h2>
+    <div id="notifList"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
+  setTimeout(markNotifSeen,500);
+  try{
+    const {data,error}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(50);
+    const el=$('#notifList');
+    if(error||!data||!data.length){el.innerHTML='<div class="es"><i class="fas fa-bell-slash ei"></i><p>لا توجد إشعارات حالياً</p></div>';return}
+    el.innerHTML=data.map(n=>{
+      const icn=n.type==='reco'?'fa-chart-line':n.type==='word'?'fa-calendar-day':'fa-bell';
+      const clr=n.type==='reco'?'var(--g)':n.type==='word'?'var(--gr)':'var(--mt)';
+      return `<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:center;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(240,185,11,.1);display:flex;align-items:center;justify-content:center;color:${clr};font-size:1.2rem;flex-shrink:0;"><i class="fas ${icn}"></i></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:800;color:var(--tx);font-size:.95rem;margin-bottom:3px;">${n.title||'إشعار'}</div>
+          <div style="color:var(--mt);font-size:.82rem;line-height:1.5;">${n.body||''}</div>
+          <div style="color:var(--mt);font-size:.7rem;margin-top:5px;">${fmtDateOnly(n.created_at)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){$('#notifList').innerHTML='<div class="es"><p>خطأ في التحميل</p></div>';}
+};
+
+/* ============================================================
+   Router للصفحات
    ============================================================ */
 R.bubble=c=>window.renderBubblePage(c);
 R.market=c=>window.renderMarketPage(c);
@@ -1125,6 +1172,26 @@ function notify(title,body){
   if(!('Notification' in window))return;
   if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png'})}catch{}}
 }
+async function updateNotifBadge(){
+  try{
+    const {data,error}=await sb.from('notifications').select('created_at').order('created_at',{ascending:false}).limit(1).maybeSingle();
+    const badge=$('#notifBadge');
+    if(!badge)return;
+    if(error||!data){badge.style.display='none';return}
+    const lastSeen=localStorage.getItem('blo_notif_seen')||'';
+    if(data.created_at!==lastSeen){
+      const {count}=await sb.from('notifications').select('*',{count:'exact',head:true}).gt('created_at',lastSeen||'1970-01-01');
+      if(count&&count>0){badge.textContent=count>9?'9+':count;badge.style.display='flex'}
+      else badge.style.display='none';
+    }else badge.style.display='none';
+  }catch(e){console.warn(e)}
+}
+function markNotifSeen(){
+  sb.from('notifications').select('created_at').order('created_at',{ascending:false}).limit(1).maybeSingle().then(({data})=>{
+    if(data?.created_at){localStorage.setItem('blo_notif_seen',data.created_at);updateNotifBadge()}
+  });
+}
+window.markNotifSeen=markNotifSeen;
 function initRealtime(){
   sb.channel('recos-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'recommendations'},payload=>{
     if(payload.new.hidden)return;
@@ -1132,6 +1199,12 @@ function initRealtime(){
     updateRB();
     notify('📈 توصية جديدة','تم نزول توصية جديدة على Blo Trade 24');
     if(currentPage==='recs')renderRecos();
+    if(currentPage==='notifications')go('notifications');
+  }).subscribe();
+  sb.channel('notif-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},payload=>{
+    updateNotifBadge();
+    notify(payload.new.title||'إشعار جديد',payload.new.body||'');
+    if(currentPage==='notifications')go('notifications');
   }).subscribe();
   sb.channel('words-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'words'},payload=>{
     if(payload.new.hidden)return;
@@ -1167,6 +1240,7 @@ window.renderAdminPage=function(c){
       <div class="adm-tab ${admTab==='deps'?'on':''}" data-t="deps"><i class="fas fa-wallet"></i> الإيداعات</div>
       <div class="adm-tab ${admTab==='recs'?'on':''}" data-t="recs"><i class="fas fa-chart-line"></i> التوصيات</div>
       <div class="adm-tab ${admTab==='words'?'on':''}" data-t="words"><i class="fas fa-calendar-day"></i> الكلمات</div>
+      <div class="adm-tab ${admTab==='settings'?'on':''}" data-t="settings"><i class="fas fa-cog"></i> الإعدادات</div>
     </div>
     <div id="admBody"></div>`;
   c.querySelectorAll('.adm-tab').forEach(t=>t.onclick=()=>{admTab=t.dataset.t;window.renderAdminPage(c)});
@@ -1178,6 +1252,7 @@ async function admRenderBody(){
   else if(admTab==='deps')await admDeps(b);
   else if(admTab==='recs')await admRecs(b);
   else if(admTab==='words')await admWords(b);
+  else if(admTab==='settings')await admSettings(b);
 }
 
 /* ===== USERS ===== */
@@ -1324,13 +1399,26 @@ async function admRecs(b){
   const list=$('#recoAdminList');
   if(!data||!data.length){list.innerHTML='<div class="es"><i class="fas fa-inbox ei"></i><p>لا توجد توصيات</p></div>';return}
   list.innerHTML=data.map(r=>`
-    <div class="dh-item" style="${r.hidden?'opacity:.5;':''}">
-      <div class="dh-head"><div style="font-weight:900;color:var(--g);font-size:1.05rem;">${r.symbol.toUpperCase()}/USDT ${r.hidden?'<span class="st rj" style="margin-right:6px;font-size:.65rem;">مخفية</span>':''}</div><div style="font-size:.75rem;color:var(--mt);">${fmtDate(r.created_at)}</div></div>
-      <div style="color:var(--mt);font-size:.78rem;margin:6px 0;line-height:1.7;">دخول: ${r.entry||'-'} · هدف1: ${r.target1||'-'} · هدف2: ${r.target2||'-'} · هدف3: ${r.target3||'-'} · وقف: ${r.stop_loss||'-'}</div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button class="bs" onclick="editReco('${r.id}')" style="flex:1;padding:8px;justify-content:center;font-size:.78rem;"><i class="fas fa-edit"></i> تعديل</button>
-        <button class="bs" onclick="toggleRecoHidden('${r.id}',${r.hidden})" style="flex:1;padding:8px;justify-content:center;font-size:.78rem;"><i class="fas fa-${r.hidden?'eye':'eye-slash'}"></i> ${r.hidden?'إظهار':'إخفاء'}</button>
-        <button class="bd2" onclick="delReco('${r.id}')" style="padding:8px 12px;font-size:.78rem;"><i class="fas fa-trash"></i></button>
+    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:12px;${r.hidden?'opacity:.55;':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:42px;height:42px;border-radius:12px;background:rgba(240,185,11,.12);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;border:1px solid rgba(240,185,11,.25);">${r.symbol.substring(0,2).toUpperCase()}</div>
+          <div>
+            <div style="font-weight:900;color:var(--g);font-size:1.1rem;letter-spacing:-.3px;">${r.symbol.toUpperCase()}<span style="color:var(--mt);font-size:.75rem;">/USDT</span></div>
+            <div style="color:var(--mt);font-size:.72rem;margin-top:2px;">${fmtDateOnly(r.created_at)}</div>
+          </div>
+        </div>
+        ${r.hidden?'<span class="st rj" style="font-size:.7rem;">👁 مخفية</span>':''}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#0b0e11;border-radius:12px;padding:12px;margin-bottom:12px;">
+        <div style="font-size:.78rem;color:var(--mt);">📍 الدخول: <b style="color:var(--g);direction:ltr;display:inline-block;">${r.entry||'-'}</b></div>
+        <div style="font-size:.78rem;color:var(--mt);">🛑 الوقف: <b style="color:var(--rd);direction:ltr;display:inline-block;">${r.stop_loss||'-'}</b></div>
+        <div style="font-size:.78rem;color:var(--mt);grid-column:1/-1;">🎯 الأهداف: <b style="color:var(--gr);direction:ltr;display:inline-block;">${r.target1||'-'} | ${r.target2||'-'} | ${r.target3||'-'}</b></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="bs" onclick="editReco('${r.id}')" style="flex:1;padding:9px;justify-content:center;font-size:.8rem;"><i class="fas fa-edit"></i> تعديل</button>
+        <button class="bs" onclick="toggleRecoHidden('${r.id}',${r.hidden})" style="flex:1;padding:9px;justify-content:center;font-size:.8rem;"><i class="fas fa-${r.hidden?'eye':'eye-slash'}"></i> ${r.hidden?'إظهار':'إخفاء'}</button>
+        <button class="bd2" onclick="delReco('${r.id}')" style="padding:9px 14px;font-size:.8rem;"><i class="fas fa-trash"></i></button>
       </div>
     </div>`).join('');
 }
@@ -1395,8 +1483,13 @@ function addRecoModal(){
     const {error}=await sb.from('recommendations').insert({symbol:sym,entry:ent,target1:t1,target2:t2,target3:t3,stop_loss:sl,notes:$('#nNotes').value.trim()});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر التوصية';
     if(error)return toast(error.message,'er');
+    // إضافة إشعار لكل المستخدمين (بدون تفاصيل)
+    await sb.from('notifications').insert({
+      title:'📈 توصية جديدة',
+      body:'تم نزول توصية جديدة على Blo Trade 24 - اشترك للمشاهدة',
+      type:'reco'
+    });
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
-    // إشعار Telegram
     tgMsg(`📢 <b>توصية جديدة</b>\n\n🪙 ${sym}/USDT\n📍 ${ent}\n🎯 ${t1||'-'} | ${t2||'-'} | ${t3||'-'}`);
   };
 }
@@ -1411,13 +1504,22 @@ async function admWords(b){
   const list=$('#wordAdminList');
   if(!data||!data.length){list.innerHTML='<div class="es"><i class="fas fa-inbox ei"></i><p>لا توجد كلمات</p></div>';return}
   list.innerHTML=data.map(w=>`
-    <div class="dh-item" style="${w.hidden?'opacity:.5;':''}">
-      <div class="dh-head"><div style="font-weight:900;color:var(--g);font-size:1.3rem;letter-spacing:2px;">${w.word}</div><div style="font-size:.75rem;color:var(--mt);">${fmtDate(w.created_at)}</div></div>
-      ${w.hint?`<div style="color:var(--mt);font-size:.8rem;margin:6px 0;">💡 ${w.hint}</div>`:''}
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button class="bs" onclick="editWord('${w.id}')" style="flex:1;padding:8px;justify-content:center;font-size:.78rem;"><i class="fas fa-edit"></i> تعديل</button>
-        <button class="bs" onclick="toggleWordHidden('${w.id}',${w.hidden})" style="flex:1;padding:8px;justify-content:center;font-size:.78rem;"><i class="fas fa-${w.hidden?'eye':'eye-slash'}"></i> ${w.hidden?'إظهار':'إخفاء'}</button>
-        <button class="bd2" onclick="delWord('${w.id}')" style="padding:8px 12px;font-size:.78rem;"><i class="fas fa-trash"></i></button>
+    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:12px;${w.hidden?'opacity:.55;':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(14,203,129,.12);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:1px solid rgba(14,203,129,.3);"><i class="fas fa-key"></i></div>
+          <div>
+            <div style="font-weight:900;color:var(--tx);font-size:1.3rem;letter-spacing:2px;direction:ltr;">${w.word}</div>
+            <div style="color:var(--mt);font-size:.72rem;margin-top:2px;">${fmtDateOnly(w.created_at)}</div>
+          </div>
+        </div>
+        ${w.hidden?'<span class="st rj" style="font-size:.7rem;">👁 مخفية</span>':''}
+      </div>
+      ${w.hint?`<div style="background:#0b0e11;border-radius:10px;padding:10px 14px;font-size:.82rem;color:var(--mt);margin-bottom:12px;line-height:1.5;"><i class="fas fa-lightbulb" style="color:var(--g)"></i> ${w.hint}</div>`:''}
+      <div style="display:flex;gap:8px;">
+        <button class="bs" onclick="editWord('${w.id}')" style="flex:1;padding:9px;justify-content:center;font-size:.8rem;"><i class="fas fa-edit"></i> تعديل</button>
+        <button class="bs" onclick="toggleWordHidden('${w.id}',${w.hidden})" style="flex:1;padding:9px;justify-content:center;font-size:.8rem;"><i class="fas fa-${w.hidden?'eye':'eye-slash'}"></i> ${w.hidden?'إظهار':'إخفاء'}</button>
+        <button class="bd2" onclick="delWord('${w.id}')" style="padding:9px 14px;font-size:.8rem;"><i class="fas fa-trash"></i></button>
       </div>
     </div>`).join('');
 }
@@ -1466,8 +1568,57 @@ function addWordModal(){
     const {error}=await sb.from('words').insert({word:wv,hint});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';
     if(error)return toast(error.message,'er');
+    // إشعار لكل المستخدمين (بدون كشف الكلمة)
+    await sb.from('notifications').insert({
+      title:'📅 كلمة اليوم',
+      body:'تم نزول كلمة اليوم الجديدة - اشترك للمشاهدة',
+      type:'word'
+    });
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
     tgMsg(`📅 <b>كلمة اليوم</b>\n\n🔤 <code>${wv}</code>`);
+  };
+}
+
+/* ===== SETTINGS ===== */
+function extractYTId(url){
+  if(!url)return'';
+  const m=String(url).match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m?m[1]:'';
+}
+async function admSettings(b){
+  b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
+  const {data,error}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
+  if(error){b.innerHTML='<div class="es"><p>خطأ في التحميل</p></div>';return}
+  const s=data||{};
+  b.innerHTML=`
+    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);margin-bottom:16px;">
+      <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;"><i class="fas fa-graduation-cap"></i> فيديوهات تعليم التداول (5 فيديوهات)</h4>
+      <p style="color:var(--mt);font-size:.8rem;margin-bottom:14px;line-height:1.6;">أضف روابط فيديوهات يوتيوب — يتم استخراج معرّف الفيديو تلقائياً</p>
+      ${[1,2,3,4,5].map(i=>`
+        <div style="margin-bottom:12px;">
+          <label class="lb">الفيديو ${i}</label>
+          <input type="text" class="ip" id="ev${i}" placeholder="https://www.youtube.com/watch?v=..." value="${s['edu_video_'+i]||''}" style="direction:ltr;">
+        </div>
+      `).join('')}
+      <button class="bp" id="saveEdu" style="width:100%;justify-content:center;margin-top:8px;"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+    </div>
+    <div style="background:rgba(14,203,129,.06);border:1px solid rgba(14,203,129,.3);border-radius:14px;padding:14px;font-size:.8rem;color:var(--mt);line-height:1.7;">
+      <i class="fas fa-info-circle" style="color:var(--gr)"></i> يتم تطبيق التعديلات فوراً على كل المستخدمين عند الحفظ
+    </div>`;
+  $('#saveEdu').onclick=async()=>{
+    const btn=$('#saveEdu');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الحفظ';
+    const patch={
+      edu_video_1:$('#ev1').value.trim(),
+      edu_video_2:$('#ev2').value.trim(),
+      edu_video_3:$('#ev3').value.trim(),
+      edu_video_4:$('#ev4').value.trim(),
+      edu_video_5:$('#ev5').value.trim(),
+      updated_at:new Date().toISOString()
+    };
+    const {error}=await sb.from('site_settings').upsert({id:1,...patch});
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ الإعدادات';
+    if(error)return toast(error.message,'er');
+    toast('✅ تم حفظ الإعدادات بنجاح','ok');
   };
 }
 
@@ -1493,13 +1644,41 @@ window.renderMarketPage=async function(c){
     $('#mw').innerHTML=`<div style="overflow-x:auto;background:var(--card);border-radius:14px;border:1px solid var(--bd);"><table style="width:100%;border-collapse:collapse;font-size:.85rem;"><thead><tr style="background:var(--card2);color:var(--mt);"><th style="padding:12px;text-align:right;font-weight:700;">العملة</th><th style="padding:12px;text-align:left;font-weight:700;">السعر</th><th style="padding:12px;text-align:left;font-weight:700;">التغير</th></tr></thead><tbody>${t.map(x=>{const ch=parseFloat(x.priceChangePercent);const p=parseFloat(x.lastPrice);return`<tr style="border-bottom:1px solid var(--bd);"><td style="padding:12px;font-weight:700;color:var(--tx);">${x.symbol.replace('USDT','')}</td><td style="padding:12px;text-align:left;direction:ltr;color:var(--tx);">$${p.toLocaleString(undefined,{maximumFractionDigits:p<1?6:2})}</td><td style="padding:12px;text-align:left;color:${ch>=0?'var(--gr)':'var(--rd)'};font-weight:700;">${ch>=0?'+':''}${ch.toFixed(2)}%</td></tr>`}).join('')}</tbody></table></div>`;
   }catch(e){$('#mw').innerHTML='<div class="es"><p>فشل التحميل</p></div>'}
 };
-window.renderLearnPage=function(c){
-  const vids=[{t:"تعلم استخدام التوصيات خطوة بخطوة",id:"hs38BPqtceg"},{t:"الأساسيات والمفاهيم الأساسية",id:"vliTJ2wDtUo"},{t:"الاستراتيجيات المتقدمة والناجحة",id:"O8BpO8EqW5A"}];
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div style="display:grid;grid-template-columns:1fr;gap:15px;">${vids.map(v=>`<div style="background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/${v.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div><div style="padding:14px;font-weight:700;color:var(--g);font-size:.92rem;">${v.t}</div></div>`).join('')}</div>`;
+window.renderLearnPage=async function(c){
+  c.innerHTML='<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div id="learnGrid"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';
+  let ids=[];
+  try{
+    const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
+    if(data){
+      ids=[data.edu_video_1,data.edu_video_2,data.edu_video_3,data.edu_video_4,data.edu_video_5]
+        .map(extractYTId).filter(Boolean);
+    }
+  }catch(e){}
+  if(!ids.length)ids=['hs38BPqtceg','vliTJ2wDtUo','O8BpO8EqW5A'];
+  const grid=$('#learnGrid');
+  grid.innerHTML=ids.map((id,i)=>`
+    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:.2s;">
+      <div style="position:relative;padding-top:56.25%;">
+        <iframe src="https://www.youtube.com/embed/${id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div style="padding:14px 18px;display:flex;align-items:center;gap:10px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;">${i+1}</div>
+        <div style="font-weight:700;color:var(--g);font-size:.9rem;">درس تعليمي رقم ${i+1}</div>
+      </div>
+    </div>
+  `).join('');
 };
 window.renderCoursePage=function(c){
-  let h='<h2 class="pt"><i class="fas fa-play-circle"></i> كورس التداول</h2><div style="display:grid;grid-template-columns:1fr;gap:15px;">';
-  for(let i=1;i<=30;i++)h+=`<div style="background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div><div style="padding:12px;color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div></div>`;
+  let h='<h2 class="pt"><i class="fas fa-play-circle"></i> كورس التداول</h2><div id="courseGrid">';
+  for(let i=1;i<=30;i++)h+=`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:.2s;">
+    <div style="position:relative;padding-top:56.25%;">
+      <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div style="padding:12px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="width:26px;height:26px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;">${i}</div>
+      <div style="color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div>
+    </div>
+  </div>`;
   h+='</div>';c.innerHTML=h;
 };
 window.renderWinnerPage=function(c){
@@ -1508,7 +1687,7 @@ window.renderWinnerPage=function(c){
 };
 
 /* ============================================================
-   GOLD PAGE (تنسيق احترافي على الهاتف)
+   GOLD PAGE (من ملفك الأصلي)
    ============================================================ */
 window.renderGoldPage=function(c){
   c.innerHTML=`
@@ -1602,16 +1781,17 @@ window.renderGoldPage=function(c){
     fetchGold();startT();
   })();
 };
-
+</script>
+<script>
 /* ============================================================
-   TELEGRAM ACTION (تأكيد/رفض من البوت مباشرة)
+   TELEGRAM ACTION (من الرابط)
    ============================================================ */
 async function tgAction(){
   const p=new URLSearchParams(location.search);
   const a=p.get('tg_action'),id=p.get('id');
   if(!a||!id)return;
   history.replaceState(null,'',location.pathname);
-  // حماية: لازم يكون المستخدم أدمن
+  // لازم تسجيل دخول أدمن
   const {data:{session}}=await sb.auth.getSession();
   if(!session||!session.user){alert('يجب تسجيل الدخول كأدمن');return}
   const {data:prof}=await sb.from('profiles').select('role').eq('id',session.user.id).single();
@@ -1640,9 +1820,9 @@ async function tgAction(){
    BOOT
    ============================================================ */
 async function boot(){
-  // عداد الزوار (يعمل حتى قبل تسجيل الدخول)
+  // عداد الزوار
   incrementVisitor();
-  // معالج Telegram (لو جاء من رابط تأكيد)
+  // معالج Telegram (من الرابط)
   await tgAction();
   // فتح Session
   const {data:{session}}=await sb.auth.getSession();
@@ -1667,6 +1847,8 @@ async function boot(){
     if(event==='SIGNED_OUT'){AUTH=null;CU=null;showAuth()}
   });
   setInterval(updateRB,8000);
+  setInterval(updateNotifBadge,10000);
+  updateNotifBadge();
 }
 
 boot();
