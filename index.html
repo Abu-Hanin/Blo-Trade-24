@@ -11,7 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
 :root{--bg:#0B0E11;--card:#1E2329;--card2:#2B3139;--bd:#2b3139;--g:#F0B90B;--g2:#F8D12F;--gr:#0ECB81;--rd:#F6465D;--tx:#EAECEF;--mt:#848E9C}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -21,23 +20,17 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 /* ============ AUTH ============ */
 #auth{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 30% 20%,#14171c,#08090b 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 #auth.hide{display:none}
-.auth-page-wrapper{width:100%;max-width:460px;margin:auto}
-.auth-hero-section{text-align:center;margin-bottom:24px}
-.auth-hero-section .hero-logo-c{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 15px 35px rgba(240,185,11,.4);font-size:2.2rem;color:#0b0e11}
-.auth-hero-section h1{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px;margin-bottom:6px}
-.auth-hero-section .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:4px 14px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:14px;border:1px solid rgba(14,203,129,.3)}
-.auth-hero-section .hero-tag .dot2{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pls 1.6s infinite}
-.auth-hero-section .hero-title-desc{font-size:.95rem;font-weight:700;color:var(--tx);line-height:1.6;padding:0 10px;margin-bottom:8px}
-.auth-hero-section .hero-sub-desc{font-size:.82rem;color:var(--mt);line-height:1.7;padding:0 10px}
-.auth-hero-section .hero-features{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
-.auth-hero-section .hero-features span{background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.2);color:var(--g);font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:5px}
-.abox{width:100%;background:linear-gradient(145deg,#1c1f26,#14171d);border:1px solid #2a2e36;border-radius:28px;padding:32px 28px;box-shadow:0 30px 60px -15px rgba(0,0,0,.9),0 0 0 1px rgba(240,185,11,.08) inset;position:relative;overflow:hidden}
+.abox{width:100%;max-width:440px;background:linear-gradient(145deg,#1c1f26,#14171d);border:1px solid #2a2e36;border-radius:28px;padding:38px 30px;box-shadow:0 30px 60px -15px rgba(0,0,0,.9),0 0 0 1px rgba(240,185,11,.08) inset;position:relative;overflow:hidden}
 .abox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--g),var(--g2),var(--g),transparent)}
 .abox::after{content:'';position:absolute;top:-80px;right:-80px;width:200px;height:200px;background:radial-gradient(circle,rgba(240,185,11,.12),transparent 70%);pointer-events:none}
-.atabs{display:flex;background:var(--bg);border-radius:14px;padding:5px;margin-bottom:24px;gap:4px;position:relative;z-index:1}
+.alg{text-align:center;margin-bottom:30px;position:relative}
+.alg .logo-c{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 12px 30px rgba(240,185,11,.35);font-size:2rem;color:#0b0e11}
+.alg h1{font-size:1.9rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
+.alg p{color:var(--mt);margin-top:8px;font-size:.88rem}
+.atabs{display:flex;background:var(--bg);border-radius:14px;padding:5px;margin-bottom:24px;gap:4px}
 .atab{flex:1;text-align:center;padding:12px;border-radius:10px;cursor:pointer;font-weight:700;color:var(--mt);transition:.2s;font-size:.9rem}
 .atab.on{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);box-shadow:0 6px 15px rgba(240,185,11,.25)}
-.afrm{display:none;flex-direction:column;gap:14px;position:relative;z-index:1}
+.afrm{display:none;flex-direction:column;gap:14px}
 .afrm.on{display:flex}
 .ff{position:relative}
 .ff i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--mt);font-size:.95rem;pointer-events:none}
@@ -54,7 +47,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .ldr{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:currentColor;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ============ APP SHELL ============ */
+/* ============ APP SHELL + HEADER (اسم شمال + burger يمين) ============ */
 #app{display:none;flex-direction:column;height:100vh}
 #app.on{display:flex}
 .hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(30,35,41,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
@@ -72,7 +65,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .notif-btn:active{transform:scale(.92)}
 .notif-badge{position:absolute;top:2px;left:2px;background:var(--rd);color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(246,70,93,.6);animation:pls 1.6s infinite}
 
-/* SIDE MENU */
+/* SIDE MENU (يمين) */
 #smenu{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--card);z-index:200;transition:right .3s;overflow-y:auto;border-left:1px solid var(--bd);display:flex;flex-direction:column}
 #smenu.on{right:0}
 .smh{padding:20px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
@@ -111,7 +104,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 @keyframes ring{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
 .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:14px;border:1px solid rgba(14,203,129,.3)}
 .hero-tag .dot2{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pls 1.6s infinite}
-.visitor-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:8px;border:1px solid rgba(14,203,129,.3);margin-right:8px}
+.visitor-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(240,185,11,.1);color:var(--g);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:8px;border:1px solid rgba(240,185,11,.3);margin-right:8px}
 .hero-title{font-size:1.15rem;font-weight:800;color:var(--tx);margin-top:16px;padding:0 20px;line-height:1.5}
 .hero-sub{font-size:.88rem;color:var(--mt);margin-top:10px;padding:0 25px;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto}
 .gi{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:26px;max-width:1100px;margin-left:auto;margin-right:auto}
@@ -159,11 +152,13 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 /* PROFILE */
 .prof-hero{background:linear-gradient(135deg,#1c1f26 0%,#14171d 100%);border:1px solid #2a2e36;border-radius:24px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden}
 .prof-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(240,185,11,.15),transparent 70%);pointer-events:none}
+.prof-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(14,203,129,.08),transparent 70%);pointer-events:none}
 .prof-top{display:flex;align-items:center;gap:18px;position:relative;z-index:1}
 .prof-av{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;color:#0b0e11;font-weight:900;font-size:2rem;flex-shrink:0;box-shadow:0 12px 25px rgba(240,185,11,.3)}
 .prof-info{flex:1;min-width:0}
 .prof-info .n{font-weight:900;font-size:1.3rem;color:var(--tx);margin-bottom:4px}
 .prof-info .e{color:var(--mt);font-size:.85rem;direction:ltr;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;position:relative;z-index:1}
 .ps-cell{background:rgba(11,14,17,.6);border:1px solid #2a2e36;border-radius:14px;padding:14px 8px;text-align:center}
 .ps-cell .ps-v{font-size:1.3rem;font-weight:900;color:var(--g);line-height:1}
@@ -190,7 +185,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .pm-list{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
 .pm-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:1.5px solid #2a2e36;border-radius:20px;padding:22px 24px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
 .pm-card:hover{border-color:var(--g);transform:translateY(-3px);box-shadow:0 15px 30px -10px rgba(240,185,11,.25);background:#1f232b}
-.pm-card .pm-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:2rem;font-weight:900}
+.pm-card .pm-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:2rem;font-weight:900;position:relative}
 .pm-vf .pm-icon{background:#e60000;color:#fff}
 .pm-bin .pm-icon{background:#f0b90b;color:#0b0e11}
 .pm-cry .pm-icon{background:#26a17b;color:#fff}
@@ -201,7 +196,12 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .pm-card .pm-txt p{font-size:.82rem;color:var(--mt);line-height:1.4}
 .pm-card .pm-arrow{color:var(--mt);font-size:1.3rem;flex-shrink:0;transition:.2s}
 .pm-card:hover .pm-arrow{color:var(--g);transform:translateX(-5px)}
-@media(max-width:480px){.pm-card{padding:18px 18px;gap:14px;border-radius:18px}.pm-card .pm-icon{width:56px;height:56px;font-size:1.7rem}.pm-card .pm-txt h4{font-size:1rem}.pm-card .pm-txt p{font-size:.78rem}}
+@media(max-width:480px){
+  .pm-card{padding:18px 18px;gap:14px;border-radius:18px}
+  .pm-card .pm-icon{width:56px;height:56px;font-size:1.7rem}
+  .pm-card .pm-txt h4{font-size:1rem}
+  .pm-card .pm-txt p{font-size:.78rem}
+}
 .pay-head-v2{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:26px 22px;border:1px solid #2a2e36;margin-bottom:18px;text-align:center;position:relative;overflow:hidden}
 .pay-head-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .pay-head-v2.vf::before{background:linear-gradient(90deg,#e60000,transparent,#e60000)}
@@ -264,6 +264,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .rec-sym:active{transform:scale(.97)}
 .rec-sym h3{font-size:1.5rem;font-weight:900;color:var(--g);letter-spacing:-.5px;line-height:1.1;display:flex;align-items:baseline;gap:6px;text-shadow:0 0 20px rgba(240,185,11,.15)}
 .rec-sym h3 span{font-size:.7rem;color:var(--mt);font-weight:600;letter-spacing:0}
+.rec-sym .copy-hint{position:absolute;top:-20px;right:0;background:var(--g);color:#0b0e11;padding:3px 9px;border-radius:8px;font-size:.65rem;font-weight:800;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 10px rgba(240,185,11,.3)}
+.rec-sym:hover .copy-hint{opacity:1;top:-24px}
 .rec-price{text-align:left;flex-shrink:0}
 .rec-price .p{font-size:1.05rem;font-weight:800;color:var(--tx);direction:ltr}
 .rec-price .c{font-size:.8rem;font-weight:700;margin-top:3px}
@@ -336,15 +338,23 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ust.act{background:rgba(14,203,129,.2);color:var(--gr)}
 .ust.inact{background:rgba(240,185,11,.2);color:var(--g)}
 
-/* EDUCATION / COURSE */
+/* EDUCATION PAGE - PC */
 #learnGrid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:768px){#learnGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}}
-@media(min-width:1200px){#learnGrid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){
+  #learnGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
+}
+@media(min-width:1200px){
+  #learnGrid{grid-template-columns:repeat(3,1fr)}
+}
 #courseGrid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:768px){#courseGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}}
-@media(min-width:1200px){#courseGrid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){
+  #courseGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
+}
+@media(min-width:1200px){
+  #courseGrid{grid-template-columns:repeat(3,1fr)}
+}
 
-/* GOLD */
+/* GOLD PAGE */
 #goldWrap .gold-container{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:20px;border:1px solid #2a2e36}
 #goldWrap .g-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 #goldWrap .g-header h3{color:var(--g);font-size:1.1rem;font-weight:900}
@@ -393,57 +403,45 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
   #goldWrap .g-result{padding:9px 14px;font-size:.9rem;min-width:80px}
   #goldWrap .g-section{padding:14px}
 }
-@media(min-width:481px) and (max-width:768px){#goldWrap .g-grid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:769px){#goldWrap .g-grid{grid-template-columns:repeat(5,1fr)}}
-
-/* WINNER IFRAME */
-.iframe-wrap{width:100%;height:calc(100vh - 180px);min-height:700px;border:0;border-radius:16px;background:#0b0e11;display:block}
+@media(min-width:481px) and (max-width:768px){
+  #goldWrap .g-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:769px){
+  #goldWrap .g-grid{grid-template-columns:repeat(5,1fr)}
+}
 </style>
 </head>
 <body>
 
-<!-- ==================== AUTH ==================== -->
 <div id="auth">
-<div class="auth-page-wrapper">
-
-<div class="auth-hero-section">
-<div class="hero-logo-c"><i class="fas fa-chart-line"></i></div>
-<h1>Blo Trade 24</h1>
-<div class="hero-tag"><span class="dot2"></span> منصة التداول الفوري · 24 ساعة</div>
-<div class="hero-title-desc">📈 توصيات احترافية يومية للتداول الفوري في العملات الرقمية المشفرة</div>
-<div class="hero-sub-desc">نقدم لكم تحليلات مدروسة من خبراء التداول مع نقاط دخول واضحة، أهداف متعددة، ووقف خسارة محدد لإدارة المخاطر باحترافية.</div>
-<div class="hero-features">
-<span><i class="fas fa-chart-line"></i> توصيات لحظية</span>
-<span><i class="fas fa-calendar-day"></i> كلمة اليوم</span>
-<span><i class="fas fa-trophy"></i> سحب الفائز</span>
-</div>
-</div>
-
 <div class="abox">
+<div class="alg">
+<div class="logo-c"><i class="fas fa-chart-line"></i></div>
+<h1>Blo Trade 24</h1>
+<p>منصة التداول الفوري للعملات الرقمية</p>
+</div>
 <div class="atabs">
 <div class="atab on" data-t="login">تسجيل الدخول</div>
 <div class="atab" data-t="reg">إنشاء حساب</div>
 </div>
 <form class="afrm on" id="lf">
 <div class="aerr" id="le"></div>
-<div class="ff"><i class="fas fa-envelope"></i><input type="email" id="lE" placeholder="البريد الإلكتروني" required autocomplete="email"></div>
-<div class="ff"><i class="fas fa-lock"></i><input type="password" id="lP" placeholder="كلمة السر" required autocomplete="current-password"></div>
+<div class="ff"><i class="fas fa-envelope"></i><input type="email" id="lE" placeholder="البريد الإلكتروني" required></div>
+<div class="ff"><i class="fas fa-lock"></i><input type="password" id="lP" placeholder="كلمة السر" required></div>
 <button type="submit" class="bp" id="lBtn"><i class="fas fa-sign-in-alt"></i> دخول</button>
 </form>
 <form class="afrm" id="rf">
 <div class="aerr" id="re"></div>
 <div class="aok" id="ro"></div>
-<div class="ff"><i class="fas fa-user"></i><input type="text" id="rU" placeholder="اسم المستخدم" required autocomplete="username"></div>
-<div class="ff"><i class="fas fa-envelope"></i><input type="email" id="rE" placeholder="البريد الإلكتروني" required autocomplete="email"></div>
-<div class="ff"><i class="fas fa-phone"></i><input type="tel" id="rH" placeholder="رقم الهاتف (إجباري)" required autocomplete="tel"></div>
-<div class="ff"><i class="fas fa-lock"></i><input type="password" id="rP" placeholder="كلمة السر (6+ أحرف)" required minlength="6" autocomplete="new-password"></div>
+<div class="ff"><i class="fas fa-user"></i><input type="text" id="rU" placeholder="اسم المستخدم" required></div>
+<div class="ff"><i class="fas fa-envelope"></i><input type="email" id="rE" placeholder="البريد الإلكتروني" required></div>
+<div class="ff"><i class="fas fa-phone"></i><input type="tel" id="rH" placeholder="رقم الهاتف (إجباري)" required></div>
+<div class="ff"><i class="fas fa-lock"></i><input type="password" id="rP" placeholder="كلمة السر (6+ أحرف)" required minlength="6"></div>
 <button type="submit" class="bp" id="rBtn"><i class="fas fa-user-plus"></i> إنشاء الحساب</button>
 </form>
 </div>
 </div>
-</div>
 
-<!-- ==================== APP ==================== -->
 <div id="app">
 <header class="hd">
 <div style="display:flex;align-items:center;gap:6px;">
@@ -491,16 +489,19 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
    ============================================================ */
 const SUPABASE_URL = 'https://wfcizftmcclhnzgvukuy.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmY2l6ZnRtY2NsaG56Z3Z1a3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDI3ODYsImV4cCI6MjEwNDYxODc4Nn0.HZ852U2kZzHkXQveGEWT0qLra-vsVOwZOsT1Zl8nQ80';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-});
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const TG_TOKEN='8848036284:AAGVbG_UylFYsYagJM56Fg_kIqaDdiT9AuM';
 const TG_CHAT='6242313550';
 const TG_API='https://api.telegram.org/bot'+TG_TOKEN;
 const ADMIN_EMAIL='swlyd3393@gmail.com';
 const PRICE_EGP=1600,PRICE_USD=33,SUB_DAYS=180;
-const ONESIGNAL_APP_ID='a7f57c53-725b-4db8-8b4f-a84ed71d1f98';
+const VF='01001606298';
+const BIN='746211155';
+const CRYPTO='TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D';
+const NET='Tron (TRC20)',COIN='USDT';
+const INSTA='01154846407';
+const REDOT='1770425974';
 
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
@@ -510,40 +511,33 @@ function fmtTime(ts){return new Date(ts).toLocaleString('ar-EG',{year:'numeric',
 function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMonth()+1} - ${d.getFullYear()}`}
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
-let CU=null,AUTH=null;
+let CU=null;
+let AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
 function subDaysLeft(){if(!CU.subscription_end)return 0;return Math.max(0,Math.ceil((new Date(CU.subscription_end).getTime()-Date.now())/864e5))}
 
 /* ============================================================
-   OneSignal Init
-   ============================================================ */
-window.OneSignalDeferred = window.OneSignalDeferred || [];
-function initOneSignal(){
-  OneSignalDeferred.push(async function(OneSignal){
-    try{
-      await OneSignal.init({
-        appId: ONESIGNAL_APP_ID,
-        allowLocalhostAsSecureOrigin: true,
-        notifyButton: {enable: false}
-      });
-      await OneSignal.Slidedown.promptPush();
-    }catch(e){console.warn('OneSignal init error:', e)}
-  });
-}
-initOneSignal();
-
-/* ============================================================
-   Profile Load
+   تحميل البروفايل
    ============================================================ */
 async function loadProfile(){
   if(!AUTH)return null;
   const {data,error}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
   if(data)return data;
+  console.warn('Profile missing, creating...',error);
   const email=(AUTH.email||'').toLowerCase();
   const meta=AUTH.user_metadata||{};
-  const newProfile={id:AUTH.id,username:meta.username||email.split('@')[0],email:email,phone:meta.phone||'',role:email===ADMIN_EMAIL.toLowerCase()?'admin':'user',balance:0,banned:false};
-  const {data:created,error:ce}=await sb.from('profiles').insert(newProfile).select().single();
-  if(ce){
+  const newProfile={
+    id:AUTH.id,
+    username:meta.username||email.split('@')[0],
+    email:email,
+    phone:meta.phone||'',
+    role:email===ADMIN_EMAIL.toLowerCase()?'admin':'user',
+    balance:0,
+    banned:false
+  };
+  const {data:created,error:createErr}=await sb.from('profiles').insert(newProfile).select().single();
+  if(createErr){
+    console.error('Create profile error:',createErr);
     const {data:retry}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
     return retry||null;
   }
@@ -651,12 +645,12 @@ $('#mod').onclick=e=>{if(e.target.id==='mod')closeM()};
 document.getElementById('notifBtn')?.addEventListener('click',()=>{go('notifications')});
 
 /* ============================================================
-   Visitors
+   عداد الزوار
    ============================================================ */
 async function getVisitorCount(){
   try{
     const {data,error}=await sb.from('site_stats').select('visits').eq('id',1).maybeSingle();
-    if(error)return 0;
+    if(error){console.warn('Stats error:',error);return 0}
     return data?.visits||0;
   }catch(e){return 0}
 }
@@ -671,24 +665,7 @@ async function incrementVisitor(){
       const newVal=(cur?.visits||0)+1;
       await sb.from('site_stats').upsert({id:1,visits:newVal});
     }
-  }catch(e){}
-}
-
-/* ============================================================
-   Settings Loader (for payments)
-   ============================================================ */
-let APP_SETTINGS={pay_vf:'01001606298',pay_bin:'746211155',pay_crypto:'TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D',pay_insta:'01154846407',pay_redot:'1770425974'};
-async function loadAppSettings(){
-  try{
-    const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
-    if(data){
-      APP_SETTINGS.pay_vf=data.pay_vf||APP_SETTINGS.pay_vf;
-      APP_SETTINGS.pay_bin=data.pay_bin||APP_SETTINGS.pay_bin;
-      APP_SETTINGS.pay_crypto=data.pay_crypto||APP_SETTINGS.pay_crypto;
-      APP_SETTINGS.pay_insta=data.pay_insta||APP_SETTINGS.pay_insta;
-      APP_SETTINGS.pay_redot=data.pay_redot||APP_SETTINGS.pay_redot;
-    }
-  }catch(e){}
+  }catch(e){console.warn('visit error',e)}
 }
 
 /* ============================================================
@@ -702,7 +679,7 @@ R.home=async c=>{
     <div class="hero">
       <div class="hero-logo"><h1>Blo Trade 24</h1><span class="hero-live"></span></div>
       <div class="hero-tag"><span class="dot2"></span> بث مباشر · 24 ساعة</div>
-      <div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('en-US')} زيارة</div>
+      <div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('ar-EG')} زيارة</div>
       <div class="hero-title">التداول الفوري للعملات الرقمية المشفرة</div>
       <div class="hero-sub">نقدم لكم توصيات للتداول الفوري للعملات المشفرة احترافية بشكل يومي، والتوصيات مدروسة من قبل الخبراء في التداول.</div>
     </div>
@@ -714,13 +691,13 @@ R.home=async c=>{
       <a class="gic" data-g="learn"><div class="icn"><i class="fas fa-graduation-cap"></i></div><div class="txt"><div class="ttl">تعليم التداول</div><div class="ds">دروس تعليمية شاملة</div></div></a>
       <a class="gic" data-g="course"><div class="icn"><i class="fas fa-play-circle"></i></div><div class="txt"><div class="ttl">كورس التداول</div><div class="ds">30 درس فيديو</div></div></a>
       <a class="gic" data-g="market"><div class="icn"><i class="fas fa-globe"></i></div><div class="txt"><div class="ttl">سوق العملات</div><div class="ds">أسعار لحظية مباشرة</div></div></a>
-      <a class="gic ${s?'unlocked':''}" data-g="winner">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-trophy"></i></div><div class="txt"><div class="ttl">اختيار الفائز</div><div class="ds">سحب عشوائي من التعليقات</div></div></a>
+      <a class="gic" data-g="winner"><div class="icn"><i class="fas fa-trophy"></i></div><div class="txt"><div class="ttl">اختيار الفائز</div><div class="ds">سحب عشوائي من التعليقات</div></div></a>
     </div>
     ${!s?`<div style="margin-top:24px;background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--g);border-radius:22px;padding:24px;text-align:center;position:relative;overflow:hidden;max-width:600px;margin-left:auto;margin-right:auto;">
       <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(240,185,11,.15),transparent 70%)"></div>
       <i class="fas fa-crown" style="color:var(--g);font-size:2.2rem;margin-bottom:12px;"></i>
       <h3 style="color:var(--g);margin-bottom:8px;font-weight:900;font-size:1.2rem;">اشترك الآن - 33$ / 6 شهور</h3>
-      <p style="color:var(--mt);margin-bottom:18px;font-size:.88rem;line-height:1.6;">فعّل اشتراكك للوصول للتوصيات وكلمة اليوم واختيار الفائز لمدة 180 يوم</p>
+      <p style="color:var(--mt);margin-bottom:18px;font-size:.88rem;line-height:1.6;">فعّل اشتراكك للوصول للتوصيات وكلمة اليوم لمدة 180 يوم</p>
       <button class="bp" data-g="dep" style="width:100%;"><i class="fas fa-wallet"></i> اذهب للإيداع</button>
     </div>`:''}
   </div>`;
@@ -759,11 +736,15 @@ R.prof=c=>{
       function tick(){
         const diff=end-Date.now();
         if(diff<=0){clearInterval(cdInterval);toast('انتهى اشتراكك','er');refreshUser().then(()=>go('prof'));return}
-        const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4),sec=Math.floor((diff%6e4)/1000);
+        const d=Math.floor(diff/864e5);
+        const h=Math.floor((diff%864e5)/36e5);
+        const m=Math.floor((diff%36e5)/6e4);
+        const sec=Math.floor((diff%6e4)/1000);
         const dEl=$('#cdD'),hEl=$('#cdH'),mEl=$('#cdM'),sEl=$('#cdS');
         if(dEl)dEl.textContent=d;if(hEl)hEl.textContent=h;if(mEl)mEl.textContent=m;if(sEl)sEl.textContent=sec;
       }
-      tick();cdInterval=setInterval(tick,1000);
+      tick();
+      cdInterval=setInterval(tick,1000);
     },50);
   }else if(u.subscription_end&&new Date(u.subscription_end).getTime()<Date.now()){
     subHTML=`<div class="sub-box" style="border-color:var(--rd)"><h4 style="color:var(--rd)"><i class="fas fa-exclamation-circle"></i> انتهى اشتراكك</h4><p style="color:var(--mt);font-size:.85rem;line-height:1.7;">انتهت صلاحية اشتراكك. قم بتجديد الاشتراك للاستمرار.</p><button class="bp" id="renewBtn" style="width:100%;margin-top:14px;justify-content:center;"><i class="fas fa-redo"></i> تجديد الاشتراك</button></div>`;
@@ -778,7 +759,7 @@ R.prof=c=>{
       <div class="prof-info">
         <div class="n">${u.username||'-'}</div>
         <div class="e">${u.email||'-'}</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${planBadge}</div>
+        <div class="prof-badges">${planBadge}</div>
       </div>
     </div>
     <div class="prof-stats">
@@ -835,18 +816,38 @@ async function actPlan(){
 }
 
 /* ============================================================
-   DEPOSIT
+   DEPOSIT (5 طرق دفع)
    ============================================================ */
 R.dep=c=>{
   c.innerHTML=`
   <h2 class="pt"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h2>
   <p style="color:var(--mt);font-size:.9rem;line-height:1.7;margin-bottom:20px;text-align:center;">نوفر في <b style="color:var(--g)">Blo Trade 24</b> مجموعة متنوعة من وسائل الدفع الآمنة والمرنة. اختر وسيلة الدفع المناسبة:</p>
   <div class="pm-list">
-    <div class="pm-card pm-vf" data-m="vf"><div class="pm-icon"><i class="fas fa-mobile-alt"></i></div><div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-bin" data-m="bin"><div class="pm-icon"><i class="fab fa-bitcoin"></i></div><div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance العالمية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-cry" data-m="cry"><div class="pm-icon"><i class="fas fa-coins"></i></div><div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20)</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-inst" data-m="inst"><div class="pm-icon"><i class="fas fa-university"></i></div><div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay المصرية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-red" data-m="red"><div class="pm-icon"><i class="fas fa-credit-card"></i></div><div class="pm-txt"><h4>ريدوت باي</h4><p>الدفع عبر منصة RedotPay العالمية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-vf" data-m="vf">
+      <div class="pm-icon"><i class="fas fa-mobile-alt"></i></div>
+      <div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش</p></div>
+      <i class="fas fa-chevron-left pm-arrow"></i>
+    </div>
+    <div class="pm-card pm-bin" data-m="bin">
+      <div class="pm-icon"><i class="fab fa-bitcoin"></i></div>
+      <div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance العالمية</p></div>
+      <i class="fas fa-chevron-left pm-arrow"></i>
+    </div>
+    <div class="pm-card pm-cry" data-m="cry">
+      <div class="pm-icon"><i class="fas fa-coins"></i></div>
+      <div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20)</p></div>
+      <i class="fas fa-chevron-left pm-arrow"></i>
+    </div>
+    <div class="pm-card pm-inst" data-m="inst">
+      <div class="pm-icon"><i class="fas fa-university"></i></div>
+      <div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay المصرية</p></div>
+      <i class="fas fa-chevron-left pm-arrow"></i>
+    </div>
+    <div class="pm-card pm-red" data-m="red">
+      <div class="pm-icon"><i class="fas fa-credit-card"></i></div>
+      <div class="pm-txt"><h4>ريدوت باي</h4><p>الدفع عبر منصة RedotPay العالمية</p></div>
+      <i class="fas fa-chevron-left pm-arrow"></i>
+    </div>
   </div>
   <div style="text-align:center;color:var(--mt);font-size:.85rem;margin-top:22px;padding:16px;background:var(--card);border-radius:14px;border:1px dashed var(--bd);"><i class="fas fa-lock"></i> جميع المعاملات آمنة ومشفرة</div>
   <h4 style="color:var(--g);margin:28px 0 14px;font-size:1rem;"><i class="fas fa-history"></i> سجل الإيداعات</h4>
@@ -871,24 +872,24 @@ async function renderDH(){
 function showPayDetail(m){
   const c=$('#ct');c.scrollTop=0;
   const META={
-    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_vf},
-    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_bin},
-    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_crypto},
-    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_insta},
-    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_redot}
+    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:VF,valLbl:'رقم محفظة الكاش'},
+    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:BIN,valLbl:'Binance Pay ID'},
+    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:CRYPTO,valLbl:'عنوان المحفظة (TRC20)'},
+    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:INSTA,valLbl:'رقم InstaPay'},
+    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:REDOT,valLbl:'RedotPay ID'}
   };
   const meta=META[m];
   let steps=[];
   if(m==='vf'){
-    steps=['افتح تطبيق محفظتك (فودافون/اتصالات/أورنج كاش)','اختر "تحويل أموال" واكتب الرقم: <strong>'+meta.val+'</strong>','اكتب المبلغ وأكد التحويل','احتفظ بلقطة شاشة للتحويل','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق محفظتك (فودافون/اتصالات/أورنج كاش)','اختر "تحويل أموال" واكتب الرقم: <strong>'+VF+'</strong>','اكتب المبلغ وأكد التحويل','احتفظ بلقطة شاشة للتحويل','ارجع هنا واملأ البيانات'];
   }else if(m==='bin'){
-    steps=['افتح تطبيق Binance واختر "Pay"','اختر "Send" واكتب المعرّف: <strong>'+meta.val+'</strong>','أدخل المبلغ بالدولار وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق Binance واختر "Pay"','اختر "Send" واكتب المعرّف: <strong>'+BIN+'</strong>','أدخل المبلغ بالدولار وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
   }else if(m==='cry'){
     steps=['افتح محفظتك الرقمية (Binance / Trust Wallet)','اختر شبكة <strong>Tron (TRC20)</strong>','أرسل <strong>'+PRICE_USD+' USDT</strong> للعنوان','احتفظ بـ Transaction Hash','ارجع هنا واملأ البيانات'];
   }else if(m==='inst'){
-    steps=['افتح تطبيق بنكك واختر InstaPay','اختر "تحويل" واكتب الرقم: <strong>'+meta.val+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق بنكك واختر InstaPay','اختر "تحويل" واكتب الرقم: <strong>'+INSTA+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
   }else{
-    steps=['افتح تطبيق RedotPay','اختر "Send" واكتب ID: <strong>'+meta.val+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
+    steps=['افتح تطبيق RedotPay','اختر "Send" واكتب ID: <strong>'+REDOT+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
   }
   c.innerHTML=`
   <button id="backBtn" style="background:none;border:none;color:var(--g);font-size:.95rem;cursor:pointer;padding:8px 0;margin-bottom:16px;font-weight:700;display:inline-flex;align-items:center;gap:8px;"><i class="fas fa-arrow-right"></i> رجوع لطرق الدفع</button>
@@ -896,6 +897,7 @@ function showPayDetail(m){
     <div class="ph-icon-v2"><i class="${meta.icon}"></i></div>
     <h3>${meta.name}</h3>
     <p class="ph-sub">${meta.sub}</p>
+    <p style="color:var(--mt);font-size:.82rem;margin-bottom:14px;">قم بالتحويل على البيانات التالية</p>
     <div class="copy-box">
       <div class="cb-lbl" id="pv1">${meta.val}</div>
       <button data-copy="pv1"><i class="fas fa-copy"></i> نسخ</button>
@@ -964,21 +966,23 @@ function showPayDetail(m){
         const {data:pub}=sb.storage.from('proofs').getPublicUrl(fileName);
         screenshotUrl=pub.publicUrl;
       }
-    }catch(e){}
+    }catch(e){console.warn('Upload failed',e)}
     const METHOD={vf:'vodafone',bin:'binance',cry:'crypto',inst:'instapay',red:'redotpay'}[m];
     const {data:depRow,error}=await sb.from('deposits').insert({user_id:CU.id,user_name:CU.username,user_email:CU.email,method:METHOD,amount:amt,tx_id:tx,phone:CU.phone||'',screenshot_url:screenshotUrl,status:'pending'}).select().single();
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> تأكيد وإرسال للإدارة';
     if(error){toast(error.message,'er');return}
     const methodName={vf:'فودافون كاش 💚',bin:'Binance Pay 🟡',cry:'USDT TRC20 🪙',inst:'إنستا باي 🏦',red:'ريدوت باي 💳'}[m];
     const caption=`🔔 <b>طلب إيداع جديد</b>\n\n👤 ${CU.username}\n📧 ${CU.email}\n📱 ${CU.phone||'-'}\n\n💳 ${methodName}\n💰 ${amt}\n🔖 TX: <code>${tx}</code>\n\n🆔 <code>${depRow.id}</code>`;
-    const keyboard={inline_keyboard:[[{text:'✅ تأكيد',callback_data:'approve:'+depRow.id},{text:'❌ رفض',callback_data:'reject:'+depRow.id}]]};
+    const depUrl=location.origin+location.pathname+'?tg_action=approve&id='+depRow.id;
+    const rejUrl=location.origin+location.pathname+'?tg_action=reject&id='+depRow.id;
+    const btns={inline_keyboard:[[{text:'✅ تأكيد',url:depUrl},{text:'❌ رفض',url:rejUrl}]]};
     if(screenshotUrl){
       try{
         const f=new FormData();
         f.append('chat_id',TG_CHAT);f.append('photo',screenshotUrl);f.append('caption',caption);f.append('parse_mode','HTML');
-        f.append('reply_markup',JSON.stringify(keyboard));
+        f.append('reply_markup',JSON.stringify(btns));
         await fetch(TG_API+'/sendPhoto',{method:'POST',body:f});
-      }catch(e){}
+      }catch(e){console.warn('TG error',e)}
     }
     toast('✅ تم إرسال الطلب! في انتظار التأكيد','ok');
     setTimeout(()=>go('dep'),1200);
@@ -988,26 +992,28 @@ function showPayDetail(m){
 /* ============================================================
    Recs/Words helpers
    ============================================================ */
-window._recsCache=[];window._wordsCache=[];
+window._recsCache=[];
+window._wordsCache=[];
 async function fetchRecos(){
   const {data,error}=await sb.from('recommendations').select('*').eq('hidden',false).order('created_at',{ascending:false});
-  if(error)return[];
+  if(error){console.error(error);return[]}
   return data||[];
 }
 async function fetchWords(){
   const {data,error}=await sb.from('words').select('*').eq('hidden',false).order('created_at',{ascending:false});
-  if(error)return[];
+  if(error){console.error(error);return[]}
   return data||[];
 }
 
 /* ============================================================
-   RECS (with hit detection)
+   RECS (مع كشف تحقيق الهدف)
    ============================================================ */
 let rPrices={};
 R.recs=async c=>{
   if(!isSub()){
     c.innerHTML=`<div class="ls"><div class="li"><i class="fas fa-lock"></i></div><h3>هذه الصفحة للمشتركين فقط</h3><p>اشترك في الخطة لمدة 6 شهور (33$) للوصول لجميع التوصيات</p><button class="bp" id="goDepBtn" style="justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;
-    $('#goDepBtn').onclick=()=>go('dep');return;
+    $('#goDepBtn').onclick=()=>go('dep');
+    return;
   }
   c.innerHTML=`<h2 class="pt"><i class="fas fa-chart-line"></i> التوصيات</h2><div id="recoList" class="recs-grid"><div class="es" style="grid-column:1/-1"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
   await renderRecos();
@@ -1046,8 +1052,9 @@ async function renderRecos(){
     const priceHtml=p?`<div class="p">$${p.price.toLocaleString(undefined,{maximumFractionDigits:p.price<1?6:2})}</div><div class="c ${p.change>=0?'c-up':'c-dn'}">${p.change>=0?'▲':'▼'} ${Math.abs(p.change).toFixed(2)}%</div>`:'<div class="p">--</div>';
     return `<div class="rec-card">
       <div class="rec-head">
-        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط لنسخ اسم العملة">
+        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط للنسخ">
           <h3>${r.symbol.toUpperCase()} <span>/USDT</span></h3>
+          <div class="copy-hint"><i class="fas fa-copy"></i> نسخ</div>
         </div>
         <div class="rec-price">${priceHtml}</div>
       </div>
@@ -1068,18 +1075,19 @@ async function renderRecos(){
   c.querySelectorAll('[data-copy]').forEach(el=>{
     el.onclick=()=>{
       const sym=el.dataset.copy;
-      navigator.clipboard.writeText(sym).then(()=>toast('تم نسخ: '+sym,'ok'));
+      navigator.clipboard.writeText(sym+'USDT').then(()=>toast('تم نسخ: '+sym+'USDT','ok'));
     };
   });
 }
 
 /* ============================================================
-   WORDS
+   WORDS (USER)
    ============================================================ */
 R.words=async c=>{
   if(!isSub()){
     c.innerHTML=`<div class="ls"><div class="li"><i class="fas fa-lock"></i></div><h3>هذه الصفحة للمشتركين فقط</h3><p>اشترك في الخطة لمدة 6 شهور (33$) للوصول لكلمات اليوم</p><button class="bp" id="goDepBtn2" style="justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;
-    $('#goDepBtn2').onclick=()=>go('dep');return;
+    $('#goDepBtn2').onclick=()=>go('dep');
+    return;
   }
   c.innerHTML=`<h2 class="pt"><i class="fas fa-calendar-day"></i> كلمة اليوم</h2><div id="wordsList"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
   const list=await fetchWords();
@@ -1092,18 +1100,19 @@ R.words=async c=>{
 };
 
 /* ============================================================
-   NOTIFICATIONS PAGE
+   صفحة الإشعارات
    ============================================================ */
 R.notifications=async c=>{
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-bell"></i> الإشعارات</h2><div id="notifList"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
+  c.innerHTML=`<h2 class="pt"><i class="fas fa-bell"></i> الإشعارات</h2>
+    <div id="notifList"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
   setTimeout(markNotifSeen,500);
   try{
     const {data,error}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(50);
     const el=$('#notifList');
     if(error||!data||!data.length){el.innerHTML='<div class="es"><i class="fas fa-bell-slash ei"></i><p>لا توجد إشعارات حالياً</p></div>';return}
     el.innerHTML=data.map(n=>{
-      const icn=n.type==='reco'?'fa-chart-line':n.type==='word'?'fa-calendar-day':n.type==='deposit_approve'?'fa-check-circle':n.type==='deposit_reject'?'fa-times-circle':'fa-bell';
-      const clr=n.type==='reco'?'var(--g)':n.type==='word'?'var(--gr)':n.type==='deposit_reject'?'var(--rd)':n.type==='deposit_approve'?'var(--gr)':'var(--mt)';
+      const icn=n.type==='reco'?'fa-chart-line':n.type==='word'?'fa-calendar-day':'fa-bell';
+      const clr=n.type==='reco'?'var(--g)':n.type==='word'?'var(--gr)':'var(--mt)';
       return `<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:center;">
         <div style="width:44px;height:44px;border-radius:12px;background:rgba(240,185,11,.1);display:flex;align-items:center;justify-content:center;color:${clr};font-size:1.2rem;flex-shrink:0;"><i class="fas ${icn}"></i></div>
         <div style="flex:1;min-width:0;">
@@ -1117,7 +1126,7 @@ R.notifications=async c=>{
 };
 
 /* ============================================================
-   Router
+   Router للصفحات
    ============================================================ */
 R.bubble=c=>window.renderBubblePage(c);
 R.market=c=>window.renderMarketPage(c);
@@ -1138,17 +1147,21 @@ function updateRB(){
 }
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();deferredPrompt=e;$('#instBtn')?.classList.add('show');
+  e.preventDefault();
+  deferredPrompt=e;
+  $('#instBtn')?.classList.add('show');
 });
 $('#instBtn')?.addEventListener('click',async()=>{
-  if(!deferredPrompt)return toast('التثبيت غير متاح');
+  if(!deferredPrompt)return toast('التثبيت غير متاح على هذا المتصفح');
   deferredPrompt.prompt();
   const {outcome}=await deferredPrompt.userChoice;
   if(outcome==='accepted')toast('🎉 شكراً لتثبيت التطبيق','ok');
-  deferredPrompt=null;$('#instBtn').classList.remove('show');
+  deferredPrompt=null;
+  $('#instBtn').classList.remove('show');
 });
 window.addEventListener('appinstalled',()=>{
-  deferredPrompt=null;$('#instBtn')?.classList.remove('show');
+  deferredPrompt=null;
+  $('#instBtn')?.classList.remove('show');
   toast('✅ تم التثبيت بنجاح','ok');
 });
 async function askNotifPermission(){
@@ -1162,7 +1175,8 @@ function notify(title,body){
 async function updateNotifBadge(){
   try{
     const {data,error}=await sb.from('notifications').select('created_at').order('created_at',{ascending:false}).limit(1).maybeSingle();
-    const badge=$('#notifBadge');if(!badge)return;
+    const badge=$('#notifBadge');
+    if(!badge)return;
     if(error||!data){badge.style.display='none';return}
     const lastSeen=localStorage.getItem('blo_notif_seen')||'';
     if(data.created_at!==lastSeen){
@@ -1170,7 +1184,7 @@ async function updateNotifBadge(){
       if(count&&count>0){badge.textContent=count>9?'9+':count;badge.style.display='flex'}
       else badge.style.display='none';
     }else badge.style.display='none';
-  }catch(e){}
+  }catch(e){console.warn(e)}
 }
 function markNotifSeen(){
   sb.from('notifications').select('created_at').order('created_at',{ascending:false}).limit(1).maybeSingle().then(({data})=>{
@@ -1211,9 +1225,10 @@ function initRealtime(){
 async function tgMsg(t){
   try{const f=new FormData();f.append('chat_id',TG_CHAT);f.append('text',t);f.append('parse_mode','HTML');await fetch(TG_API+'/sendMessage',{method:'POST',body:f})}catch(e){}
 }
-
+</script>
+<script>
 /* ============================================================
-   ADMIN - Same as before + Payment settings
+   ADMIN PANEL
    ============================================================ */
 let admTab='users';
 window.renderAdminPage=function(c){
@@ -1290,7 +1305,6 @@ window.admActivateUser=async function(id){
   const end=new Date(Date.now()+SUB_DAYS*864e5).toISOString();
   const {error}=await sb.from('profiles').update({subscription_end:end,banned:false}).eq('id',id);
   if(error)return toast(error.message,'er');
-  await sb.from('notifications').insert({title:'🎉 تم تفعيل اشتراكك',body:'تم تفعيل اشتراكك لمدة 180 يوم. استمتع بكل المميزات!',type:'general'});
   toast('تم التفعيل لـ 180 يوم','ok');closeM();admRenderBody();
 };
 window.admCancelSub=async function(id){
@@ -1322,7 +1336,6 @@ window.admAddBal=async function(id){
   const {data:u}=await sb.from('profiles').select('balance').eq('id',id).single();
   const {error}=await sb.from('profiles').update({balance:(u.balance||0)+n}).eq('id',id);
   if(error)return toast(error.message,'er');
-  await sb.from('notifications').insert({title:'💰 تم إضافة رصيد لحسابك',body:`تم إضافة ${n} ج.م إلى رصيدك`,type:'general'});
   toast('تم إضافة '+n+' ج.م','ok');closeM();admRenderBody();
 };
 
@@ -1363,17 +1376,17 @@ window.admApproveDep=async function(id){
   await sb.from('deposits').update({status:'approved',processed_at:new Date().toISOString()}).eq('id',id);
   const {data:u}=await sb.from('profiles').select('balance').eq('id',d.user_id).single();
   if(u)await sb.from('profiles').update({balance:(u.balance||0)+parseFloat(d.amount)}).eq('id',d.user_id);
-  await sb.from('notifications').insert({title:'✅ تم تأكيد إيداعك',body:`تم إضافة ${d.amount} إلى رصيدك. يمكنك الآن تفعيل خطتك.`,type:'deposit_approve'});
   toast('✅ تم التأكيد وإضافة الرصيد','ok');
   admRenderBody();
+  tgMsg(`✅ تم تأكيد الإيداع\n👤 ${d.user_name}\n💰 ${d.amount}`);
 };
 window.admRejectDep=async function(id){
   if(!confirm('رفض هذا الإيداع؟'))return;
   const {data:d}=await sb.from('deposits').select('*').eq('id',id).single();
   await sb.from('deposits').update({status:'rejected',processed_at:new Date().toISOString()}).eq('id',id);
-  await sb.from('notifications').insert({title:'❌ تم رفض إيداعك',body:'تواصل مع الدعم لمزيد من المعلومات',type:'deposit_reject'});
   toast('تم الرفض','er');
   admRenderBody();
+  if(d)tgMsg(`❌ تم رفض الإيداع\n👤 ${d.user_name}`);
 };
 
 /* ===== RECS ADMIN ===== */
@@ -1470,19 +1483,12 @@ function addRecoModal(){
     const {error}=await sb.from('recommendations').insert({symbol:sym,entry:ent,target1:t1,target2:t2,target3:t3,stop_loss:sl,notes:$('#nNotes').value.trim()});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر التوصية';
     if(error)return toast(error.message,'er');
+    // إضافة إشعار لكل المستخدمين (بدون تفاصيل)
     await sb.from('notifications').insert({
       title:'📈 توصية جديدة',
-      body:'تم نزول توصية جديدة على منصة Blo Trade 24 الآن',
+      body:'تم نزول توصية جديدة على Blo Trade 24 - اشترك للمشاهدة',
       type:'reco'
     });
-    // إرسال إشعار للموبايل عن طريق Edge Function
-    try{
-      await fetch(SUPABASE_URL+'/functions/v1/send-push', {
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
-        body: JSON.stringify({title:'📈 توصية جديدة', body:'تم نزول توصية جديدة على Blo Trade 24'})
-      });
-    }catch(e){console.warn('Push failed:', e)}
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
     tgMsg(`📢 <b>توصية جديدة</b>\n\n🪙 ${sym}/USDT\n📍 ${ent}\n🎯 ${t1||'-'} | ${t2||'-'} | ${t3||'-'}`);
   };
@@ -1562,24 +1568,18 @@ function addWordModal(){
     const {error}=await sb.from('words').insert({word:wv,hint});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';
     if(error)return toast(error.message,'er');
+    // إشعار لكل المستخدمين (بدون كشف الكلمة)
     await sb.from('notifications').insert({
       title:'📅 كلمة اليوم',
-      body:'تم نزول كلمة اليوم الجديدة على منصة Blo Trade 24',
+      body:'تم نزول كلمة اليوم الجديدة - اشترك للمشاهدة',
       type:'word'
     });
-    try{
-      await fetch(SUPABASE_URL+'/functions/v1/send-push', {
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_KEY},
-        body: JSON.stringify({title:'📅 كلمة اليوم', body:'تم نزول كلمة اليوم الجديدة'})
-      });
-    }catch(e){console.warn('Push failed:', e)}
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
     tgMsg(`📅 <b>كلمة اليوم</b>\n\n🔤 <code>${wv}</code>`);
   };
 }
 
-/* ===== SETTINGS (with payments) ===== */
+/* ===== SETTINGS ===== */
 function extractYTId(url){
   if(!url)return'';
   const m=String(url).match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
@@ -1592,72 +1592,32 @@ async function admSettings(b){
   const s=data||{};
   b.innerHTML=`
     <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);margin-bottom:16px;">
-      <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;"><i class="fas fa-credit-card"></i> طرق الدفع (بيانات التحويل)</h4>
-      <div style="background:#0b0e11;border-radius:12px;padding:14px;margin-bottom:12px;">
-        <label class="lb">💚 رقم محفظة الكاش</label>
-        <input type="text" class="ip" id="pVf" value="${s.pay_vf||'01001606298'}" style="direction:ltr;">
-      </div>
-      <div style="background:#0b0e11;border-radius:12px;padding:14px;margin-bottom:12px;">
-        <label class="lb">🟡 Binance Pay ID</label>
-        <input type="text" class="ip" id="pBin" value="${s.pay_bin||'746211155'}" style="direction:ltr;">
-      </div>
-      <div style="background:#0b0e11;border-radius:12px;padding:14px;margin-bottom:12px;">
-        <label class="lb">🪙 عنوان محفظة USDT (TRC20)</label>
-        <input type="text" class="ip" id="pCrypto" value="${s.pay_crypto||'TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D'}" style="direction:ltr;">
-      </div>
-      <div style="background:#0b0e11;border-radius:12px;padding:14px;margin-bottom:12px;">
-        <label class="lb">🏦 رقم InstaPay</label>
-        <input type="text" class="ip" id="pInsta" value="${s.pay_insta||'01154846407'}" style="direction:ltr;">
-      </div>
-      <div style="background:#0b0e11;border-radius:12px;padding:14px;">
-        <label class="lb">💳 RedotPay ID</label>
-        <input type="text" class="ip" id="pRedot" value="${s.pay_redot||'1770425974'}" style="direction:ltr;">
-      </div>
-    </div>
-    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);margin-bottom:16px;">
       <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;"><i class="fas fa-graduation-cap"></i> فيديوهات تعليم التداول (5 فيديوهات)</h4>
+      <p style="color:var(--mt);font-size:.8rem;margin-bottom:14px;line-height:1.6;">أضف روابط فيديوهات يوتيوب — يتم استخراج معرّف الفيديو تلقائياً</p>
       ${[1,2,3,4,5].map(i=>`
-        <div style="background:#0b0e11;border-radius:12px;padding:14px;margin-bottom:12px;">
-          <label class="lb">عنوان الفيديو ${i}</label>
-          <input type="text" class="ip" id="et${i}" placeholder="مثال: أساسيات التداول" value="${s['edu_title_'+i]||''}" style="margin-bottom:8px;">
-          <label class="lb">رابط الفيديو ${i} (YouTube)</label>
+        <div style="margin-bottom:12px;">
+          <label class="lb">الفيديو ${i}</label>
           <input type="text" class="ip" id="ev${i}" placeholder="https://www.youtube.com/watch?v=..." value="${s['edu_video_'+i]||''}" style="direction:ltr;">
         </div>
       `).join('')}
+      <button class="bp" id="saveEdu" style="width:100%;justify-content:center;margin-top:8px;"><i class="fas fa-save"></i> حفظ الإعدادات</button>
     </div>
-    <button class="bp" id="saveSettings" style="width:100%;justify-content:center;margin-bottom:16px;"><i class="fas fa-save"></i> حفظ كل الإعدادات</button>
     <div style="background:rgba(14,203,129,.06);border:1px solid rgba(14,203,129,.3);border-radius:14px;padding:14px;font-size:.8rem;color:var(--mt);line-height:1.7;">
       <i class="fas fa-info-circle" style="color:var(--gr)"></i> يتم تطبيق التعديلات فوراً على كل المستخدمين عند الحفظ
     </div>`;
-  $('#saveSettings').onclick=async()=>{
-    const btn=$('#saveSettings');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الحفظ';
+  $('#saveEdu').onclick=async()=>{
+    const btn=$('#saveEdu');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الحفظ';
     const patch={
-      pay_vf:$('#pVf').value.trim(),
-      pay_bin:$('#pBin').value.trim(),
-      pay_crypto:$('#pCrypto').value.trim(),
-      pay_insta:$('#pInsta').value.trim(),
-      pay_redot:$('#pRedot').value.trim(),
       edu_video_1:$('#ev1').value.trim(),
       edu_video_2:$('#ev2').value.trim(),
       edu_video_3:$('#ev3').value.trim(),
       edu_video_4:$('#ev4').value.trim(),
       edu_video_5:$('#ev5').value.trim(),
-      edu_title_1:$('#et1').value.trim(),
-      edu_title_2:$('#et2').value.trim(),
-      edu_title_3:$('#et3').value.trim(),
-      edu_title_4:$('#et4').value.trim(),
-      edu_title_5:$('#et5').value.trim(),
       updated_at:new Date().toISOString()
     };
     const {error}=await sb.from('site_settings').upsert({id:1,...patch});
-    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ كل الإعدادات';
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ الإعدادات';
     if(error)return toast(error.message,'er');
-    // تحديث البيانات المحلية
-    APP_SETTINGS.pay_vf=patch.pay_vf;
-    APP_SETTINGS.pay_bin=patch.pay_bin;
-    APP_SETTINGS.pay_crypto=patch.pay_crypto;
-    APP_SETTINGS.pay_insta=patch.pay_insta;
-    APP_SETTINGS.pay_redot=patch.pay_redot;
     toast('✅ تم حفظ الإعدادات بنجاح','ok');
   };
 }
@@ -1686,48 +1646,48 @@ window.renderMarketPage=async function(c){
 };
 window.renderLearnPage=async function(c){
   c.innerHTML='<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div id="learnGrid"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';
-  let items=[];
+  let ids=[];
   try{
     const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
     if(data){
-      for(let i=1;i<=5;i++){
-        const id=extractYTId(data['edu_video_'+i]);
-        if(id)items.push({id,title:(data['edu_title_'+i]||'').trim()||('درس تعليمي رقم '+i)});
-      }
+      ids=[data.edu_video_1,data.edu_video_2,data.edu_video_3,data.edu_video_4,data.edu_video_5]
+        .map(extractYTId).filter(Boolean);
     }
   }catch(e){}
-  if(!items.length)items=[{id:'hs38BPqtceg',title:'تعلم استخدام التوصيات خطوة بخطوة'},{id:'vliTJ2wDtUo',title:'الأساسيات والمفاهيم الأساسية'},{id:'O8BpO8EqW5A',title:'الاستراتيجيات المتقدمة والناجحة'}];
-  $('#learnGrid').innerHTML=items.map((it,i)=>`
-    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);">
+  if(!ids.length)ids=['hs38BPqtceg','vliTJ2wDtUo','O8BpO8EqW5A'];
+  const grid=$('#learnGrid');
+  grid.innerHTML=ids.map((id,i)=>`
+    <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:.2s;">
       <div style="position:relative;padding-top:56.25%;">
-        <iframe src="https://www.youtube.com/embed/${it.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+        <iframe src="https://www.youtube.com/embed/${id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
       </div>
       <div style="padding:14px 18px;display:flex;align-items:center;gap:10px;">
         <div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;">${i+1}</div>
-        <div style="font-weight:700;color:var(--g);font-size:.9rem;">${it.title}</div>
+        <div style="font-weight:700;color:var(--g);font-size:.9rem;">درس تعليمي رقم ${i+1}</div>
       </div>
     </div>
   `).join('');
 };
 window.renderCoursePage=function(c){
   let h='<h2 class="pt"><i class="fas fa-play-circle"></i> كورس التداول</h2><div id="courseGrid">';
-  for(let i=1;i<=30;i++)h+=`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe></div><div style="padding:12px 16px;display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;">${i}</div><div style="color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div></div></div>`;
+  for(let i=1;i<=30;i++)h+=`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:.2s;">
+    <div style="position:relative;padding-top:56.25%;">
+      <iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div style="padding:12px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="width:26px;height:26px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;">${i}</div>
+      <div style="color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div>
+    </div>
+  </div>`;
   h+='</div>';c.innerHTML=h;
 };
-
-/* ============================================================
-   WINNER - iframe to winner.html
-   ============================================================ */
 window.renderWinnerPage=function(c){
-  if(!isSub()){
-    c.innerHTML=`<div class="ls"><div class="li"><i class="fas fa-lock"></i></div><h3>هذه الصفحة للمشتركين فقط</h3><p>اشترك في الخطة لمدة 6 شهور (33$) للوصول لصفحة اختيار الفائز</p><button class="bp" id="goDepBtn3" style="justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;
-    $('#goDepBtn3').onclick=()=>go('dep');return;
-  }
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><iframe class="iframe-wrap" src="winner.html" allow="autoplay; clipboard-write; encrypted-media; fullscreen"></iframe>`;
+  c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><div style="background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--bd);"><label class="lb">رابط فيديو يوتيوب</label><input type="url" class="ip" id="wyt" placeholder="https://www.youtube.com/watch?v=..." style="margin-bottom:12px;"><button class="bp" id="wgo" style="width:100%;"><i class="fas fa-search"></i> ابدأ السحب</button><div id="wres" style="margin-top:18px;"></div></div>`;
+  $('#wgo').onclick=()=>toast('هذه الخاصية تحتاج مفتاح YouTube Data API','er');
 };
 
 /* ============================================================
-   GOLD PAGE
+   GOLD PAGE (من ملفك الأصلي)
    ============================================================ */
 window.renderGoldPage=function(c){
   c.innerHTML=`
@@ -1741,14 +1701,18 @@ window.renderGoldPage=function(c){
           <span class="g-timer">⏳ <span id="gTimer">300</span> ث</span>
         </div>
       </div>
-      <div class="g-subtitle"><strong>📌 السعر الحقيقي للذهب في السوق العالمي</strong> — بدون إضافات. المصنعية تختلف من تاجر لآخر.</div>
+      <div class="g-subtitle">
+        <strong>📌 السعر الحقيقي للذهب في السوق العالمي</strong> — بدون إضافات. المصنعية تختلف من تاجر لآخر.
+      </div>
       <div id="gGrid" class="g-grid"></div>
       <div class="g-section">
         <h4><span>🧮 احسب سعر الشراء</span></h4>
         <div class="g-row">
           <div class="g-input-wrap">
             <input type="number" id="gGrams" value="1" step="0.1" min="0.1" placeholder="جرام">
-            <select id="gKarat"><option value="24">عيار 24</option><option value="22">عيار 22</option><option value="21" selected>عيار 21</option><option value="18">عيار 18</option><option value="14">عيار 14</option></select>
+            <select id="gKarat">
+              <option value="24">عيار 24</option><option value="22">عيار 22</option><option value="21" selected>عيار 21</option><option value="18">عيار 18</option><option value="14">عيار 14</option>
+            </select>
           </div>
           <div class="g-result" id="gCalcResult">— ج.م</div>
         </div>
@@ -1783,12 +1747,22 @@ window.renderGoldPage=function(c){
       const items=[{k:'gold24',n:'عيار 24',d:'ذهب خالص'},{k:'gold22',n:'عيار 22',d:'91.6%'},{k:'gold21',n:'عيار 21',d:'الأكثر تداولاً'},{k:'gold18',n:'عيار 18',d:'أكستوارات'},{k:'gold14',n:'عيار 14',d:'أكستوارات'},{k:'gold12',n:'عيار 12',d:'50%'},{k:'gold10',n:'عيار 10',d:'مشغولات'},{k:'gold9',n:'عيار 9',d:'37.5%'},{k:'silverGram',n:'الفضة',d:'سعر الجرام',cls:'silver'},{k:'goldOunce',n:'الأوقية',d:'XAU/USD',cls:'global'}];
       const cur={};
       grid.innerHTML=items.map(it=>{const v=data[it.k];cur[it.k]=v;const isG=it.k==='goldOunce';const cr=isG?'$':'ج.م';return`<div class="g-card ${it.cls||''}"><div class="g-karat">${it.n}</div><div class="g-desc">${it.d}</div><div class="g-price">${fn(v)} <span class="g-currency">${cr}</span></div></div>`}).join('');
-      prev=cur;usdEl.textContent=fn(data.usdEg);
+      prev=cur;
+      usdEl.textContent=fn(data.usdEg);
       updEl.textContent=new Date(data.timestamp).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
       calc();zakat();
     }
     function calc(){const g=parseFloat(gG.value)||0,k=parseInt(gK.value);if(g<=0||!prev.gold24){gR.textContent='0.00 ج.م';return}let pp=prev['gold'+k];if(!pp||isNaN(pp))pp=prev.gold24*(k/24);gR.textContent=fn(pp*g)+' ج.م'}
-    function zakat(){const gr=parseFloat(zG.value)||0,k=parseInt(zK.value)||21;const pp=prev['gold'+k]||0;if(pp<=0){zR.textContent='— ج.م';zM.innerHTML='<span style="color:var(--rd)">⏳ انتظر تحميل الأسعار...</span>';return}const gv=gr*pp;const p21=prev.gold21||0;if(p21<=0){zR.textContent='— ج.م';return}const nv=85*p21;let z=0,msg='';if(gv>=nv&&gv>0){z=gv*0.025;msg=`<span style="color:var(--gr)">✅ تجب عليك الزكاة</span> — قيمة الذهب ${fn(gv)} ج.م، وهو يبلغ النصاب (${fn(nv)} ج.م). الزكاة = <strong>${fn(z)} ج.م</strong>`}else if(gv>0){msg=`<span style="color:var(--rd)">⚠️ لا تجب الزكاة</span> — ${fn(gv)} ج.م أقل من النصاب (${fn(nv)} ج.م) = 85 جرام عيار 21`}else{msg='<span style="color:var(--g)">💡 أدخل الجرامات لحساب الزكاة.</span>'}zR.textContent=z>0?fn(z)+' ج.م':'0.00 ج.م';zM.innerHTML=msg}
+    function zakat(){
+      const gr=parseFloat(zG.value)||0,k=parseInt(zK.value)||21;
+      const pp=prev['gold'+k]||0;if(pp<=0){zR.textContent='— ج.م';zM.innerHTML='<span style="color:var(--rd)">⏳ انتظر تحميل الأسعار...</span>';return}
+      const gv=gr*pp;const p21=prev.gold21||0;if(p21<=0){zR.textContent='— ج.م';return}
+      const nv=85*p21;let z=0,msg='';
+      if(gv>=nv&&gv>0){z=gv*0.025;msg=`<span style="color:var(--gr)">✅ تجب عليك الزكاة</span> — قيمة الذهب ${fn(gv)} ج.م، وهو يبلغ النصاب (${fn(nv)} ج.م). الزكاة = <strong>${fn(z)} ج.م</strong>`}
+      else if(gv>0){msg=`<span style="color:var(--rd)">⚠️ لا تجب الزكاة</span> — ${fn(gv)} ج.م أقل من النصاب (${fn(nv)} ج.م) = 85 جرام عيار 21`}
+      else{msg='<span style="color:var(--g)">💡 أدخل الجرامات لحساب الزكاة.</span>'}
+      zR.textContent=z>0?fn(z)+' ج.م':'0.00 ج.م';zM.innerHTML=msg;
+    }
     async function fetchGold(){
       try{
         grid.style.opacity='.5';
@@ -1807,13 +1781,50 @@ window.renderGoldPage=function(c){
     fetchGold();startT();
   })();
 };
+</script>
+<script>
+/* ============================================================
+   TELEGRAM ACTION (من الرابط)
+   ============================================================ */
+async function tgAction(){
+  const p=new URLSearchParams(location.search);
+  const a=p.get('tg_action'),id=p.get('id');
+  if(!a||!id)return;
+  history.replaceState(null,'',location.pathname);
+  // لازم تسجيل دخول أدمن
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session||!session.user){alert('يجب تسجيل الدخول كأدمن');return}
+  const {data:prof}=await sb.from('profiles').select('role').eq('id',session.user.id).single();
+  if(!prof||prof.role!=='admin'){alert('غير مصرح لك بهذه العملية');return}
+  const {data:d}=await sb.from('deposits').select('*').eq('id',id).single();
+  if(!d){alert('الطلب غير موجود');return}
+  if(d.status!=='pending'){alert('تمت معالجة الطلب مسبقاً');return}
+  if(a==='approve'){
+    if(confirm(`تأكيد إيداع ${d.user_name} بمبلغ ${d.amount}؟\n\nسيتم إضافة المبلغ لرصيده فوراً.`)){
+      await sb.from('deposits').update({status:'approved',processed_at:new Date().toISOString()}).eq('id',id);
+      const {data:u}=await sb.from('profiles').select('balance').eq('id',d.user_id).single();
+      if(u)await sb.from('profiles').update({balance:(u.balance||0)+parseFloat(d.amount)}).eq('id',d.user_id);
+      alert('✅ تم التأكيد وإضافة الرصيد لحساب المستخدم');
+      tgMsg(`✅ تم تأكيد الإيداع\n👤 ${d.user_name}\n💰 ${d.amount}`);
+    }
+  }else if(a==='reject'){
+    if(confirm(`رفض إيداع ${d.user_name}؟\n\nلن يتم إضافة أي مبلغ لحسابه.`)){
+      await sb.from('deposits').update({status:'rejected',processed_at:new Date().toISOString()}).eq('id',id);
+      alert('❌ تم الرفض - لم يُضف أي مبلغ');
+      tgMsg(`❌ تم رفض الإيداع\n👤 ${d.user_name}`);
+    }
+  }
+}
 
 /* ============================================================
    BOOT
    ============================================================ */
 async function boot(){
+  // عداد الزوار
   incrementVisitor();
-  await loadAppSettings();
+  // معالج Telegram (من الرابط)
+  await tgAction();
+  // فتح Session
   const {data:{session}}=await sb.auth.getSession();
   if(session&&session.user){
     AUTH=session.user;
@@ -1834,11 +1845,6 @@ async function boot(){
   }
   sb.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){AUTH=null;CU=null;showAuth()}
-    else if(event==='SIGNED_IN' && session?.user && !CU){
-      AUTH=session.user;
-      CU=await loadProfile();
-      if(CU&&!CU.banned)showApp();
-    }
   });
   setInterval(updateRB,8000);
   setInterval(updateNotifBadge,10000);
