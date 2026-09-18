@@ -13,7 +13,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0B0E11;--card:#1E2329;--card2:#2B3139;--bd:#2b3139;--g:#F0B90B;--g2:#F8D12F;--gr:#0ECB81;--rd:#F6465D;--tx:#EAECEF;--mt:#848E9C}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 html,body{height:100%}
 body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 
@@ -47,7 +48,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .ldr{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:currentColor;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ============ APP SHELL + HEADER (اسم شمال + burger يمين) ============ */
+/* ============ APP ============ */
 #app{display:none;flex-direction:column;height:100vh}
 #app.on{display:flex}
 .hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(30,35,41,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
@@ -65,7 +66,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .notif-btn:active{transform:scale(.92)}
 .notif-badge{position:absolute;top:2px;left:2px;background:var(--rd);color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(246,70,93,.6);animation:pls 1.6s infinite}
 
-/* SIDE MENU (يمين) */
+/* SIDE MENU */
 #smenu{position:fixed;top:0;right:-320px;width:300px;height:100vh;background:var(--card);z-index:200;transition:right .3s;overflow-y:auto;border-left:1px solid var(--bd);display:flex;flex-direction:column}
 #smenu.on{right:0}
 .smh{padding:20px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
@@ -104,7 +105,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 @keyframes ring{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
 .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:14px;border:1px solid rgba(14,203,129,.3)}
 .hero-tag .dot2{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pls 1.6s infinite}
-.visitor-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(240,185,11,.1);color:var(--g);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:8px;border:1px solid rgba(240,185,11,.3);margin-right:8px}
+.visitor-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:5px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:8px;border:1px solid rgba(14,203,129,.3);margin-right:8px}
 .hero-title{font-size:1.15rem;font-weight:800;color:var(--tx);margin-top:16px;padding:0 20px;line-height:1.5}
 .hero-sub{font-size:.88rem;color:var(--mt);margin-top:10px;padding:0 25px;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto}
 .gi{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:26px;max-width:1100px;margin-left:auto;margin-right:auto}
@@ -264,8 +265,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .rec-sym:active{transform:scale(.97)}
 .rec-sym h3{font-size:1.5rem;font-weight:900;color:var(--g);letter-spacing:-.5px;line-height:1.1;display:flex;align-items:baseline;gap:6px;text-shadow:0 0 20px rgba(240,185,11,.15)}
 .rec-sym h3 span{font-size:.7rem;color:var(--mt);font-weight:600;letter-spacing:0}
-.rec-sym .copy-hint{position:absolute;top:-20px;right:0;background:var(--g);color:#0b0e11;padding:3px 9px;border-radius:8px;font-size:.65rem;font-weight:800;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 10px rgba(240,185,11,.3)}
-.rec-sym:hover .copy-hint{opacity:1;top:-24px}
 .rec-price{text-align:left;flex-shrink:0}
 .rec-price .p{font-size:1.05rem;font-weight:800;color:var(--tx);direction:ltr}
 .rec-price .c{font-size:.8rem;font-weight:700;margin-top:3px}
@@ -338,23 +337,15 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ust.act{background:rgba(14,203,129,.2);color:var(--gr)}
 .ust.inact{background:rgba(240,185,11,.2);color:var(--g)}
 
-/* EDUCATION PAGE - PC */
+/* EDUCATION / COURSE */
 #learnGrid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:768px){
-  #learnGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
-}
-@media(min-width:1200px){
-  #learnGrid{grid-template-columns:repeat(3,1fr)}
-}
+@media(min-width:768px){#learnGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}}
+@media(min-width:1200px){#learnGrid{grid-template-columns:repeat(3,1fr)}}
 #courseGrid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:768px){
-  #courseGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}
-}
-@media(min-width:1200px){
-  #courseGrid{grid-template-columns:repeat(3,1fr)}
-}
+@media(min-width:768px){#courseGrid{grid-template-columns:repeat(2,1fr);gap:16px;max-width:1000px;margin:0 auto}}
+@media(min-width:1200px){#courseGrid{grid-template-columns:repeat(3,1fr)}}
 
-/* GOLD PAGE */
+/* GOLD */
 #goldWrap .gold-container{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:20px;border:1px solid #2a2e36}
 #goldWrap .g-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 #goldWrap .g-header h3{color:var(--g);font-size:1.1rem;font-weight:900}
@@ -403,12 +394,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
   #goldWrap .g-result{padding:9px 14px;font-size:.9rem;min-width:80px}
   #goldWrap .g-section{padding:14px}
 }
-@media(min-width:481px) and (max-width:768px){
-  #goldWrap .g-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(min-width:769px){
-  #goldWrap .g-grid{grid-template-columns:repeat(5,1fr)}
-}
+@media(min-width:481px) and (max-width:768px){#goldWrap .g-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:769px){#goldWrap .g-grid{grid-template-columns:repeat(5,1fr)}}
 </style>
 </head>
 <body>
@@ -445,10 +432,10 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="app">
 <header class="hd">
 <div style="display:flex;align-items:center;gap:6px;">
-<button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+<button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
 <div class="bal" id="balB" style="display:none"><i class="fas fa-wallet"></i> <span id="balT">0</span> ج.م</div>
-<button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
+<button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
 </div>
 <div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
 </header>
@@ -679,7 +666,7 @@ R.home=async c=>{
     <div class="hero">
       <div class="hero-logo"><h1>Blo Trade 24</h1><span class="hero-live"></span></div>
       <div class="hero-tag"><span class="dot2"></span> بث مباشر · 24 ساعة</div>
-      <div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('ar-EG')} زيارة</div>
+      <div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('en-US')} زيارة</div>
       <div class="hero-title">التداول الفوري للعملات الرقمية المشفرة</div>
       <div class="hero-sub">نقدم لكم توصيات للتداول الفوري للعملات المشفرة احترافية بشكل يومي، والتوصيات مدروسة من قبل الخبراء في التداول.</div>
     </div>
@@ -823,31 +810,11 @@ R.dep=c=>{
   <h2 class="pt"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h2>
   <p style="color:var(--mt);font-size:.9rem;line-height:1.7;margin-bottom:20px;text-align:center;">نوفر في <b style="color:var(--g)">Blo Trade 24</b> مجموعة متنوعة من وسائل الدفع الآمنة والمرنة. اختر وسيلة الدفع المناسبة:</p>
   <div class="pm-list">
-    <div class="pm-card pm-vf" data-m="vf">
-      <div class="pm-icon"><i class="fas fa-mobile-alt"></i></div>
-      <div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش</p></div>
-      <i class="fas fa-chevron-left pm-arrow"></i>
-    </div>
-    <div class="pm-card pm-bin" data-m="bin">
-      <div class="pm-icon"><i class="fab fa-bitcoin"></i></div>
-      <div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance العالمية</p></div>
-      <i class="fas fa-chevron-left pm-arrow"></i>
-    </div>
-    <div class="pm-card pm-cry" data-m="cry">
-      <div class="pm-icon"><i class="fas fa-coins"></i></div>
-      <div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20)</p></div>
-      <i class="fas fa-chevron-left pm-arrow"></i>
-    </div>
-    <div class="pm-card pm-inst" data-m="inst">
-      <div class="pm-icon"><i class="fas fa-university"></i></div>
-      <div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay المصرية</p></div>
-      <i class="fas fa-chevron-left pm-arrow"></i>
-    </div>
-    <div class="pm-card pm-red" data-m="red">
-      <div class="pm-icon"><i class="fas fa-credit-card"></i></div>
-      <div class="pm-txt"><h4>ريدوت باي</h4><p>الدفع عبر منصة RedotPay العالمية</p></div>
-      <i class="fas fa-chevron-left pm-arrow"></i>
-    </div>
+    <div class="pm-card pm-vf" data-m="vf"><div class="pm-icon"><i class="fas fa-mobile-alt"></i></div><div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-bin" data-m="bin"><div class="pm-icon"><i class="fab fa-bitcoin"></i></div><div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance العالمية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-cry" data-m="cry"><div class="pm-icon"><i class="fas fa-coins"></i></div><div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20)</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-inst" data-m="inst"><div class="pm-icon"><i class="fas fa-university"></i></div><div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay المصرية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-red" data-m="red"><div class="pm-icon"><i class="fas fa-credit-card"></i></div><div class="pm-txt"><h4>ريدوت باي</h4><p>الدفع عبر منصة RedotPay العالمية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
   </div>
   <div style="text-align:center;color:var(--mt);font-size:.85rem;margin-top:22px;padding:16px;background:var(--card);border-radius:14px;border:1px dashed var(--bd);"><i class="fas fa-lock"></i> جميع المعاملات آمنة ومشفرة</div>
   <h4 style="color:var(--g);margin:28px 0 14px;font-size:1rem;"><i class="fas fa-history"></i> سجل الإيداعات</h4>
@@ -872,11 +839,11 @@ async function renderDH(){
 function showPayDetail(m){
   const c=$('#ct');c.scrollTop=0;
   const META={
-    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:VF,valLbl:'رقم محفظة الكاش'},
-    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:BIN,valLbl:'Binance Pay ID'},
-    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:CRYPTO,valLbl:'عنوان المحفظة (TRC20)'},
-    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:INSTA,valLbl:'رقم InstaPay'},
-    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:REDOT,valLbl:'RedotPay ID'}
+    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:VF},
+    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:BIN},
+    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:CRYPTO},
+    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية للتحويل الفوري',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:INSTA},
+    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية للبطاقات',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:REDOT}
   };
   const meta=META[m];
   let steps=[];
@@ -899,7 +866,7 @@ function showPayDetail(m){
     <p class="ph-sub">${meta.sub}</p>
     <p style="color:var(--mt);font-size:.82rem;margin-bottom:14px;">قم بالتحويل على البيانات التالية</p>
     <div class="copy-box">
-      <div class="cb-lbl" id="pv1">${meta.val}</div>
+      <div class="cb-lbl">${meta.val}</div>
       <button data-copy="pv1"><i class="fas fa-copy"></i> نسخ</button>
     </div>
     <div class="pay-amt-v2"><span class="l">المبلغ المطلوب</span><span class="v">${meta.amount}</span></div>
@@ -1006,7 +973,7 @@ async function fetchWords(){
 }
 
 /* ============================================================
-   RECS (مع كشف تحقيق الهدف)
+   RECS (مع كشف تحقيق الهدف + نسخ اسم العملة بنقرة)
    ============================================================ */
 let rPrices={};
 R.recs=async c=>{
@@ -1052,9 +1019,8 @@ async function renderRecos(){
     const priceHtml=p?`<div class="p">$${p.price.toLocaleString(undefined,{maximumFractionDigits:p.price<1?6:2})}</div><div class="c ${p.change>=0?'c-up':'c-dn'}">${p.change>=0?'▲':'▼'} ${Math.abs(p.change).toFixed(2)}%</div>`:'<div class="p">--</div>';
     return `<div class="rec-card">
       <div class="rec-head">
-        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط للنسخ">
+        <div class="rec-sym" data-copy="${r.symbol.toUpperCase()}" title="اضغط لنسخ اسم العملة">
           <h3>${r.symbol.toUpperCase()} <span>/USDT</span></h3>
-          <div class="copy-hint"><i class="fas fa-copy"></i> نسخ</div>
         </div>
         <div class="rec-price">${priceHtml}</div>
       </div>
@@ -1075,7 +1041,7 @@ async function renderRecos(){
   c.querySelectorAll('[data-copy]').forEach(el=>{
     el.onclick=()=>{
       const sym=el.dataset.copy;
-      navigator.clipboard.writeText(sym+'USDT').then(()=>toast('تم نسخ: '+sym+'USDT','ok'));
+      navigator.clipboard.writeText(sym).then(()=>toast('تم نسخ: '+sym,'ok'));
     };
   });
 }
@@ -1483,10 +1449,10 @@ function addRecoModal(){
     const {error}=await sb.from('recommendations').insert({symbol:sym,entry:ent,target1:t1,target2:t2,target3:t3,stop_loss:sl,notes:$('#nNotes').value.trim()});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر التوصية';
     if(error)return toast(error.message,'er');
-    // إضافة إشعار لكل المستخدمين (بدون تفاصيل)
+    // إضافة إشعار لكل المستخدمين
     await sb.from('notifications').insert({
       title:'📈 توصية جديدة',
-      body:'تم نزول توصية جديدة على Blo Trade 24 - اشترك للمشاهدة',
+      body:'تم نزول توصية جديدة على منصة Blo Trade 24 الآن',
       type:'reco'
     });
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
@@ -1568,10 +1534,10 @@ function addWordModal(){
     const {error}=await sb.from('words').insert({word:wv,hint});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';
     if(error)return toast(error.message,'er');
-    // إشعار لكل المستخدمين (بدون كشف الكلمة)
+    // إشعار لكل المستخدمين
     await sb.from('notifications').insert({
       title:'📅 كلمة اليوم',
-      body:'تم نزول كلمة اليوم الجديدة - اشترك للمشاهدة',
+      body:'تم نزول كلمة اليوم الجديدة على منصة Blo Trade 24',
       type:'word'
     });
     closeM();toast('تم النشر - سيصل الإشعار لكل المستخدمين','ok');admRenderBody();
@@ -1593,10 +1559,16 @@ async function admSettings(b){
   b.innerHTML=`
     <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);margin-bottom:16px;">
       <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;"><i class="fas fa-graduation-cap"></i> فيديوهات تعليم التداول (5 فيديوهات)</h4>
-      <p style="color:var(--mt);font-size:.8rem;margin-bottom:14px;line-height:1.6;">أضف روابط فيديوهات يوتيوب — يتم استخراج معرّف الفيديو تلقائياً</p>
+      <p style="color:var(--mt);font-size:.8rem;margin-bottom:14px;line-height:1.6;">أضف رابط الفيديو + عنوانه — يتم استخراج معرّف الفيديو تلقائياً</p>
       ${[1,2,3,4,5].map(i=>`
-        <div style="margin-bottom:12px;">
-          <label class="lb">الفيديو ${i}</label>
+        <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px;">
+          <div style="font-weight:800;color:var(--g);font-size:.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:24px;height:24px;border-radius:50%;background:rgba(240,185,11,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;">${i}</span>
+            الفيديو رقم ${i}
+          </div>
+          <label class="lb" style="margin-top:8px;">عنوان الفيديو</label>
+          <input type="text" class="ip" id="et${i}" placeholder="مثال: أساسيات التداول" value="${s['edu_title_'+i]||''}" style="margin-bottom:10px;">
+          <label class="lb">رابط الفيديو (YouTube)</label>
           <input type="text" class="ip" id="ev${i}" placeholder="https://www.youtube.com/watch?v=..." value="${s['edu_video_'+i]||''}" style="direction:ltr;">
         </div>
       `).join('')}
@@ -1613,6 +1585,11 @@ async function admSettings(b){
       edu_video_3:$('#ev3').value.trim(),
       edu_video_4:$('#ev4').value.trim(),
       edu_video_5:$('#ev5').value.trim(),
+      edu_title_1:$('#et1').value.trim(),
+      edu_title_2:$('#et2').value.trim(),
+      edu_title_3:$('#et3').value.trim(),
+      edu_title_4:$('#et4').value.trim(),
+      edu_title_5:$('#et5').value.trim(),
       updated_at:new Date().toISOString()
     };
     const {error}=await sb.from('site_settings').upsert({id:1,...patch});
@@ -1646,24 +1623,37 @@ window.renderMarketPage=async function(c){
 };
 window.renderLearnPage=async function(c){
   c.innerHTML='<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div id="learnGrid"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';
-  let ids=[];
+  let items=[];
   try{
     const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
     if(data){
-      ids=[data.edu_video_1,data.edu_video_2,data.edu_video_3,data.edu_video_4,data.edu_video_5]
-        .map(extractYTId).filter(Boolean);
+      for(let i=1;i<=5;i++){
+        const id=extractYTId(data['edu_video_'+i]);
+        if(id){
+          items.push({
+            id:id,
+            title:(data['edu_title_'+i]||'').trim()||('درس تعليمي رقم '+i)
+          });
+        }
+      }
     }
   }catch(e){}
-  if(!ids.length)ids=['hs38BPqtceg','vliTJ2wDtUo','O8BpO8EqW5A'];
+  if(!items.length){
+    items=[
+      {id:'hs38BPqtceg',title:'تعلم استخدام التوصيات خطوة بخطوة'},
+      {id:'vliTJ2wDtUo',title:'الأساسيات والمفاهيم الأساسية'},
+      {id:'O8BpO8EqW5A',title:'الاستراتيجيات المتقدمة والناجحة'}
+    ];
+  }
   const grid=$('#learnGrid');
-  grid.innerHTML=ids.map((id,i)=>`
+  grid.innerHTML=items.map((item,i)=>`
     <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:.2s;">
       <div style="position:relative;padding-top:56.25%;">
-        <iframe src="https://www.youtube.com/embed/${id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
+        <iframe src="https://www.youtube.com/embed/${item.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe>
       </div>
       <div style="padding:14px 18px;display:flex;align-items:center;gap:10px;">
-        <div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;">${i+1}</div>
-        <div style="font-weight:700;color:var(--g);font-size:.9rem;">درس تعليمي رقم ${i+1}</div>
+        <div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;flex-shrink:0;">${i+1}</div>
+        <div style="font-weight:700;color:var(--g);font-size:.9rem;line-height:1.4;">${item.title}</div>
       </div>
     </div>
   `).join('');
@@ -1681,13 +1671,184 @@ window.renderCoursePage=function(c){
   </div>`;
   h+='</div>';c.innerHTML=h;
 };
+
+/* ===== WINNER PAGE (صفحة سحب فائز كاملة) ===== */
 window.renderWinnerPage=function(c){
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><div style="background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--bd);"><label class="lb">رابط فيديو يوتيوب</label><input type="url" class="ip" id="wyt" placeholder="https://www.youtube.com/watch?v=..." style="margin-bottom:12px;"><button class="bp" id="wgo" style="width:100%;"><i class="fas fa-search"></i> ابدأ السحب</button><div id="wres" style="margin-top:18px;"></div></div>`;
-  $('#wgo').onclick=()=>toast('هذه الخاصية تحتاج مفتاح YouTube Data API','er');
+  c.innerHTML=`
+  <h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2>
+  <div style="max-width:520px;margin:0 auto;">
+    <div style="background:var(--card);border-radius:18px;padding:18px;border:1px solid var(--bd);margin-bottom:18px;">
+      <label class="lb">رابط فيديو يوتيوب</label>
+      <input type="url" class="ip" id="wyt" placeholder="https://www.youtube.com/watch?v=..." style="margin-bottom:12px;">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button id="wFilterBtn" style="flex:1;background:linear-gradient(135deg,#2b3139,#3a4250);color:var(--tx);border:1px solid var(--g);padding:12px;border-radius:10px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.85rem;"><i class="fas fa-filter"></i> تصفية</button>
+        <button id="wTopBtn" style="flex:1;background:linear-gradient(135deg,#2b3139,#3a4250);color:var(--tx);border:1px solid var(--g);padding:12px;border-radius:10px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.85rem;"><i class="fas fa-users"></i> الأكثر تعليقاً</button>
+      </div>
+      <input type="text" class="ip" id="wFilterInput" placeholder="اكتب الإجابة الصحيحة..." style="display:none;margin-bottom:12px;">
+      <button class="bp" id="wDrawBtn" style="width:100%;"><i class="fas fa-search"></i> ابدأ السحب العشوائي</button>
+    </div>
+    <div id="wLoading" style="display:none;background:var(--card);border-radius:18px;padding:24px;border:1px solid var(--bd);text-align:center;margin-bottom:18px;">
+      <div style="border:4px solid var(--bd);border-top:4px solid var(--g);border-radius:50%;width:50px;height:50px;margin:0 auto 16px;animation:spin 1s linear infinite;"></div>
+      <p style="color:var(--tx);font-weight:600;">جاري تحميل التعليقات...</p>
+      <div style="height:8px;background:var(--bd);border-radius:4px;overflow:hidden;margin-top:16px;"><div id="wProgress" style="height:100%;background:linear-gradient(90deg,var(--g),var(--g2));width:0%;transition:width .5s;"></div></div>
+    </div>
+    <div id="wCountdown" style="display:none;background:linear-gradient(145deg,#1c1f26,#15181e);border:2px solid var(--g);border-radius:18px;padding:24px;text-align:center;margin-bottom:18px;">
+      <div id="wCdNum" style="font-size:5rem;font-weight:900;color:var(--g);line-height:1;text-shadow:0 0 20px rgba(240,185,11,.4);">5</div>
+      <div style="font-size:1rem;color:var(--tx);font-weight:600;margin-top:10px;">يتم اختيار الفائز خلال...</div>
+    </div>
+    <div id="wResult" style="display:none;"></div>
+  </div>`;
+
+  const YOUTUBE_API_KEY='AIzaSyCV15Vidv5pZTBdAXwRXQtSAPE8kgRKTpg';
+  let originalComments=[],comments=[],filterOn=false,filterText='',topMode=false,totalCount=0,cdInt=null,isFetching=false;
+
+  function extractVideoId(url){
+    const m=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/);
+    return m?m[1]:null;
+  }
+  async function fetchCount(vid){
+    try{
+      const r=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${vid}&key=${YOUTUBE_API_KEY}`);
+      const d=await r.json();
+      if(d.items&&d.items[0])return parseInt(d.items[0].statistics.commentCount)||0;
+    }catch(e){}
+    return 0;
+  }
+  async function fetchComments(vid){
+    let all=[],next='',pages=0;
+    totalCount=await fetchCount(vid);
+    do{
+      const r=await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${vid}&key=${YOUTUBE_API_KEY}&maxResults=100&pageToken=${next}`);
+      const d=await r.json();
+      if(d.error)throw new Error(d.error.message);
+      if(!d.items||!d.items.length)break;
+      d.items.forEach(item=>{
+        const s=item.snippet.topLevelComment.snippet;
+        all.push({name:s.authorDisplayName,comment:s.textDisplay,avatar:s.authorProfileImageUrl});
+      });
+      pages++;
+      $('#wProgress').style.width=Math.min(pages*10,90)+'%';
+      next=d.nextPageToken||'';
+    }while(next);
+    $('#wProgress').style.width='100%';
+    if(!totalCount)totalCount=all.length;
+    return all;
+  }
+  function applyFilter(){
+    if(!filterOn||!filterText.trim())comments=[...originalComments];
+    else comments=originalComments.filter(c=>c.comment&&c.comment.toLowerCase().includes(filterText.trim().toLowerCase()));
+  }
+  function pickWinner(){
+    if(!comments.length)return null;
+    if(topMode){
+      const map=new Map();
+      comments.forEach(c=>{const n=c.name||'مجهول';map.set(n,(map.get(n)||0)+1)});
+      let max=0,name='';
+      for(const[n,c]of map.entries())if(c>max){max=c;name=n}
+      const w=comments.find(c=>(c.name||'مجهول')===name);
+      return{name,comment:w?w.comment:'',avatar:w?w.avatar:`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=F0B90B&color=0B0E11&size=128`,count:max};
+    }else{
+      const w=comments[Math.floor(Math.random()*comments.length)];
+      return{name:w.name||'بدون اسم',comment:w.comment||'',avatar:w.avatar||`https://ui-avatars.com/api/?name=${encodeURIComponent(w.name||'فائز')}&background=F0B90B&color=0B0E11&size=128`,count:null};
+    }
+  }
+  function showResult(){
+    const w=pickWinner();
+    const r=$('#wResult');
+    r.style.display='block';
+    if(w){
+      r.innerHTML=`
+      <div id="wCard" style="background:linear-gradient(145deg,#1c1f26,#15181e);border:2px solid var(--g);border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--g),var(--g2));"></div>
+        <div style="background:var(--g);color:#0b0e11;padding:8px 20px;border-radius:20px;font-weight:800;display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;font-size:1rem;"><i class="fas fa-crown"></i> الفائز</div>
+        <div style="width:100px;height:100px;border-radius:50%;border:3px solid var(--g);overflow:hidden;margin:0 auto 14px;background:#2b3139;">
+          <img src="${w.avatar}" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div style="font-size:1.3rem;color:#fff;font-weight:800;margin-bottom:14px;">${w.name}</div>
+        <div style="background:#0b0e11;border-radius:12px;padding:14px;border-right:4px solid var(--g);text-align:right;margin-bottom:12px;">
+          <div style="color:var(--mt);font-size:.8rem;margin-bottom:6px;"><i class="fas fa-quote-right"></i> تعليق الفائز</div>
+          <div style="color:var(--tx);font-size:.95rem;line-height:1.6;word-break:break-word;">${w.comment||'لا يوجد'}</div>
+        </div>
+        ${w.count!==null?`<div style="background:rgba(240,185,11,.1);border:1px solid var(--g);border-radius:10px;padding:10px;color:var(--g);font-weight:700;margin-top:10px;"><i class="fas fa-comments"></i> عدد التعليقات: ${w.count}</div>`:''}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button id="wNewDraw" style="flex:1;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border:none;padding:14px;border-radius:12px;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.9rem;"><i class="fas fa-redo-alt"></i> سحب جديد</button>
+        <button id="wNewVid" style="flex:1;background:linear-gradient(135deg,#0ecb81,#0aaa6e);color:#fff;border:none;padding:14px;border-radius:12px;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.9rem;"><i class="fas fa-video"></i> فيديو جديد</button>
+      </div>`;
+      if(typeof confetti==='function')confetti({particleCount:120,spread:70,origin:{y:.6},colors:['#f0b90b','#f8d12f','#0ecb81','#ffffff']});
+      $('#wNewDraw').onclick=startDraw;
+      $('#wNewVid').onclick=reset;
+    }else{
+      r.innerHTML='<div style="text-align:center;padding:30px;color:var(--mt);">لا توجد تعليقات</div>';
+    }
+  }
+  function startDraw(){
+    if(!comments.length)return toast('لا توجد تعليقات','er');
+    $('#wResult').style.display='none';
+    $('#wCountdown').style.display='block';
+    $('#wCdNum').textContent='5';
+    let s=5;
+    if(cdInt)clearInterval(cdInt);
+    cdInt=setInterval(()=>{
+      s--;
+      $('#wCdNum').textContent=s;
+      if(s<=0){clearInterval(cdInt);$('#wCountdown').style.display='none';showResult();}
+    },1000);
+  }
+  function reset(){
+    if(cdInt){clearInterval(cdInt);cdInt=null}
+    $('#wResult').style.display='none';
+    $('#wLoading').style.display='none';
+    $('#wCountdown').style.display='none';
+    $('#wyt').value='';
+    $('#wFilterInput').value='';
+    $('#wFilterInput').style.display='none';
+    $('#wFilterBtn').classList.remove('active');
+    filterOn=false;filterText='';topMode=false;
+    originalComments=[];comments=[];
+    $('#wDrawBtn').disabled=false;
+    isFetching=false;
+  }
+  $('#wFilterBtn').onclick=()=>{
+    filterOn=!filterOn;
+    $('#wFilterInput').style.display=filterOn?'block':'none';
+    if(filterOn&&originalComments.length){filterText=$('#wFilterInput').value;applyFilter()}
+    else if(!filterOn){filterText='';if(originalComments.length)applyFilter()}
+  };
+  $('#wFilterInput').oninput=()=>{
+    if(filterOn){filterText=$('#wFilterInput').value;if(originalComments.length)applyFilter()}
+  };
+  $('#wTopBtn').onclick=()=>{
+    topMode=!topMode;
+    $('#wTopBtn').style.background=topMode?'linear-gradient(135deg,var(--g),var(--g2))':'linear-gradient(135deg,#2b3139,#3a4250)';
+    $('#wTopBtn').style.color=topMode?'#0b0e11':'var(--tx)';
+  };
+  $('#wDrawBtn').onclick=async()=>{
+    if(isFetching)return;
+    const url=$('#wyt').value.trim();
+    if(!url)return toast('أدخل رابط الفيديو','er');
+    const vid=extractVideoId(url);
+    if(!vid)return toast('رابط غير صالح','er');
+    $('#wDrawBtn').disabled=true;
+    isFetching=true;
+    $('#wLoading').style.display='block';
+    $('#wProgress').style.width='0%';
+    try{
+      originalComments=await fetchComments(vid);
+      applyFilter();
+      $('#wLoading').style.display='none';
+      startDraw();
+    }catch(e){
+      $('#wLoading').style.display='none';
+      toast(e.message||'فشل التحميل','er');
+      $('#wDrawBtn').disabled=false;
+      isFetching=false;
+    }
+  };
 };
 
 /* ============================================================
-   GOLD PAGE (من ملفك الأصلي)
+   GOLD PAGE
    ============================================================ */
 window.renderGoldPage=function(c){
   c.innerHTML=`
@@ -1820,11 +1981,8 @@ async function tgAction(){
    BOOT
    ============================================================ */
 async function boot(){
-  // عداد الزوار
   incrementVisitor();
-  // معالج Telegram (من الرابط)
   await tgAction();
-  // فتح Session
   const {data:{session}}=await sb.auth.getSession();
   if(session&&session.user){
     AUTH=session.user;
