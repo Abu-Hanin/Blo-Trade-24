@@ -296,10 +296,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 
 <div id="app">
 <header class="hd">
-<div class="lg">
-<span class="live-dot"></span>
-<span class="lg-txt">Blo Trade 24</span>
-</div>
+<div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
 <div style="display:flex;align-items:center;gap:8px;">
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
 <div class="bal" id="balB" style="display:none"><i class="fas fa-wallet"></i> <span id="balT">0</span> ج.م</div>
@@ -345,9 +342,6 @@ const SUPABASE_URL = 'https://wfcizftmcclhnzgvukuy.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmY2l6ZnRtY2NsaG56Z3Z1a3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDI3ODYsImV4cCI6MjEwNDYxODc4Nn0.HZ852U2kZzHkXQveGEWT0qLra-vsVOwZOsT1Zl8nQ80';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ============================================================
-   إعدادات عامة
-   ============================================================ */
 const TG_TOKEN='8848036284:AAGVbG_UylFYsYagJM56Fg_kIqaDdiT9AuM';
 const TG_CHAT='6242313550';
 const TG_API='https://api.telegram.org/bot'+TG_TOKEN;
@@ -358,9 +352,6 @@ const BIN='746211155';
 const CRYPTO='TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D';
 const NET='Tron (TRC20)',COIN='USDT';
 
-/* ============================================================
-   Helpers
-   ============================================================ */
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 function toast(m,t=''){const e=$('#tst');e.textContent=m;e.className='on'+(t?' '+t:'');clearTimeout(e._t);e._t=setTimeout(()=>{e.className=t||''},3500)}
@@ -368,22 +359,38 @@ function fmtDate(ts){return new Date(ts).toLocaleDateString('ar-EG',{year:'numer
 function fmtTime(ts){return new Date(ts).toLocaleString('ar-EG',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
-/* ============================================================
-   Global State
-   ============================================================ */
 let CU=null;
 let AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
 function subDaysLeft(){if(!CU.subscription_end)return 0;return Math.max(0,Math.ceil((new Date(CU.subscription_end).getTime()-Date.now())/864e5))}
 
 /* ============================================================
-   Auth Flow
+   ⭐ loadProfile معدلة - تنشئ البروفايل لو مش موجود
    ============================================================ */
 async function loadProfile(){
   if(!AUTH)return null;
-  const {data,error}=await sb.from('profiles').select('*').eq('id',AUTH.id).single();
-  if(error){console.error('Profile load:',error);return null}
-  return data;
+  const {data,error}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
+  if(data)return data;
+  console.warn('Profile missing, creating new one...',error);
+  const email=(AUTH.email||'').toLowerCase();
+  const meta=AUTH.user_metadata||{};
+  const newProfile={
+    id:AUTH.id,
+    username:meta.username||email.split('@')[0],
+    email:email,
+    phone:meta.phone||'',
+    role:email===ADMIN_EMAIL.toLowerCase()?'admin':'user',
+    balance:0,
+    banned:false
+  };
+  const {data:created,error:createErr}=await sb.from('profiles').insert(newProfile).select().single();
+  if(createErr){
+    console.error('Create profile error:',createErr);
+    // محاولة أخيرة: نجيب البروفايل تاني (لو اتأخر الـ trigger)
+    const {data:retry}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
+    return retry||null;
+  }
+  return created;
 }
 async function refreshUser(){
   AUTH=(await sb.auth.getUser()).data.user;
@@ -411,6 +418,8 @@ $$('.atab').forEach(t=>t.onclick=()=>{
   $(t.dataset.t==='login'?'#lf':'#rf').classList.add('on');
   $$('.aerr,.aok').forEach(x=>x.classList.remove('on'));
 });
+
+/* ⭐ Login معدل */
 $('#lf').onsubmit=async e=>{
   e.preventDefault();
   const btn=$('#lBtn');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الدخول';
@@ -419,10 +428,12 @@ $('#lf').onsubmit=async e=>{
   if(error){const el=$('#le');el.textContent=error.message.includes('Invalid')?'البريد أو كلمة السر خطأ':error.message;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),4000);return}
   AUTH=data.user;
   CU=await loadProfile();
-  if(!CU){const el=$('#le');el.textContent='تعذر تحميل الملف الشخصي';el.classList.add('on');return}
+  if(!CU){const el=$('#le');el.textContent='تعذر الاتصال بالسيرفر. جرب تاني';el.classList.add('on');return}
   if(CU.banned){await sb.auth.signOut();const el=$('#le');el.textContent='تم حظر حسابك';el.classList.add('on');return}
   showApp();
 };
+
+/* ⭐ Register معدل */
 $('#rf').onsubmit=async e=>{
   e.preventDefault();
   const un=$('#rU').value.trim(),em=$('#rE').value.trim(),ph=$('#rH').value.trim(),pw=$('#rP').value;
@@ -435,8 +446,17 @@ $('#rf').onsubmit=async e=>{
   btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> إنشاء الحساب';
   if(error){aErr('re',error.message);return}
   if(!data.user){aErr('re','لم يتم إنشاء الحساب');return}
-  if(data.session){AUTH=data.user;CU=await loadProfile();showApp();}
-  else{const el=$('#ro');el.textContent='تم إنشاء الحساب! اذهب لتسجيل الدخول';el.classList.add('on');setTimeout(()=>{$$('.atab')[0].click()},1500);}
+  if(data.session){
+    AUTH=data.user;
+    // انتظر لحظة للـ trigger
+    await new Promise(r=>setTimeout(r,800));
+    CU=await loadProfile();
+    if(!CU){aErr('re','تعذر إنشاء الملف الشخصي. جرب تسجيل الدخول');return}
+    showApp();
+  }else{
+    const el=$('#ro');el.textContent='تم إنشاء الحساب! سجّل دخول الآن';el.classList.add('on');
+    setTimeout(()=>{$$('.atab')[0].click()},1500);
+  }
 };
 function aErr(id,m){const e=$('#'+id);e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4000)}
 async function doLogout(){
@@ -446,9 +466,7 @@ async function doLogout(){
   showAuth();
 }
 
-/* ============================================================
-   Menu & Router
-   ============================================================ */
+/* Menu & Router */
 $('#mBtn').onclick=()=>{$('#smenu').classList.add('on');$('#mov').classList.add('on')};
 const closeMenu=()=>{$('#smenu').classList.remove('on');$('#mov').classList.remove('on')};
 $('#cBtn').onclick=closeMenu;$('#mov').onclick=closeMenu;
@@ -751,9 +769,7 @@ async function fetchWords(){
   return data||[];
 }
 
-/* ============================================================
-   RECS (USER)
-   ============================================================ */
+/* RECS (USER) */
 let rPrices={};
 R.recs=async c=>{
   if(!isSub()){
@@ -805,9 +821,7 @@ async function renderRecos(){
   }).join('');
 }
 
-/* ============================================================
-   WORDS (USER)
-   ============================================================ */
+/* WORDS (USER) */
 R.words=async c=>{
   if(!isSub()){
     c.innerHTML=`<div class="ls"><div class="li"><i class="fas fa-lock"></i></div><h3>هذه الصفحة للمشتركين فقط</h3><p>اشترك في الخطة لمدة 6 شهور (33$) للوصول لكلمات اليوم</p><button class="bp" id="goDepBtn2" style="justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;
@@ -824,9 +838,7 @@ R.words=async c=>{
   });
 };
 
-/* ============================================================
-   Router للصفحات
-   ============================================================ */
+/* Router */
 R.bubble=c=>window.renderBubblePage(c);
 R.market=c=>window.renderMarketPage(c);
 R.learn=c=>window.renderLearnPage(c);
@@ -835,9 +847,6 @@ R.winner=c=>window.renderWinnerPage(c);
 R.gold=c=>window.renderGoldPage(c);
 R.admin=c=>window.renderAdminPage(c);
 
-/* ============================================================
-   Badge
-   ============================================================ */
 function updateRB(){
   const last=localStorage.getItem('blo_lastseen')||'';
   const first=window._recsCache[0]?.id||'';
@@ -845,9 +854,7 @@ function updateRB(){
   if(b)b.style.display=(first&&first!==last)?'inline-block':'none';
 }
 
-/* ============================================================
-   PWA Install
-   ============================================================ */
+/* PWA Install */
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
@@ -868,9 +875,7 @@ window.addEventListener('appinstalled',()=>{
   toast('✅ تم التثبيت بنجاح','ok');
 });
 
-/* ============================================================
-   Notifications
-   ============================================================ */
+/* Notifications */
 async function askNotifPermission(){
   if(!('Notification' in window))return;
   if(Notification.permission==='default'){try{await Notification.requestPermission()}catch{}}
@@ -880,9 +885,7 @@ function notify(title,body){
   if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png'})}catch{}}
 }
 
-/* ============================================================
-   Realtime
-   ============================================================ */
+/* Realtime */
 function initRealtime(){
   sb.channel('recos-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'recommendations'},payload=>{
     if(payload.new.hidden)return;
@@ -908,9 +911,7 @@ function initRealtime(){
   }).subscribe();
 }
 
-/* ============================================================
-   Telegram
-   ============================================================ */
+/* Telegram */
 async function tgMsg(t){
   try{const f=new FormData();f.append('chat_id',TG_CHAT);f.append('text',t);f.append('parse_mode','HTML');await fetch(TG_API+'/sendMessage',{method:'POST',body:f})}catch(e){}
 }
@@ -1223,9 +1224,7 @@ function addWordModal(){
   };
 }
 
-/* ============================================================
-   FREE PAGES
-   ============================================================ */
+/* FREE PAGES */
 window.renderBubblePage=async function(c){
   c.innerHTML='<h2 class="pt"><i class="fas fa-fire"></i> فقاعة العملات</h2><div id="bw"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';
   try{
@@ -1258,10 +1257,6 @@ window.renderWinnerPage=function(c){
   c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><div style="background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--bd);"><label class="lb">رابط فيديو يوتيوب</label><input type="url" class="ip" id="wyt" placeholder="https://www.youtube.com/watch?v=..." style="margin-bottom:12px;"><button class="bp" id="wgo" style="width:100%;"><i class="fas fa-search"></i> ابدأ السحب</button><div id="wres" style="margin-top:18px;"></div></div>`;
   $('#wgo').onclick=()=>toast('هذه الخاصية تحتاج مفتاح YouTube Data API','er');
 };
-
-/* ============================================================
-   GOLD PAGE
-   ============================================================ */
 window.renderGoldPage=function(c){
   c.innerHTML=`
   <h2 class="pt"><i class="fas fa-coins"></i> أسعار الذهب في مصر</h2>
@@ -1348,9 +1343,7 @@ window.renderGoldPage=function(c){
   })();
 };
 
-/* ============================================================
-   Telegram Action (from URL)
-   ============================================================ */
+/* Telegram Action */
 async function tgAction(){
   const p=new URLSearchParams(location.search);
   const a=p.get('tg_action'),id=p.get('id');
@@ -1376,9 +1369,7 @@ async function tgAction(){
   }
 }
 
-/* ============================================================
-   BOOT
-   ============================================================ */
+/* BOOT */
 async function boot(){
   await tgAction();
   const {data:{session}}=await sb.auth.getSession();
