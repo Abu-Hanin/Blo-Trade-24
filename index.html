@@ -21,7 +21,7 @@ html,body{height:100%}
 body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 #bootLoader{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#14171c,#08090b 70%);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .4s ease}
 #bootLoader.out{opacity:0;pointer-events:none}
-#bootLoader .bl-logo{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#F7931A,#FFB84D);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;box-shadow:0 18px 45px rgba(247,147,26,.45),0 0 0 10px rgba(247,147,26,.08);animation:coinFloat 3s ease-in-out infinite}
+#bootLoader .bl-logo{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#F7931A,#FFB84D);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;box-shadow:0 18px 45px rgba(247,147,26,.45),0 0 0 0 10px rgba(247,147,26,.08);animation:coinFloat 3s ease-in-out infinite}
 #bootLoader .bl-title{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 #bootLoader .bl-spin{width:24px;height:24px;border:3px solid rgba(240,185,11,.2);border-top-color:var(--g);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes coinFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -225,7 +225,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .confirm-v2 label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:8px;font-weight:600;margin-top:14px}
 .confirm-v2 label.lb:first-of-type{margin-top:0}
 
-/* ============ FILE UPLOAD PRO (نظيف بدون خطوط جانبية) ============ */
 .upload-pro{background:#0b0e11;border:1.5px dashed rgba(240,185,11,.45);border-radius:16px;padding:26px 20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;display:block}
 .upload-pro:hover{border-color:var(--g);background:rgba(240,185,11,.03)}
 .upload-pro input{display:none}
@@ -237,7 +236,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .upload-pro.done{border-style:solid;border-color:var(--gr);background:rgba(14,203,129,.04)}
 .upload-pro.done .up-icn{background:rgba(14,203,129,.12);color:var(--gr)}
 
-/* ============ SUBMIT BUTTON GREEN ============ */
 .submit-green{width:100%;background:linear-gradient(135deg,#0ECB81,#0a9d65);color:#fff;border:none;padding:18px;border-radius:14px;font-weight:900;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Cairo',sans-serif;box-shadow:0 10px 25px -8px rgba(14,203,129,.5);transition:.2s;margin-top:18px}
 .submit-green:hover{transform:translateY(-2px);box-shadow:0 14px 30px -8px rgba(14,203,129,.6)}
 .submit-green:disabled{opacity:.5;cursor:not-allowed;transform:none}
@@ -319,12 +317,10 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .ust.act{background:rgba(14,203,129,.2);color:var(--gr)}
 .ust.inact{background:rgba(240,185,11,.2);color:var(--g)}
 
-/* Admin cards grid */
 .adm-cards-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:768px){.adm-cards-grid{grid-template-columns:repeat(2,1fr);gap:14px}}
 @media(min-width:1200px){.adm-cards-grid{grid-template-columns:repeat(3,1fr)}}
 
-/* Admin modern card */
 .adm-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--bd);border-radius:18px;padding:18px;transition:.25s;position:relative;overflow:hidden}
 .adm-card:hover{border-color:rgba(240,185,11,.4);transform:translateY(-2px);box-shadow:0 12px 25px -10px rgba(0,0,0,.6)}
 .adm-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
@@ -336,35 +332,71 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .adm-card-actions{display:flex;gap:8px;flex-wrap:wrap}
 .adm-card-actions button{flex:1;min-width:0;padding:10px;font-size:.8rem;justify-content:center}
 
-/* ============ CHAT / MESSAGES ============ */
-.chat-list-item{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.2s}
-.chat-list-item:hover{border-color:var(--g);background:#1f232b}
-.chat-list-item.unread{border-color:var(--g);background:linear-gradient(145deg,rgba(240,185,11,.08),rgba(240,185,11,.02))}
-.chat-av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;flex-shrink:0;position:relative}
-.chat-av .unread-dot{position:absolute;top:0;right:0;width:14px;height:14px;background:var(--rd);border-radius:50%;border:2px solid var(--card);animation:pls 1.6s infinite}
-.chat-info{flex:1;min-width:0}
-.chat-info .nm{font-weight:800;font-size:.95rem;color:var(--tx);margin-bottom:3px;display:flex;justify-content:space-between;gap:8px}
-.chat-info .nm .tm{font-size:.7rem;color:var(--mt);font-weight:600}
-.chat-info .ms{font-size:.8rem;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ============ USER CHAT SHELL (NEW) ============ */
+.chat-shell{background:var(--card);border:1px solid var(--bd);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 180px);min-height:480px;box-shadow:0 20px 50px -20px rgba(0,0,0,.5)}
+@media(min-width:768px){.chat-shell{height:calc(100vh - 200px)}}
+.chat-top{padding:16px 20px;background:linear-gradient(145deg,#1e2329,#15181e);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:14px;flex-shrink:0;position:relative}
+.chat-top::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.5}
+.chat-brand-av{width:50px;height:50px;border-radius:16px;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;color:#0b0e11;font-size:1.4rem;flex-shrink:0;box-shadow:0 8px 20px -8px rgba(240,185,11,.6);position:relative}
+.chat-brand-av .status-dot{position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;background:var(--gr);border-radius:50%;border:3px solid #1e2329;box-shadow:0 0 10px var(--gr);animation:pls 2s infinite}
+.chat-brand-info{flex:1;min-width:0}
+.chat-brand-info .nm{font-size:1rem;font-weight:900;color:var(--tx);margin-bottom:3px}
+.chat-brand-info .st{font-size:.72rem;color:var(--gr);font-weight:700;display:flex;align-items:center;gap:5px}
+.chat-brand-info .st::before{content:'';width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pls 1.6s infinite}
+.chat-scroll{flex:1;overflow-y:auto;padding:20px 16px;background:radial-gradient(circle at 50% 0%,rgba(240,185,11,.03),transparent 60%),#0b0e11;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.chat-scroll::-webkit-scrollbar{width:6px}
+.chat-scroll::-webkit-scrollbar-track{background:transparent}
+.chat-scroll::-webkit-scrollbar-thumb{background:#2b3139;border-radius:3px}
+.chat-scroll::-webkit-scrollbar-thumb:hover{background:var(--g)}
+.chat-day-sep{align-self:center;background:rgba(43,49,57,.8);color:var(--mt);font-size:.68rem;font-weight:800;padding:5px 14px;border-radius:20px;margin:12px 0 6px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.05)}
+.bubble-wrap{display:flex;gap:8px;align-items:flex-end;max-width:85%;animation:bubbleIn .3s cubic-bezier(.18,.89,.32,1.28)}
+.bubble-wrap.mine{align-self:flex-end;flex-direction:row-reverse}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(8px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.bubble-wrap .mini-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;margin-bottom:4px}
+.bubble-wrap.them .mini-av{background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11}
+.bubble-wrap.mine .mini-av{background:#2b3139;color:var(--tx)}
+.bubble{padding:10px 14px;border-radius:18px;font-size:.88rem;line-height:1.55;word-wrap:break-word;position:relative;box-shadow:0 4px 12px -4px rgba(0,0,0,.4)}
+.bubble-wrap.them .bubble{background:linear-gradient(145deg,#2B3139,#1E2329);color:var(--tx);border-bottom-right-radius:4px;border:1px solid rgba(255,255,255,.05)}
+.bubble-wrap.mine .bubble{background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;font-weight:600;border-bottom-left-radius:4px}
+.bubble img{max-width:100%;max-height:240px;border-radius:12px;margin-top:6px;display:block;cursor:pointer}
+.bubble .meta{font-size:.62rem;opacity:.75;margin-top:6px;display:flex;align-items:center;gap:5px;justify-content:flex-end;direction:ltr}
+.bubble-wrap.mine .bubble .meta{justify-content:flex-start}
 
-.chat-view{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:500px;background:var(--card);border:1px solid var(--bd);border-radius:20px;overflow:hidden}
-.chat-head{padding:14px 18px;background:linear-gradient(145deg,#1c1f26,#15181e);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.chat-head .nm{font-weight:800;font-size:.95rem}
-.chat-head .st{color:var(--gr);font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:4px;margin-top:2px}
-.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#0b0e11}
-.chat-msg{max-width:78%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.55;word-wrap:break-word;position:relative;animation:msgIn .25s ease}
-@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.chat-msg.user{align-self:flex-start;background:linear-gradient(135deg,#2B3139,#1E2329);color:var(--tx);border-bottom-right-radius:4px}
-.chat-msg.admin{align-self:flex-end;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border-bottom-left-radius:4px;font-weight:600}
-.chat-msg img{max-width:100%;max-height:240px;border-radius:10px;margin-top:6px;display:block;cursor:pointer}
-.chat-msg .tm{font-size:.62rem;opacity:.7;margin-top:6px;text-align:left;direction:ltr}
-.chat-input{display:flex;gap:8px;padding:12px;background:#1c1f26;border-top:1px solid var(--bd);align-items:center;flex-shrink:0}
-.chat-input label.att{width:42px;height:42px;border-radius:50%;background:#2B3139;color:var(--g);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.05rem;flex-shrink:0;transition:.2s}
-.chat-input label.att:hover{background:#353d47}
-.chat-input label.att input{display:none}
-.chat-input input.txt{flex:1;padding:12px 16px;background:#0b0e11;border:1px solid #262a33;border-radius:24px;color:var(--tx);font-size:.92rem;outline:none;font-family:'Cairo',sans-serif}
-.chat-input input.txt:focus{border-color:var(--g)}
-.chat-input button.send{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chat-compose{padding:14px 16px;background:linear-gradient(145deg,#1e2329,#15181e);border-top:1px solid var(--bd);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.chat-compose .attach-btn{width:44px;height:44px;border-radius:14px;background:#2B3139;border:1px solid var(--bd);color:var(--g);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.05rem;flex-shrink:0;transition:.2s}
+.chat-compose .attach-btn:hover{background:#353d47;border-color:var(--g)}
+.chat-compose .attach-btn input{display:none}
+.chat-compose .input-wrap{flex:1;position:relative}
+.chat-compose .input-wrap input{width:100%;padding:13px 18px;background:#0b0e11;border:1.5px solid #262a33;border-radius:22px;color:var(--tx);font-size:.92rem;outline:none;font-family:'Cairo',sans-serif;transition:.2s}
+.chat-compose .input-wrap input:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(240,185,11,.08)}
+.chat-compose .send-btn{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;border:none;cursor:pointer;font-size:1.05rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;box-shadow:0 8px 20px -6px rgba(240,185,11,.5)}
+.chat-compose .send-btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px -6px rgba(240,185,11,.7)}
+.chat-compose .send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 20px;color:var(--mt)}
+.chat-empty .ce-icon{width:90px;height:90px;border-radius:50%;background:rgba(240,185,11,.08);border:2px solid rgba(240,185,11,.2);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--g);margin-bottom:18px;animation:coinFloat 3s ease-in-out infinite}
+.chat-empty h4{color:var(--tx);font-size:1.05rem;font-weight:800;margin-bottom:6px}
+.chat-empty p{font-size:.85rem;line-height:1.6;max-width:280px}
+
+/* ============ ADMIN CHAT LIST (NEW) ============ */
+.msg-filter{display:flex;gap:8px;margin-bottom:14px;background:var(--card);padding:5px;border-radius:14px;border:1px solid var(--bd)}
+.msg-filter .mf-tab{flex:1;padding:10px;text-align:center;border-radius:10px;cursor:pointer;font-weight:700;color:var(--mt);font-size:.82rem;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.msg-filter .mf-tab.on{background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11}
+.msg-filter .mf-tab .cnt{background:rgba(246,70,93,.2);color:var(--rd);font-size:.68rem;font-weight:800;padding:2px 7px;border-radius:10px;min-width:20px}
+.msg-filter .mf-tab.on .cnt{background:rgba(11,14,17,.2);color:#0b0e11}
+.chat-list-item{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.25s;position:relative;overflow:hidden}
+.chat-list-item:hover{border-color:var(--g);transform:translateY(-2px);box-shadow:0 12px 25px -10px rgba(240,185,11,.2)}
+.chat-list-item.unread{border-color:var(--g);background:linear-gradient(145deg,rgba(240,185,11,.06),rgba(240,185,11,.01))}
+.chat-list-item.unread::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:4px;background:linear-gradient(180deg,var(--g),var(--g2));border-radius:4px 0 0 4px}
+.chat-list-item .cla{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));color:#0b0e11;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.15rem;flex-shrink:0;position:relative;box-shadow:0 6px 15px -6px rgba(240,185,11,.4)}
+.chat-list-item .cla .unread-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;background:var(--rd);color:#fff;font-size:.68rem;font-weight:900;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid #15181e;box-shadow:0 3px 8px rgba(246,70,93,.6)}
+.chat-list-item .cli{flex:1;min-width:0}
+.chat-list-item .cli .cn{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.chat-list-item .cli .cn .nm{font-weight:800;font-size:.95rem;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-list-item .cli .cn .tm{font-size:.68rem;color:var(--mt);font-weight:600;flex-shrink:0}
+.chat-list-item .cli .cm{font-size:.82rem;color:var(--mt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-list-item .cli .cm.mine{color:var(--g)}
+.chat-list-item .cli .cm .tag{display:inline-block;background:rgba(240,185,11,.15);color:var(--g);padding:1px 6px;border-radius:6px;font-size:.65rem;font-weight:800;margin-left:4px}
 
 /* ============ SETTINGS PRO ============ */
 .set-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
@@ -388,13 +420,35 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .set-field input:focus{border-color:var(--g)}
 .set-field input.ltr{direction:ltr;text-align:left}
 
-/* Price highlight */
-.price-hero{background:linear-gradient(135deg,rgba(240,185,11,.1),rgba(240,185,11,.02));border:2px solid var(--g);border-radius:20px;padding:22px;margin-bottom:18px;text-align:center}
-.price-hero .pv{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin:10px 0}
-.price-hero .pl{color:var(--mt);font-size:.82rem;font-weight:700}
-.price-hero .ps{color:var(--tx);font-size:.9rem;margin-top:10px;font-weight:700}
+/* ============ PRICE SECTION PRO (NEW) ============ */
+.price-hero{background:linear-gradient(135deg,rgba(240,185,11,.12),rgba(240,185,11,.02));border:2px solid var(--g);border-radius:24px;padding:28px 22px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden}
+.price-hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(240,185,11,.08) 0%,transparent 60%);animation:priceGlow 4s ease-in-out infinite}
+@keyframes priceGlow{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.15);opacity:1}}
+.price-hero .pl{position:relative;z-index:1;color:var(--mt);font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px}
+.price-hero .pl i{color:var(--g)}
+.price-hero .pv{position:relative;z-index:1;font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin:14px 0}
+.price-hero .ps{position:relative;z-index:1;color:var(--tx);font-size:.9rem;margin-top:6px;font-weight:700}
+.price-hero .pbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.15);color:var(--gr);padding:6px 16px;border-radius:20px;font-size:.72rem;font-weight:800;margin-top:14px;border:1px solid rgba(14,203,129,.3);position:relative;z-index:1}
+.price-change{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:18px}
+@media(min-width:640px){.price-change{grid-template-columns:1fr 1fr}}
+.price-input-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--bd);border-radius:18px;padding:20px;transition:.25s;position:relative;overflow:hidden}
+.price-input-card:hover{border-color:rgba(240,185,11,.4);transform:translateY(-2px)}
+.price-input-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:linear-gradient(180deg,var(--g),var(--g2));border-radius:0 0 0 0}
+.price-input-card .pc-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.price-input-card .pc-icon{width:42px;height:42px;border-radius:12px;background:rgba(240,185,11,.12);border:1px solid rgba(240,185,11,.25);color:var(--g);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.price-input-card .pc-title{font-size:.95rem;font-weight:800;color:var(--tx)}
+.price-input-card .pc-sub{font-size:.72rem;color:var(--mt);margin-top:3px}
+.price-input-card .pc-field{position:relative}
+.price-input-card .pc-field input{width:100%;padding:16px 18px 16px 62px;background:#0b0e11;border:2px solid #262a33;border-radius:12px;color:var(--g);font-size:1.3rem;font-weight:900;outline:none;font-family:'Cairo',sans-serif;transition:.2s;direction:ltr;text-align:left}
+.price-input-card .pc-field input:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(240,185,11,.1)}
+.price-input-card .pc-field .unit{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:.85rem;font-weight:900;color:var(--g);opacity:.85;letter-spacing:1px}
+.preview-panel{background:linear-gradient(135deg,#1a1712,#0f1215);border:1px dashed rgba(240,185,11,.5);border-radius:16px;padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;gap:16px}
+.preview-panel .pv-icon{width:48px;height:48px;border-radius:14px;background:rgba(14,203,129,.12);color:var(--gr);border:1px solid rgba(14,203,129,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.preview-panel .pv-txt{flex:1;min-width:0}
+.preview-panel .pv-lbl{color:var(--mt);font-size:.72rem;font-weight:700;margin-bottom:4px}
+.preview-panel .pv-val{color:var(--tx);font-size:1.15rem;font-weight:900;direction:ltr;text-align:right}
 
-/* Admin messages banner on home */
+/* ============ ADMIN MESSAGES BANNER ON HOME ============ */
 .msg-banner{background:linear-gradient(135deg,rgba(246,70,93,.15),rgba(246,70,93,.05));border:2px solid rgba(246,70,93,.4);border-radius:20px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;animation:msgPulse 2s ease-in-out infinite}
 @keyframes msgPulse{0%,100%{border-color:rgba(246,70,93,.4)}50%{border-color:rgba(246,70,93,.7)}}
 .msg-banner .msg-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(246,70,93,.25),rgba(246,70,93,.1));border:2px solid rgba(246,70,93,.5);color:var(--rd);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
@@ -410,7 +464,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .msg-info .msg-title{color:var(--gr)}
 .msg-info .msg-body{border-right-color:var(--gr)}
 
-/* Deposit history item */
 .dh-item{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin-bottom:10px}
 .dh-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .st{padding:4px 12px;border-radius:12px;font-size:.72rem;font-weight:800;display:inline-block}
@@ -418,7 +471,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .st.ap{background:rgba(14,203,129,.18);color:var(--gr);border:1px solid rgba(14,203,129,.3)}
 .st.rj{background:rgba(246,70,93,.18);color:var(--rd);border:1px solid rgba(246,70,93,.3)}
 
-/* Gold */
 #goldWrap .gold-container{background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:22px;padding:20px;border:1px solid #2a2e36}
 #goldWrap .g-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 #goldWrap .g-header h3{color:var(--g);font-size:1.1rem;font-weight:900}
@@ -526,7 +578,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 /* ============================================================
    نظام التحديث التلقائي
    ============================================================ */
-const APP_VERSION = '2026.09.19.400';
+const APP_VERSION = '2026.09.20.500';
 
 (function forceUpdate(){
   try{
@@ -556,7 +608,6 @@ const ADMIN_EMAIL='swlyd3393@gmail.com';
 const SUB_DAYS=180;
 const ONESIGNAL_APP_ID='a7f57c53-725b-4db8-8b4f-a84ed71d1f98';
 
-/* متغيرات قابلة للتعديل من الإعدادات */
 let SUB_PRICE_USD = 33;
 let USD_RATE_EGP = 50;
 function PRICE_EGP(){ return SUB_PRICE_USD * USD_RATE_EGP; }
@@ -768,7 +819,7 @@ R.home=async c=>{
 };
 
 /* ============================================================
-   PROFILE - احترافي
+   PROFILE
    ============================================================ */
 let cdInterval=null;
 R.prof=c=>{
@@ -1039,7 +1090,7 @@ function showPayDetail(m){
 }
 
 /* ============================================================
-   RECS / WORDS / NOTIFICATIONS / CHAT
+   RECS / WORDS / NOTIFICATIONS
    ============================================================ */
 window._recsCache=[];window._wordsCache=[];
 async function fetchRecos(){const {data,error}=await sb.from('recommendations').select('*').eq('hidden',false).order('created_at',{ascending:false}).limit(50);if(error)return[];return data||[]}
@@ -1096,7 +1147,7 @@ R.notifications=async c=>{
 };
 
 /* ============================================================
-   CHAT - محادثة مع الإدارة
+   CHAT - محادثة مع الإدارة (REDESIGNED)
    ============================================================ */
 let chatChannel=null;
 async function fetchChatMsgs(){
@@ -1109,13 +1160,11 @@ async function sendChatMsg(body,imageUrl){
     user_id:CU.id,sender:'user',body:body||null,image_url:imageUrl||null,is_read:false
   });
   if(error)throw error;
-  /* إشعار الأدمن في Supabase */
   await sb.from('notifications').insert({
     title:'💬 رسالة جديدة من مستخدم',
     body:`من: ${CU.username} - ${body||'📷 صورة'}`,
     type:'chat_message',is_public:false,user_id:CU.id
   });
-  /* إشعار للأدمن في التليجرام */
   try{
     const msg=`💬 <b>رسالة جديدة</b>\n\n👤 <b>من:</b> ${CU.username}\n📧 ${CU.email}\n🆔 <code>${CU.id}</code>\n\n📝 ${body||'📷 صورة'}`;
     if(imageUrl){
@@ -1141,42 +1190,68 @@ async function sendChatMsg(body,imageUrl){
 R.chat=async c=>{
   if(!CU){return}
   c.innerHTML=`<h2 class="pt"><i class="fas fa-comments"></i> المحادثة مع الإدارة</h2>
-    <div class="chat-view">
-      <div class="chat-head">
-        <div class="chat-av" style="width:42px;height:42px;font-size:1rem;">إ</div>
-        <div><div class="nm">فريق الإدارة</div><div class="st"><span class="live-dot" style="width:6px;height:6px;"></span> متصل</div></div>
+    <div class="chat-shell">
+      <div class="chat-top">
+        <div class="chat-brand-av">
+          <i class="fas fa-headset"></i>
+          <span class="status-dot"></span>
+        </div>
+        <div class="chat-brand-info">
+          <div class="nm">فريق الإدارة</div>
+          <div class="st">متصل الآن · رد فوري</div>
+        </div>
       </div>
-      <div class="chat-body" id="chatBody"><div class="es"><i class="fas fa-spinner fa-spin ei"></i></div></div>
-      <div class="chat-input">
-        <label class="att"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label>
-        <input type="text" class="txt" id="chatTxt" placeholder="اكتب رسالتك...">
-        <button class="send" id="chatSend"><i class="fas fa-paper-plane"></i></button>
+      <div class="chat-scroll" id="chatBody"></div>
+      <div class="chat-compose">
+        <label class="attach-btn"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label>
+        <div class="input-wrap"><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..."></div>
+        <button class="send-btn" id="chatSend"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>`;
   
   const renderMsgs=async()=>{
     const msgs=await fetchChatMsgs();
     const body=$('#chatBody');if(!body)return;
-    if(!msgs.length){body.innerHTML='<div class="es" style="margin:auto;"><i class="fas fa-comments ei"></i><p>لا توجد رسائل بعد. ابدأ المحادثة الآن.</p></div>';return}
-    body.innerHTML=msgs.map(m=>`
-      <div class="chat-msg ${m.sender==='admin'?'admin':'user'}">
-        ${m.body?esc(m.body):''}
-        ${m.image_url?`<img src="${m.image_url}" onclick="window.open('${m.image_url}','_blank')">`:''}
-        <div class="tm">${new Date(m.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} · ${m.sender==='admin'?'الإدارة':'أنت'}</div>
-      </div>`).join('');
+    if(!msgs.length){
+      body.innerHTML=`<div class="chat-empty">
+        <div class="ce-icon"><i class="fas fa-comments"></i></div>
+        <h4>مرحباً بك 👋</h4>
+        <p>لا توجد رسائل بعد. ابدأ المحادثة مع فريق الإدارة الآن وسنقوم بالرد عليك في أسرع وقت.</p>
+      </div>`;
+      return;
+    }
+    let lastDay='';
+    const html=[];
+    msgs.forEach(m=>{
+      const d=new Date(m.created_at);
+      const dayKey=d.toDateString();
+      if(dayKey!==lastDay){
+        lastDay=dayKey;
+        html.push(`<div class="chat-day-sep">${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</div>`);
+      }
+      const isMine=m.sender==='user';
+      html.push(`<div class="bubble-wrap ${isMine?'mine':'them'}">
+        <div class="mini-av">${isMine?(CU.username||'أ').charAt(0).toUpperCase():'<i class="fas fa-headset" style="font-size:.75rem"></i>'}</div>
+        <div class="bubble">
+          ${m.body?esc(m.body):''}
+          ${m.image_url?`<img src="${m.image_url}" onclick="window.open('${m.image_url}','_blank')">`:''}
+          <div class="meta">${d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} <i class="fas fa-check-double"></i></div>
+        </div>
+      </div>`);
+    });
+    body.innerHTML=html.join('');
     body.scrollTop=body.scrollHeight;
   };
   await renderMsgs();
   
-  /* علم القراءة */
   try{
     await sb.from('chat_messages').update({is_read:true}).eq('user_id',CU.id).eq('sender','admin');
   }catch(e){}
   
-  let pendingImg=null;
   $('#chatImg').onchange=async e=>{
     const f=e.target.files[0];if(!f)return;
-    if(f.size>5*1024*1024)return toast('الصورة كبيرة','er');
+    if(f.size>5*1024*1024)return toast('الصورة كبيرة (max 5MB)','er');
+    toast('جاري رفع الصورة...');
     const r=new FileReader();
     r.onload=async ev=>{
       const img=new Image();
@@ -1202,7 +1277,7 @@ R.chat=async c=>{
     r.readAsDataURL(f);
   };
   
-  $('#chatSend').onclick=async()=>{
+  const sendNow=async()=>{
     const t=$('#chatTxt').value.trim();if(!t)return;
     const btn=$('#chatSend');btn.disabled=true;
     try{
@@ -1212,7 +1287,8 @@ R.chat=async c=>{
     }catch(e){toast('خطأ','er')}
     btn.disabled=false;
   };
-  $('#chatTxt').onkeydown=e=>{if(e.key==='Enter')$('#chatSend').click()};
+  $('#chatSend').onclick=sendNow;
+  $('#chatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
   
   if(chatChannel){try{sb.removeChannel(chatChannel)}catch(e){}}
   chatChannel=sb.channel('chat-user-'+CU.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${CU.id}`},async()=>{await renderMsgs()}).subscribe();
@@ -1369,7 +1445,6 @@ window.admActivateUser=async function(id){
       body:`تم تفعيل اشتراكك لمدة ${SUB_DAYS} يوم. استمتع بكل المميزات!`,
       type:'general',is_public:false,user_id:id
     });
-    /* إرسال رسالة في الشات */
     await sb.from('chat_messages').insert({
       user_id:id,sender:'admin',
       body:`🎉 مبروك! تم تفعيل اشتراكك لمدة ${SUB_DAYS} يوم. استمتع بكل المميزات!`,
@@ -1420,7 +1495,7 @@ window.admSendMessage=async function(id,username){
   };
 };
 
-/* ==================== DEPOSITS - تنسيق احترافي ==================== */
+/* ==================== DEPOSITS ==================== */
 async function admDeps(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('deposits').select('*').order('created_at',{ascending:false});
@@ -1471,7 +1546,6 @@ window.admApproveDep=async function(id){
   const cur=d.currency||methodCurrency(d.method);const sym=cur==='USD'?'$':'ج.م';
   const {error}=await sb.from('deposits').update({status:'approved',processed_at:new Date().toISOString()}).eq('id',id).eq('status','pending');
   if(error)return toast(error.message,'er');
-  /* تفعيل الاشتراك تلقائياً */
   const end=new Date(Date.now()+SUB_DAYS*864e5).toISOString();
   try{await sb.from('profiles').update({subscription_end:end,banned:false}).eq('id',d.user_id)}catch(e){}
   try{
@@ -1493,7 +1567,7 @@ window.admRejectDep=async function(id){
   toast('تم الرفض','er');admRenderBody();
 };
 
-/* ==================== RECS ADMIN - تنسيق احترافي ==================== */
+/* ==================== RECS ADMIN ==================== */
 async function admRecs(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('recommendations').select('*').order('created_at',{ascending:false});
@@ -1529,7 +1603,7 @@ window.toggleRecoHidden=async function(id,hidden){const {error}=await sb.from('r
 window.editReco=async function(id){const {data:r}=await sb.from('recommendations').select('*').eq('id',id).single();if(!r)return;openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-edit"></i> تعديل التوصية</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">العملة</label><input type="text" class="ip" id="eSym" value="${esc(r.symbol)}" style="text-transform:uppercase;"></div><div><label class="lb">منطقة الدخول</label><input type="text" class="ip" id="eEnt" value="${esc(r.entry||'')}"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="lb">هدف1</label><input type="text" class="ip" id="eT1" value="${esc(r.target1||'')}"></div><div><label class="lb">هدف2</label><input type="text" class="ip" id="eT2" value="${esc(r.target2||'')}"></div><div><label class="lb">هدف3</label><input type="text" class="ip" id="eT3" value="${esc(r.target3||'')}"></div></div><div><label class="lb">وقف الخسارة</label><input type="text" class="ip" id="eSL" value="${esc(r.stop_loss||'')}"></div><div><label class="lb">ملاحظات</label><textarea class="ip" id="eNotes">${esc(r.notes||'')}</textarea></div><button class="bp" id="saveEdit"><i class="fas fa-save"></i> حفظ</button></div>`);$('#saveEdit').onclick=async()=>{const sym=$('#eSym').value.trim().toUpperCase();if(!sym)return toast('أدخل العملة','er');const {error}=await sb.from('recommendations').update({symbol:sym,entry:$('#eEnt').value.trim(),target1:$('#eT1').value.trim(),target2:$('#eT2').value.trim(),target3:$('#eT3').value.trim(),stop_loss:$('#eSL').value.trim(),notes:$('#eNotes').value.trim()}).eq('id',id);if(error)return toast(error.message,'er');closeM();toast('تم التعديل','ok');admRenderBody()}};
 function addRecoModal(){openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-chart-line"></i> توصية جديدة</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">العملة</label><input type="text" class="ip" id="nSym" placeholder="BTC" style="text-transform:uppercase;"></div><div><label class="lb">منطقة الدخول</label><input type="text" class="ip" id="nEnt" placeholder="34000 - 34500"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="lb">هدف1</label><input type="text" class="ip" id="nT1"></div><div><label class="lb">هدف2</label><input type="text" class="ip" id="nT2"></div><div><label class="lb">هدف3</label><input type="text" class="ip" id="nT3"></div></div><div><label class="lb">وقف الخسارة</label><input type="text" class="ip" id="nSL"></div><div><label class="lb">ملاحظات</label><textarea class="ip" id="nNotes"></textarea></div><button class="bp" id="saveReco"><i class="fas fa-paper-plane"></i> نشر</button></div>`);$('#saveReco').onclick=async()=>{const sym=$('#nSym').value.trim().toUpperCase();const ent=$('#nEnt').value.trim();if(!sym||!ent)return toast('أكمل البيانات','er');const btn=$('#saveReco');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('recommendations').insert({symbol:sym,entry:ent,target1:$('#nT1').value.trim(),target2:$('#nT2').value.trim(),target3:$('#nT3').value.trim(),stop_loss:$('#nSL').value.trim(),notes:$('#nNotes').value.trim()});btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');await sb.from('notifications').insert({title:'📈 توصية جديدة',body:'تم نزول توصية جديدة على منصة Blo Trade 24 الآن',type:'reco',is_public:true});closeM();toast('تم النشر','ok');admRenderBody()}}
 
-/* ==================== WORDS ADMIN - تنسيق احترافي ==================== */
+/* ==================== WORDS ADMIN ==================== */
 async function admWords(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('words').select('*').order('created_at',{ascending:false});
@@ -1559,22 +1633,30 @@ window.toggleWordHidden=async function(id,hidden){const {error}=await sb.from('w
 window.editWord=async function(id){const {data:w}=await sb.from('words').select('*').eq('id',id).single();if(!w)return;openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-edit"></i> تعديل الكلمة</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">الكلمة</label><input type="text" class="ip" id="eW" value="${esc(w.word)}" style="text-transform:uppercase;text-align:center;"></div><div><label class="lb">تلميح</label><textarea class="ip" id="eWh">${esc(w.hint||'')}</textarea></div><button class="bp" id="saveWE"><i class="fas fa-save"></i> حفظ</button></div>`);$('#saveWE').onclick=async()=>{const wv=$('#eW').value.trim().toUpperCase();if(!wv)return toast('أدخل الكلمة','er');const {error}=await sb.from('words').update({word:wv,hint:$('#eWh').value.trim()}).eq('id',id);if(error)return toast(error.message,'er');closeM();toast('تم التعديل','ok');admRenderBody()}};
 function addWordModal(){openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-calendar-day"></i> كلمة اليوم</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">الكلمة</label><input type="text" class="ip" id="nW" placeholder="WODL" style="text-transform:uppercase;text-align:center;"></div><div><label class="lb">تلميح</label><textarea class="ip" id="nWh"></textarea></div><button class="bp" id="saveW"><i class="fas fa-paper-plane"></i> نشر</button></div>`);$('#saveW').onclick=async()=>{const wv=$('#nW').value.trim().toUpperCase();if(!wv)return toast('أدخل الكلمة','er');const btn=$('#saveW');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('words').insert({word:wv,hint:$('#nWh').value.trim()});btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');await sb.from('notifications').insert({title:'📅 كلمة اليوم',body:'تم نزول كلمة اليوم الجديدة',type:'word',is_public:true});closeM();toast('تم النشر','ok');admRenderBody()}}
 
-/* ==================== ADMIN MESSAGES / CHAT ==================== */
+/* ============================================================
+   ADMIN MESSAGES / CHAT (REDESIGNED)
+   ============================================================ */
 let adminChatUserId=null;
+let msgFilter='all';
+let msgSearch='';
+let adminMsgsChannel=null;
+let admChatChannel=null;
+
 async function admMsgs(b){
   if(adminChatUserId){await admChatView(b,adminChatUserId);return}
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('chat_messages').select('*').order('created_at',{ascending:false});
   if(error){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
-  /* تجميع حسب user_id */
+  
   const convMap=new Map();
   (data||[]).forEach(m=>{
     if(!convMap.has(m.user_id))convMap.set(m.user_id,{userId:m.user_id,last:m,unread:0});
     const c=convMap.get(m.user_id);
     if(m.sender==='user'&&!m.is_read)c.unread++;
+    if(new Date(m.created_at)>new Date(c.last.created_at))c.last=m;
   });
   const convs=[...convMap.values()].sort((a,b)=>new Date(b.last.created_at)-new Date(a.last.created_at));
-  /* جلب أسماء المستخدمين */
+  
   const ids=convs.map(c=>c.userId);
   let profiles={};
   if(ids.length){
@@ -1582,68 +1664,131 @@ async function admMsgs(b){
     (ps||[]).forEach(p=>{profiles[p.id]=p});
   }
   
-  b.innerHTML=`<h3 style="color:var(--g);margin-bottom:16px;font-size:1.05rem;"><i class="fas fa-comments"></i> محادثات المستخدمين</h3><div id="chatList"></div>`;
-  const list=$('#chatList');
-  if(!convs.length){list.innerHTML='<div class="es"><i class="fas fa-comment-slash ei"></i><p>لا توجد محادثات بعد</p></div>';return}
-  list.innerHTML=convs.map(c=>{
+  const totalUnread=convs.reduce((s,c)=>s+c.unread,0);
+  
+  b.innerHTML=`
+    <div class="msg-filter">
+      <div class="mf-tab ${msgFilter==='all'?'on':''}" data-f="all"><i class="fas fa-inbox"></i> الكل (${convs.length})</div>
+      <div class="mf-tab ${msgFilter==='unread'?'on':''}" data-f="unread"><i class="fas fa-envelope"></i> غير مقروءة ${totalUnread>0?`<span class="cnt">${totalUnread}</span>`:''}</div>
+    </div>
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="msgSearchInput" placeholder="ابحث بالاسم أو البريد..." value="${esc(msgSearch)}">
+      ${msgSearch?`<button class="clear-btn" id="clearMsgSearch"><i class="fas fa-times"></i></button>`:''}
+    </div>
+    <div id="msgList"></div>`;
+  
+  b.querySelectorAll('.mf-tab').forEach(t=>t.onclick=()=>{msgFilter=t.dataset.f;admMsgs(b)});
+  
+  const searchInput=$('#msgSearchInput');
+  searchInput.addEventListener('input',e=>{msgSearch=e.target.value.trim().toLowerCase();admMsgs(b)});
+  $('#clearMsgSearch')?.addEventListener('click',()=>{msgSearch='';admMsgs(b)});
+  if(msgSearch)setTimeout(()=>{searchInput.focus();searchInput.setSelectionRange(searchInput.value.length,searchInput.value.length)},50);
+  
+  let filtered=convs;
+  if(msgFilter==='unread')filtered=filtered.filter(c=>c.unread>0);
+  if(msgSearch){
+    filtered=filtered.filter(c=>{
+      const p=profiles[c.userId]||{};
+      return (p.username||'').toLowerCase().includes(msgSearch)||(p.email||'').toLowerCase().includes(msgSearch);
+    });
+  }
+  
+  const list=$('#msgList');
+  if(!filtered.length){list.innerHTML='<div class="es"><i class="fas fa-comment-slash ei"></i><p>'+(msgSearch||msgFilter==='unread'?'لا توجد نتائج مطابقة':'لا توجد محادثات بعد')+'</p></div>';return}
+  
+  list.innerHTML=filtered.map(c=>{
     const p=profiles[c.userId]||{username:'مستخدم',email:''};
-    const unreadCls=c.unread>0?'unread':'';
-    return `<div class="chat-list-item ${unreadCls}" onclick="admOpenChat('${c.userId}')">
-      <div class="chat-av">${(p.username||'U').charAt(0).toUpperCase()}${c.unread>0?'<span class="unread-dot"></span>':''}</div>
-      <div class="chat-info">
-        <div class="nm"><span>${esc(p.username)}</span><span class="tm">${fmtDateOnly(c.last.created_at)}</span></div>
-        <div class="ms">${c.last.sender==='admin'?'أنت: ':''}${esc(c.last.body||'📷 صورة')}</div>
+    const isUnread=c.unread>0;
+    const lastMsg=c.last;
+    const isMine=lastMsg.sender==='admin';
+    const preview=lastMsg.body||'📷 صورة';
+    const time=fmtDateOnly(lastMsg.created_at);
+    return `<div class="chat-list-item ${isUnread?'unread':''}" onclick="admOpenChat('${c.userId}')">
+      <div class="cla">${(p.username||'U').charAt(0).toUpperCase()}${isUnread?`<span class="unread-badge">${c.unread}</span>`:''}</div>
+      <div class="cli">
+        <div class="cn">
+          <span class="nm">${esc(p.username)}</span>
+          <span class="tm">${time}</span>
+        </div>
+        <div class="cm ${isMine?'mine':''}">
+          ${isMine?'<span class="tag">أنت</span> ':''}${esc(preview)}
+        </div>
       </div>
     </div>`;
   }).join('');
+  
+  if(adminMsgsChannel){try{sb.removeChannel(adminMsgsChannel)}catch(e){}}
+  adminMsgsChannel=sb.channel('admin-chat-list').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},()=>{
+    if(admTab==='msgs'&&!adminChatUserId)admMsgs(b);
+  }).subscribe();
 }
 window.admOpenChat=function(uid){adminChatUserId=uid;admRenderBody()};
 window.admCloseChat=function(){adminChatUserId=null;admRenderBody()};
 
 async function admChatView(b,uid){
   const {data:p}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
-  const {data:msgs}=await sb.from('chat_messages').select('*').eq('user_id',uid).order('created_at',{ascending:true});
   
   b.innerHTML=`
     <button class="bs" onclick="admCloseChat()" style="margin-bottom:12px;"><i class="fas fa-arrow-right"></i> رجوع للمحادثات</button>
-    <div class="chat-view" style="height:calc(100vh - 260px);">
-      <div class="chat-head">
-        <div class="chat-av" style="width:42px;height:42px;font-size:1rem;">${(p?.username||'U').charAt(0).toUpperCase()}</div>
-        <div style="flex:1;">
+    <div class="chat-shell" style="height:calc(100vh - 260px);">
+      <div class="chat-top">
+        <div class="chat-brand-av" style="background:linear-gradient(135deg,var(--g),var(--g2));">${(p?.username||'U').charAt(0).toUpperCase()}</div>
+        <div class="chat-brand-info">
           <div class="nm">${esc(p?.username||'مستخدم')}</div>
-          <div style="color:var(--mt);font-size:.72rem;">${esc(p?.email||'')}</div>
+          <div class="st" style="color:var(--mt);">${esc(p?.email||'')}</div>
         </div>
-        <button class="bs" onclick="openUser('${uid}')" style="padding:8px 12px;font-size:.78rem;"><i class="fas fa-cog"></i> إدارة</button>
+        <button class="bs" onclick="openUser('${uid}')" style="padding:8px 14px;font-size:.78rem;"><i class="fas fa-cog"></i></button>
       </div>
-      <div class="chat-body" id="adminChatBody">
-        ${!msgs?.length?'<div class="es" style="margin:auto;"><i class="fas fa-comments ei"></i><p>لا توجد رسائل بعد</p></div>':msgs.map(m=>`
-          <div class="chat-msg ${m.sender==='admin'?'admin':'user'}">
-            ${m.body?esc(m.body):''}
-            ${m.image_url?`<img src="${m.image_url}" onclick="window.open('${m.image_url}','_blank')">`:''}
-            <div class="tm">${new Date(m.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} · ${m.sender==='admin'?'أنت':'المستخدم'}</div>
-          </div>`).join('')}
-      </div>
-      <div class="chat-input">
-        <label class="att"><i class="fas fa-image"></i><input type="file" accept="image/*" id="adminChatImg"></label>
-        <input type="text" class="txt" id="adminChatTxt" placeholder="اكتب رسالتك...">
-        <button class="send" id="adminChatSend"><i class="fas fa-paper-plane"></i></button>
+      <div class="chat-scroll" id="adminChatBody"></div>
+      <div class="chat-compose">
+        <label class="attach-btn"><i class="fas fa-image"></i><input type="file" accept="image/*" id="adminChatImg"></label>
+        <div class="input-wrap"><input type="text" id="adminChatTxt" placeholder="اكتب ردك هنا..."></div>
+        <button class="send-btn" id="adminChatSend"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>`;
   
-  const body=$('#adminChatBody');
-  setTimeout(()=>{body.scrollTop=body.scrollHeight},50);
+  const renderMsgs=async()=>{
+    const {data:msgs}=await sb.from('chat_messages').select('*').eq('user_id',uid).order('created_at',{ascending:true});
+    const body=$('#adminChatBody');if(!body)return;
+    if(!msgs?.length){
+      body.innerHTML=`<div class="chat-empty"><div class="ce-icon"><i class="fas fa-comments"></i></div><h4>لا توجد رسائل بعد</h4><p>لم يرسل هذا المستخدم أي رسالة حتى الآن.</p></div>`;
+      return;
+    }
+    let lastDay='';
+    const html=[];
+    msgs.forEach(m=>{
+      const d=new Date(m.created_at);
+      const dayKey=d.toDateString();
+      if(dayKey!==lastDay){
+        lastDay=dayKey;
+        html.push(`<div class="chat-day-sep">${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</div>`);
+      }
+      const isAdmin=m.sender==='admin';
+      html.push(`<div class="bubble-wrap ${isAdmin?'mine':'them'}">
+        <div class="mini-av">${isAdmin?'<i class="fas fa-headset" style="font-size:.75rem"></i>':(p?.username||'U').charAt(0).toUpperCase()}</div>
+        <div class="bubble">
+          ${m.body?esc(m.body):''}
+          ${m.image_url?`<img src="${m.image_url}" onclick="window.open('${m.image_url}','_blank')">`:''}
+          <div class="meta">${d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} <i class="fas fa-check-double"></i></div>
+        </div>
+      </div>`);
+    });
+    body.innerHTML=html.join('');
+    body.scrollTop=body.scrollHeight;
+  };
+  await renderMsgs();
   
-  /* علم القراءة */
   try{await sb.from('chat_messages').update({is_read:true}).eq('user_id',uid).eq('sender','user')}catch(e){}
   
   const sendMsg=async(txt,img)=>{
     await sb.from('chat_messages').insert({user_id:uid,sender:'admin',body:txt||null,image_url:img||null,is_read:false});
-    /* إشعار للمستخدم */
     await sb.from('notifications').insert({title:'💬 رسالة جديدة من الإدارة',body:txt||'📷 صورة',type:'chat_message',is_public:false,user_id:uid});
   };
   
   $('#adminChatImg').onchange=async e=>{
     const f=e.target.files[0];if(!f)return;
+    toast('جاري رفع الصورة...');
     const r=new FileReader();
     r.onload=async ev=>{
       const img=new Image();
@@ -1660,22 +1805,29 @@ async function admChatView(b,uid){
         const {data:pub}=sb.storage.from('proofs').getPublicUrl(fn);
         await sendMsg(null,pub.publicUrl);
         toast('✅ تم إرسال الصورة','ok');
-        admChatView(b,uid);
+        await renderMsgs();
       };
       img.src=ev.target.result;
     };
     r.readAsDataURL(f);
   };
   
-  $('#adminChatSend').onclick=async()=>{
+  const sendNow=async()=>{
     const t=$('#adminChatTxt').value.trim();if(!t)return;
+    const btn=$('#adminChatSend');btn.disabled=true;
     await sendMsg(t,null);
-    admChatView(b,uid);
+    $('#adminChatTxt').value='';
+    await renderMsgs();
+    btn.disabled=false;
   };
-  $('#adminChatTxt').onkeydown=e=>{if(e.key==='Enter')$('#adminChatSend').click()};
+  $('#adminChatSend').onclick=sendNow;
+  $('#adminChatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
+  
+  if(admChatChannel){try{sb.removeChannel(admChatChannel)}catch(e){}}
+  admChatChannel=sb.channel('adm-chat-'+uid).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${uid}`},async()=>{await renderMsgs()}).subscribe();
 }
 
-/* ==================== SETTINGS - احترافي ==================== */
+/* ==================== SETTINGS (REDESIGNED PRICE) ==================== */
 async function admSettings(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
@@ -1707,28 +1859,49 @@ async function admSettings(b){
     
     <div class="set-panel ${setTab==='price'?'on':''}">
       <div class="price-hero">
-        <div class="pl">السعر الحالي للاشتراك</div>
-        <div class="pv">${curSub}$ <span style="font-size:1.2rem;color:var(--mt);">/</span> ${(curSub*curRate).toLocaleString('en-US')} ج.م</div>
-        <div class="ps">لمدة ${SUB_DAYS} يوم · سعر الدولار = ${curRate} ج.م</div>
+        <div class="pl"><i class="fas fa-crown"></i> السعر الحالي للاشتراك</div>
+        <div class="pv">${curSub}$ / ${(curSub*curRate).toLocaleString('en-US')} ج.م</div>
+        <div class="ps">اشتراك ${SUB_DAYS} يوم · سعر الدولار = ${curRate} ج.م</div>
+        <div class="pbadge"><i class="fas fa-bolt"></i> يتم التطبيق فوراً على جميع المستخدمين</div>
       </div>
       <div class="settings-block">
-        <h4><i class="fas fa-tags"></i> التحكم بالأسعار</h4>
-        <div class="settings-grid">
-          <div class="set-field">
-            <div class="fh"><i class="fas fa-dollar-sign"></i> سعر الاشتراك (USD)</div>
-            <label class="lb">سعر الاشتراك بالدولار لمدة ${SUB_DAYS} يوم</label>
-            <input type="number" id="subPrice" value="${curSub}" min="1" step="1" class="ltr">
+        <h4><i class="fas fa-sliders-h"></i> تعديل الأسعار</h4>
+        <div class="price-change">
+          <div class="price-input-card">
+            <div class="pc-head">
+              <div class="pc-icon"><i class="fas fa-dollar-sign"></i></div>
+              <div>
+                <div class="pc-title">سعر الاشتراك</div>
+                <div class="pc-sub">بالدولار · لمدة ${SUB_DAYS} يوم</div>
+              </div>
+            </div>
+            <div class="pc-field">
+              <input type="number" id="subPrice" value="${curSub}" min="1" step="1">
+              <span class="unit">USD</span>
+            </div>
           </div>
-          <div class="set-field">
-            <div class="fh"><i class="fas fa-money-bill-wave"></i> سعر الدولار (بالجنيه)</div>
-            <label class="lb">سعر صرف الدولار مقابل الجنيه المصري</label>
-            <input type="number" id="usdRate" value="${curRate}" min="1" step="0.5" class="ltr">
+          <div class="price-input-card">
+            <div class="pc-head">
+              <div class="pc-icon"><i class="fas fa-money-bill-wave"></i></div>
+              <div>
+                <div class="pc-title">سعر الدولار</div>
+                <div class="pc-sub">مقابل الجنيه المصري</div>
+              </div>
+            </div>
+            <div class="pc-field">
+              <input type="number" id="usdRate" value="${curRate}" min="1" step="0.5">
+              <span class="unit">EGP</span>
+            </div>
           </div>
         </div>
-        <div style="background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.3);border-radius:12px;padding:14px;margin-top:16px;font-size:.85rem;color:var(--tx);line-height:1.6;">
-          <i class="fas fa-info-circle" style="color:var(--g);"></i> معاينة فورية: <b id="pricePreview" style="color:var(--g);">${curSub}$ / ${(curSub*curRate).toLocaleString('en-US')} ج.م</b>
+        <div class="preview-panel">
+          <div class="pv-icon"><i class="fas fa-eye"></i></div>
+          <div class="pv-txt">
+            <div class="pv-lbl">معاينة فورية</div>
+            <div class="pv-val" id="pricePreview">${curSub}$ = ${(curSub*curRate).toLocaleString('en-US')} ج.م</div>
+          </div>
         </div>
-        <button class="bp" id="savePrice" style="width:100%;justify-content:center;margin-top:16px;"><i class="fas fa-save"></i> حفظ الأسعار</button>
+        <button class="bp" id="savePrice" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> حفظ وتطبيق على كل المستخدمين</button>
       </div>
     </div>
     
@@ -1748,7 +1921,7 @@ async function admSettings(b){
     const sp=parseFloat($('#subPrice')?.value)||0;
     const rt=parseFloat($('#usdRate')?.value)||0;
     const pv=$('#pricePreview');
-    if(pv)pv.textContent=`${sp}$ / ${(sp*rt).toLocaleString('en-US')} ج.م`;
+    if(pv)pv.textContent=`${sp}$ = ${(sp*rt).toLocaleString('en-US')} ج.م`;
   };
   $('#subPrice')?.addEventListener('input',updatePreview);
   $('#usdRate')?.addEventListener('input',updatePreview);
@@ -1770,7 +1943,7 @@ async function admSettings(b){
     if(!rt||rt<=0)return toast('سعر الدولار غير صالح','er');
     const btn=$('#savePrice');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';
     const {error}=await sb.from('site_settings').upsert({id:1,sub_price_usd:sp,usd_rate_egp:rt,updated_at:new Date().toISOString()});
-    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ الأسعار';
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ وتطبيق على كل المستخدمين';
     if(error)return toast(error.message,'er');
     SUB_PRICE_USD=sp;USD_RATE_EGP=rt;
     APP_SETTINGS.sub_price_usd=sp;APP_SETTINGS.usd_rate_egp=rt;
