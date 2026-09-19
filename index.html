@@ -19,6 +19,15 @@ input,textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:d
 html,body{height:100%}
 body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 
+/* ============ BOOT LOADER ============ */
+#bootLoader{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#14171c,#08090b 70%);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .4s ease}
+#bootLoader.out{opacity:0;pointer-events:none}
+#bootLoader .bl-logo{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#F7931A,#FFB84D);display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;box-shadow:0 18px 45px rgba(247,147,26,.45),0 0 0 10px rgba(247,147,26,.08);animation:coinFloat 3s ease-in-out infinite}
+#bootLoader .bl-title{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
+#bootLoader .bl-spin{width:24px;height:24px;border:3px solid rgba(240,185,11,.2);border-top-color:var(--g);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes coinFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes sp{to{transform:rotate(360deg)}}
+
 /* ============ AUTH ============ */
 #auth{position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 30% 20%,#14171c,#08090b 70%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 #auth.hide{display:none}
@@ -26,7 +35,6 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .auth-hero-section{text-align:center;margin-bottom:24px}
 .auth-hero-section .hero-logo-c{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#F7931A,#FFB84D);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 18px 45px rgba(247,147,26,.45),0 0 0 10px rgba(247,147,26,.08);font-size:3.4rem;color:#fff;animation:coinFloat 3s ease-in-out infinite}
 .auth-hero-section .hero-logo-c i{font-size:3.4rem;line-height:1;text-shadow:0 2px 6px rgba(0,0,0,.25)}
-@keyframes coinFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .auth-hero-section h1{font-size:2.1rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px;margin-bottom:8px}
 .auth-hero-section .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(14,203,129,.12);color:var(--gr);padding:5px 14px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:16px;border:1px solid rgba(14,203,129,.3)}
 .auth-hero-section .hero-tag .dot2{width:6px;height:6px;background:var(--gr);border-radius:50%;animation:pls 1.6s infinite}
@@ -53,7 +61,6 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .aok{background:rgba(14,203,129,.1);border-color:var(--gr);color:var(--gr)}
 .aerr.on,.aok.on{display:block}
 .ldr{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:currentColor;border-radius:50%;animation:sp .8s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
 
 /* ============ APP SHELL ============ */
 #app{display:none;flex-direction:column;height:100vh}
@@ -400,8 +407,16 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 </style>
 </head>
 <body>
+
+<!-- ==================== BOOT LOADER ==================== -->
+<div id="bootLoader">
+<div class="bl-logo"><i class="fab fa-bitcoin"></i></div>
+<div class="bl-title">Blo Trade 24</div>
+<div class="bl-spin"></div>
+</div>
+
  <!-- ==================== AUTH ==================== -->
-<div id="auth">
+<div id="auth" class="hide">
 <div class="auth-page-wrapper">
 
 <div class="auth-hero-section">
@@ -526,6 +541,16 @@ function getBal(cur){if(!CU)return 0;return Number(CU[balanceField(cur)]||0)}
 function hasAnyBalance(){return getBal('EGP')>0||getBal('USD')>0}
 
 /* ============================================================
+   🚀 Boot Loader Helper
+   ============================================================ */
+function hideBootLoader(){
+  const b=document.getElementById('bootLoader');
+  if(!b)return;
+  b.classList.add('out');
+  setTimeout(()=>{try{b.remove()}catch(e){}},450);
+}
+
+/* ============================================================
    OneSignal - Push Notifications
    ============================================================ */
 window.OneSignalDeferred=window.OneSignalDeferred||[];
@@ -538,7 +563,6 @@ OneSignalDeferred.push(async function(OneSignal){
       promptOptions:{slidedown:{enable:true,autoPrompt:true,actionMessage:'تفعيل الإشعارات لتصلك التوصيات والإشعارات فوراً'}}
     });
     try{await OneSignal.Notifications.requestPermission()}catch(e){}
-    // ربط المستخدم بعد التسجيل
     if(AUTH){
       try{
         await OneSignal.login(AUTH.id);
@@ -575,8 +599,8 @@ async function loadProfile(){
   return created;
 }
 async function refreshUser(){AUTH=(await sb.auth.getUser()).data.user;if(AUTH){CU=await loadProfile()}return CU}
-function showAuth(){$('#auth').classList.remove('hide');$('#app').classList.remove('on')}
-function showApp(){$('#auth').classList.add('hide');$('#app').classList.add('on');refreshUI();go('home')}
+function showAuth(){$('#auth').classList.remove('hide');$('#app').classList.remove('on');hideBootLoader()}
+function showApp(){$('#auth').classList.add('hide');$('#app').classList.add('on');refreshUI();go('home');hideBootLoader()}
 function refreshUI(){
   if(!CU)return;
   $('#mUn').textContent=CU.username||'-';
@@ -585,7 +609,6 @@ function refreshUI(){
   if(CU.role==='admin')b.innerHTML='<span class="pb ad">👑 أدمن</span>';
   else if(isSub())b.innerHTML='<span class="pb on">✅ مشترك - '+subDaysLeft()+' يوم</span>';
   else b.innerHTML='<span class="pb off">⚠️ غير مشترك</span>';
-  // 💱 عرض الرصيد بالعملتين لو موجودين
   const bal=$('#balB');
   const egp=Math.round(getBal('EGP'));
   const usd=Math.round(getBal('USD')*100)/100;
@@ -859,6 +882,16 @@ async function actPlan(cur){
   patch[field]=getBal(cur)-price;
   const {error}=await sb.from('profiles').update(patch).eq('id',CU.id);
   if(error)return toast(error.message,'er');
+  // ✅ إشعار لصاحب الباقة فقط بعد التفعيل
+  try{
+    await sb.from('notifications').insert({
+      title:'🎉 تم تفعيل اشتراكك بنجاح',
+      body:`تم تفعيل باقتك لمدة ${SUB_DAYS} يوم. استمتع بكل المميزات!`,
+      type:'general',
+      is_public:false,
+      user_id:CU.id
+    });
+  }catch(e){}
   await refreshUser();
   toast('🎉 تم تفعيل الاشتراك لمدة 180 يوم!','ok');
   refreshUI();go('prof');
@@ -996,6 +1029,17 @@ function showPayDetail(m){
     const {data:depRow,error}=await sb.from('deposits').insert({user_id:CU.id,user_name:CU.username,user_email:CU.email,method:METHOD,amount:amt,tx_id:tx,phone:CU.phone||'',screenshot_url:screenshotUrl,status:'pending'}).select().single();
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> تأكيد وإرسال للإدارة';
     if(error){toast(error.message,'er');return}
+    // ✅ إشعار لصاحب الإيداع فقط - تم استلام الطلب
+    try{
+      const curSym=isEGP?'ج.م':'$';
+      await sb.from('notifications').insert({
+        title:'📥 تم استلام طلب الإيداع',
+        body:`تم استلام طلبك بمبلغ ${amt} ${curSym} عبر ${meta.name}. في انتظار المراجعة من الإدارة.`,
+        type:'deposit_pending',
+        is_public:false,
+        user_id:CU.id
+      });
+    }catch(e){}
     const methodName={vf:'فودافون كاش 💚',bin:'Binance Pay 🟡',cry:'USDT TRC20 🪙',inst:'إنستا باي 🏦',red:'ريدوت باي 💳'}[m];
     const curSym=isEGP?'ج.م':'$';
     const caption=`🔔 <b>طلب إيداع جديد</b>\n\n👤 ${CU.username}\n📧 ${CU.email}\n📱 ${CU.phone||'-'}\n\n💳 ${methodName}\n💰 ${amt} ${curSym}\n🔖 TX: <code>${tx}</code>\n\n🆔 <code>${depRow.id}</code>`;
@@ -1130,8 +1174,8 @@ R.notifications=async c=>{
     const mine=data.filter(n=>n.is_public!==false||n.user_id===CU?.id||!n.user_id);
     if(!mine.length){el.innerHTML='<div class="es"><i class="fas fa-bell-slash ei"></i><p>لا توجد إشعارات حالياً</p></div>';return}
     el.innerHTML=mine.map(n=>{
-      const icn=n.type==='reco'?'fa-chart-line':n.type==='word'?'fa-calendar-day':n.type==='deposit_approve'?'fa-check-circle':n.type==='deposit_reject'?'fa-times-circle':'fa-bell';
-      const clr=n.type==='reco'?'var(--g)':n.type==='word'?'var(--gr)':n.type==='deposit_reject'?'var(--rd)':n.type==='deposit_approve'?'var(--gr)':'var(--mt)';
+      const icn=n.type==='reco'?'fa-chart-line':n.type==='word'?'fa-calendar-day':n.type==='deposit_approve'?'fa-check-circle':n.type==='deposit_reject'?'fa-times-circle':n.type==='deposit_pending'?'fa-hourglass-half':'fa-bell';
+      const clr=n.type==='reco'?'var(--g)':n.type==='word'?'var(--gr)':n.type==='deposit_reject'?'var(--rd)':n.type==='deposit_approve'?'var(--gr)':n.type==='deposit_pending'?'var(--g)':'var(--mt)';
       return `<div style="background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:center;">
         <div style="width:44px;height:44px;border-radius:12px;background:rgba(240,185,11,.1);display:flex;align-items:center;justify-content:center;color:${clr};font-size:1.2rem;flex-shrink:0;"><i class="fas ${icn}"></i></div>
         <div style="flex:1;min-width:0;">
