@@ -65,7 +65,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 @keyframes pls{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
 .mbtn{background:transparent;border:none;color:var(--g);font-size:1.5rem;cursor:pointer;padding:8px 10px;border-radius:10px}
 .mbtn:hover{background:var(--bg)}
-.bal{background:var(--bg);border:1px solid var(--g);padding:5px 12px;border-radius:20px;font-size:.8rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:5px}
+.bal{background:var(--bg);border:1px solid var(--g);padding:5px 12px;border-radius:20px;font-size:.8rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap}
 .inst-btn{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
 .inst-btn.show{display:flex}
 .notif-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;position:relative;transition:.2s}
@@ -393,6 +393,10 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 
 /* WINNER IFRAME */
 .iframe-wrap{width:100%;height:calc(100vh - 200px);min-height:700px;border:0;border-radius:16px;background:#0b0e11;display:block}
+
+/* CURRENCY BALANCE CHIPS */
+.bal-chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--g);padding:4px 10px;border-radius:20px;font-size:.78rem;color:var(--g);font-weight:700}
+.bal-chip.usd{border-color:var(--gr);color:var(--gr)}
 </style>
 </head>
 <body>
@@ -438,7 +442,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div style="display:flex;align-items:center;gap:6px;">
 <button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
-<div class="bal" id="balB" style="display:none"><i class="fas fa-wallet"></i> <span id="balT">0</span> ج.م</div>
+<div class="bal" id="balB" style="display:none"><i class="fas fa-wallet"></i> <span id="balT">0</span></div>
 <button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
 </div>
 <div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
@@ -489,6 +493,15 @@ const ADMIN_EMAIL='swlyd3393@gmail.com';
 const PRICE_EGP=1600,PRICE_USD=33,SUB_DAYS=180;
 const ONESIGNAL_APP_ID='a7f57c53-725b-4db8-8b4f-a84ed71d1f98';
 
+/* ============================================================
+   💱 نظام العملات - EGP vs USD
+   ============================================================ */
+const EGP_METHODS=['vodafone','instapay'];
+const USD_METHODS=['binance','crypto','redotpay'];
+function methodCurrency(m){return EGP_METHODS.includes(m)?'EGP':'USD'}
+function currencySymbol(cur){return cur==='USD'?'$':'ج.م'}
+function balanceField(cur){return cur==='USD'?'balance_usd':'balance'}
+
 /* إعدادات الدفع (تُحمَّل من قاعدة البيانات) */
 let APP_SETTINGS={
   pay_vf:'01001606298',
@@ -509,17 +522,43 @@ function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDi
 let CU=null,AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
 function subDaysLeft(){if(!CU.subscription_end)return 0;return Math.max(0,Math.ceil((new Date(CU.subscription_end).getTime()-Date.now())/864e5))}
+function getBal(cur){if(!CU)return 0;return Number(CU[balanceField(cur)]||0)}
+function hasAnyBalance(){return getBal('EGP')>0||getBal('USD')>0}
 
 /* ============================================================
-   OneSignal
+   OneSignal - Push Notifications
    ============================================================ */
 window.OneSignalDeferred=window.OneSignalDeferred||[];
 OneSignalDeferred.push(async function(OneSignal){
   try{
-    await OneSignal.init({appId:ONESIGNAL_APP_ID,allowLocalhostAsSecureOrigin:true,notifyButton:{enable:false}});
-    await OneSignal.Slidedown.promptPush();
+    await OneSignal.init({
+      appId:ONESIGNAL_APP_ID,
+      allowLocalhostAsSecureOrigin:true,
+      notifyButton:{enable:false},
+      promptOptions:{slidedown:{enable:true,autoPrompt:true,actionMessage:'تفعيل الإشعارات لتصلك التوصيات والإشعارات فوراً'}}
+    });
+    try{await OneSignal.Notifications.requestPermission()}catch(e){}
+    // ربط المستخدم بعد التسجيل
+    if(AUTH){
+      try{
+        await OneSignal.login(AUTH.id);
+        if(AUTH.email)await OneSignal.User.addTag('email',AUTH.email);
+      }catch(e){console.warn('OS login error:',e)}
+    }
   }catch(e){console.warn('OS error:',e)}
 });
+
+async function syncOneSignalUser(){
+  if(!AUTH)return;
+  try{
+    window.OneSignalDeferred.push(async function(OneSignal){
+      try{
+        await OneSignal.login(AUTH.id);
+        if(AUTH.email)await OneSignal.User.addTag('email',AUTH.email);
+      }catch(e){}
+    });
+  }catch(e){}
+}
 
 /* ============================================================
    Profile
@@ -530,7 +569,7 @@ async function loadProfile(){
   if(data)return data;
   const email=(AUTH.email||'').toLowerCase();
   const meta=AUTH.user_metadata||{};
-  const np={id:AUTH.id,username:meta.username||email.split('@')[0],email:email,phone:meta.phone||'',role:email===ADMIN_EMAIL.toLowerCase()?'admin':'user',balance:0,banned:false};
+  const np={id:AUTH.id,username:meta.username||email.split('@')[0],email:email,phone:meta.phone||'',role:email===ADMIN_EMAIL.toLowerCase()?'admin':'user',balance:0,balance_usd:0,banned:false};
   const {data:created,error:ce}=await sb.from('profiles').insert(np).select().single();
   if(ce){const {data:retry}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();return retry||null}
   return created;
@@ -546,9 +585,18 @@ function refreshUI(){
   if(CU.role==='admin')b.innerHTML='<span class="pb ad">👑 أدمن</span>';
   else if(isSub())b.innerHTML='<span class="pb on">✅ مشترك - '+subDaysLeft()+' يوم</span>';
   else b.innerHTML='<span class="pb off">⚠️ غير مشترك</span>';
+  // 💱 عرض الرصيد بالعملتين لو موجودين
   const bal=$('#balB');
-  if((CU.balance>0)||isSub()){bal.style.display='flex';$('#balT').textContent=Math.round(CU.balance||0)}
-  else bal.style.display='none';
+  const egp=Math.round(getBal('EGP'));
+  const usd=Math.round(getBal('USD')*100)/100;
+  if(egp>0||usd>0||isSub()){
+    bal.style.display='flex';
+    let txt='';
+    if(egp>0)txt+=egp+' ج.م';
+    if(usd>0)txt+=(txt?' · ':'')+usd+' $';
+    if(!txt)txt='0';
+    $('#balT').textContent=txt;
+  }else bal.style.display='none';
   $$('.mi.ado').forEach(el=>el.classList.toggle('sh',CU.role==='admin'));
 }
 
@@ -571,6 +619,7 @@ $('#lf').onsubmit=async e=>{
   if(!CU){const el=$('#le');el.textContent='تعذر الاتصال بالسيرفر';el.classList.add('on');return}
   if(CU.banned){await sb.auth.signOut();const el=$('#le');el.textContent='تم حظر حسابك';el.classList.add('on');return}
   showApp();
+  syncOneSignalUser();
 };
 $('#rf').onsubmit=async e=>{
   e.preventDefault();
@@ -591,6 +640,7 @@ $('#rf').onsubmit=async e=>{
     CU=await loadProfile();
     if(!CU){aErr('re','تعذر إنشاء الملف الشخصي. جرب تسجيل الدخول');return}
     showApp();
+    syncOneSignalUser();
   }else{
     const el=$('#ro');el.textContent='تم إنشاء الحساب! سجّل دخول الآن';el.classList.add('on');
     setTimeout(()=>{$$('.atab')[0].click()},1500);
@@ -705,6 +755,8 @@ R.prof=c=>{
   const u=CU,s=isSub();
   const planBadge=u.role==='admin'?'<span class="pb ad">👑 أدمن</span>':s?`<span class="pb on">✅ مشترك</span>`:'<span class="pb off">⚠️ غير مشترك</span>';
   const daysLeft=subDaysLeft();
+  const egp=Math.round(getBal('EGP'));
+  const usd=Math.round(getBal('USD')*100)/100;
   let subHTML='';
   if(u.role==='admin'){
     subHTML=`<div class="sub-box" style="border-color:var(--g)"><h4><i class="fas fa-shield-alt"></i> حساب المدير</h4><p style="color:var(--mt);font-size:.85rem;line-height:1.7;">لديك وصول كامل لكل المميزات.</p></div>`;
@@ -739,6 +791,7 @@ R.prof=c=>{
   }else{
     subHTML=`<div class="sub-box"><h4><i class="fas fa-star"></i> لم تشترك بعد</h4><p style="color:var(--mt);font-size:.85rem;line-height:1.7;">اشترك لمدة 6 شهور (180 يوم) مقابل 33$ للوصول لكل المميزات.</p><button class="bp" id="subscribeBtn" style="width:100%;margin-top:14px;justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;
   }
+  const canActivate = (egp>=PRICE_EGP||usd>=PRICE_USD) && !s && u.role!=='admin';
   c.innerHTML=`
   <h2 class="pt"><i class="fas fa-user-circle"></i> الملف الشخصي</h2>
   <div class="prof-hero">
@@ -751,9 +804,9 @@ R.prof=c=>{
       </div>
     </div>
     <div class="prof-stats">
-      <div class="ps-cell"><div class="ps-v">${Math.round(u.balance||0)}</div><div class="ps-l">الرصيد (ج.م)</div></div>
+      <div class="ps-cell"><div class="ps-v">${egp}</div><div class="ps-l">الرصيد (ج.م)</div></div>
+      <div class="ps-cell"><div class="ps-v" style="color:var(--gr)">${usd}</div><div class="ps-l">الرصيد ($)</div></div>
       <div class="ps-cell"><div class="ps-v" style="color:${s?'var(--gr)':'var(--mt)'}">${s?daysLeft+' يوم':'—'}</div><div class="ps-l">متبقي</div></div>
-      <div class="ps-cell"><div class="ps-v" style="color:${u.banned?'var(--rd)':'var(--gr)'}">${u.banned?'🚫':'✓'}</div><div class="ps-l">الحالة</div></div>
     </div>
   </div>
   ${subHTML}
@@ -761,15 +814,18 @@ R.prof=c=>{
     <h4><i class="fas fa-info-circle"></i> معلومات الحساب</h4>
     <div class="info-row"><span class="l">رقم الهاتف</span><span class="v">${u.phone||'-'}</span></div>
     <div class="info-row"><span class="l">تاريخ التسجيل</span><span class="v">${fmtDate(u.created_at)}</span></div>
-    <div class="info-row"><span class="l">الرصيد الحالي</span><span class="v" style="color:var(--g)">${fmtNum(u.balance||0)} ج.م</span></div>
+    <div class="info-row"><span class="l">الرصيد بالجنيه</span><span class="v" style="color:var(--g)">${fmtNum(egp)} ج.م</span></div>
+    <div class="info-row"><span class="l">الرصيد بالدولار</span><span class="v" style="color:var(--gr)">$${fmtNum(usd)}</span></div>
     <div class="info-row"><span class="l">حالة الحساب</span><span class="v" style="color:${u.banned?'var(--rd)':'var(--gr)'}">${u.banned?'محظور':'نشط'}</span></div>
   </div>
   <div style="display:flex;flex-direction:column;gap:10px;">
     <button class="bs" id="chPwdBtn" style="width:100%;"><i class="fas fa-key"></i> تغيير كلمة السر</button>
-    ${(CU.balance>=PRICE_EGP&&!s&&u.role!=='admin')?`<button class="bg3" id="actPlanBtn" style="width:100%;"><i class="fas fa-crown"></i> تفعيل الخطة (${PRICE_EGP} ج.م / 180 يوم)</button>`:''}
+    ${canActivate?`<button class="bg3" id="actPlanEgpBtn" style="width:100%;"><i class="fas fa-crown"></i> تفعيل الخطة (${PRICE_EGP} ج.م / 180 يوم)</button>`:''}
+    ${canActivate&&usd>=PRICE_USD?`<button class="bg3" id="actPlanUsdBtn" style="width:100%;"><i class="fas fa-crown"></i> تفعيل الخطة (${PRICE_USD} $ / 180 يوم)</button>`:''}
   </div>`;
   $('#chPwdBtn')?.addEventListener('click',chPwdM);
-  $('#actPlanBtn')?.addEventListener('click',actPlan);
+  $('#actPlanEgpBtn')?.addEventListener('click',()=>actPlan('EGP'));
+  $('#actPlanUsdBtn')?.addEventListener('click',()=>actPlan('USD'));
   $('#subscribeBtn')?.addEventListener('click',()=>go('dep'));
   $('#renewBtn')?.addEventListener('click',()=>go('dep'));
 };
@@ -792,11 +848,16 @@ function chPwdM(){
     closeM();toast('تم تغيير كلمة السر','ok');
   };
 }
-async function actPlan(){
-  if(!confirm(`تفعيل الخطة مقابل ${PRICE_EGP} ج.م لمدة 180 يوم؟`))return;
-  if(CU.balance<PRICE_EGP)return toast('رصيدك غير كافٍ','er');
+async function actPlan(cur){
+  const price=cur==='USD'?PRICE_USD:PRICE_EGP;
+  const sym=currencySymbol(cur);
+  if(!confirm(`تفعيل الخطة مقابل ${price} ${sym} لمدة 180 يوم؟`))return;
+  const field=balanceField(cur);
+  if(getBal(cur)<price)return toast('رصيدك غير كافٍ','er');
   const end=Date.now()+SUB_DAYS*864e5;
-  const {error}=await sb.from('profiles').update({balance:CU.balance-PRICE_EGP,subscription_end:new Date(end).toISOString()}).eq('id',CU.id);
+  const patch={subscription_end:new Date(end).toISOString()};
+  patch[field]=getBal(cur)-price;
+  const {error}=await sb.from('profiles').update(patch).eq('id',CU.id);
   if(error)return toast(error.message,'er');
   await refreshUser();
   toast('🎉 تم تفعيل الاشتراك لمدة 180 يوم!','ok');
@@ -811,11 +872,11 @@ R.dep=c=>{
   <h2 class="pt"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h2>
   <p style="color:var(--mt);font-size:.9rem;line-height:1.7;margin-bottom:20px;text-align:center;">نوفر في <b style="color:var(--g)">Blo Trade 24</b> مجموعة متنوعة من وسائل الدفع الآمنة. اختر الوسيلة المناسبة:</p>
   <div class="pm-list">
-    <div class="pm-card pm-vf" data-m="vf"><div class="pm-icon"><i class="fas fa-mobile-alt"></i></div><div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-bin" data-m="bin"><div class="pm-icon"><i class="fab fa-bitcoin"></i></div><div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-cry" data-m="cry"><div class="pm-icon"><i class="fas fa-coins"></i></div><div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20)</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-inst" data-m="inst"><div class="pm-icon"><i class="fas fa-university"></i></div><div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
-    <div class="pm-card pm-red" data-m="red"><div class="pm-icon"><i class="fas fa-credit-card"></i></div><div class="pm-txt"><h4>ريدوت باي</h4><p>منصة RedotPay العالمية</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-vf" data-m="vf"><div class="pm-icon"><i class="fas fa-mobile-alt"></i></div><div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش · بالجنيه</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-bin" data-m="bin"><div class="pm-icon"><i class="fab fa-bitcoin"></i></div><div class="pm-txt"><h4>باينانس باي</h4><p>الدفع عن طريق منصة Binance · بالدولار</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-cry" data-m="cry"><div class="pm-icon"><i class="fas fa-coins"></i></div><div class="pm-txt"><h4>العملات الرقمية</h4><p>USDT عبر شبكة Tron (TRC20) · بالدولار</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-inst" data-m="inst"><div class="pm-icon"><i class="fas fa-university"></i></div><div class="pm-txt"><h4>إنستا باي</h4><p>الدفع عبر خدمة InstaPay · بالجنيه</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
+    <div class="pm-card pm-red" data-m="red"><div class="pm-icon"><i class="fas fa-credit-card"></i></div><div class="pm-txt"><h4>ريدوت باي</h4><p>منصة RedotPay العالمية · بالدولار</p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
   </div>
   <div style="text-align:center;color:var(--mt);font-size:.85rem;margin-top:22px;padding:16px;background:var(--card);border-radius:14px;border:1px dashed var(--bd);"><i class="fas fa-lock"></i> جميع المعاملات آمنة ومشفرة</div>
   <h4 style="color:var(--g);margin:28px 0 14px;font-size:1rem;"><i class="fas fa-history"></i> سجل الإيداعات</h4>
@@ -830,9 +891,11 @@ async function renderDH(){
   const mn={vodafone:'فودافون كاش',binance:'Binance Pay',crypto:'USDT TRC20',instapay:'InstaPay',redotpay:'RedotPay'};
   h.innerHTML=data.map(d=>{
     const st=d.status==='approved'?'<span class="st ap">✅ مقبول</span>':d.status==='rejected'?'<span class="st rj">❌ مرفوض</span>':'<span class="st pd">⏳ قيد المراجعة</span>';
+    const cur=methodCurrency(d.method);
+    const sym=currencySymbol(cur);
     return `<div class="dh-item">
       <div class="dh-head"><div style="font-weight:800;color:var(--tx);">${mn[d.method]||d.method}</div>${st}</div>
-      <div style="color:var(--mt);font-size:.82rem;margin-bottom:6px;">المبلغ: <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)}</b> · ${fmtDate(d.created_at)}</div>
+      <div style="color:var(--mt);font-size:.82rem;margin-bottom:6px;">المبلغ: <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)} ${sym}</b> · ${fmtDate(d.created_at)}</div>
       <div style="color:var(--mt);font-size:.72rem;direction:ltr;text-align:left;">TX: ${d.tx_id||'-'}</div>
     </div>`;
   }).join('');
@@ -840,13 +903,14 @@ async function renderDH(){
 function showPayDetail(m){
   const c=$('#ct');c.scrollTop=0;
   const META={
-    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_vf},
-    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_bin},
-    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_crypto},
-    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_insta},
-    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_redot}
+    vf:{name:'محفظة الكاش',icon:'fas fa-mobile-alt',cls:'vf',sub:'يدعم فودافون كاش / اتصالات كاش / أورنج كاش',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_vf,cur:'EGP'},
+    bin:{name:'باينانس باي',icon:'fab fa-bitcoin',cls:'bin',sub:'الدفع عن طريق منصة Binance العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_bin,cur:'USD'},
+    cry:{name:'عملات رقمية',icon:'fas fa-coins',cls:'cry',sub:'USDT على شبكة Tron (TRC20)',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_crypto,cur:'USD'},
+    inst:{name:'إنستا باي',icon:'fas fa-university',cls:'inst',sub:'خدمة InstaPay المصرية',amount:PRICE_EGP+' ج.م',amtVal:PRICE_EGP,val:APP_SETTINGS.pay_insta,cur:'EGP'},
+    red:{name:'ريدوت باي',icon:'fas fa-credit-card',cls:'red',sub:'منصة RedotPay العالمية',amount:PRICE_USD+' $',amtVal:PRICE_USD,val:APP_SETTINGS.pay_redot,cur:'USD'}
   };
   const meta=META[m];
+  const isEGP=meta.cur==='EGP';
   let steps=[];
   if(m==='vf')steps=['افتح تطبيق محفظتك','اختر "تحويل أموال" واكتب الرقم: <strong>'+meta.val+'</strong>','اكتب المبلغ وأكد التحويل','احتفظ بلقطة شاشة للتحويل','ارجع هنا واملأ البيانات'];
   else if(m==='bin')steps=['افتح تطبيق Binance واختر "Pay"','اختر "Send" واكتب المعرّف: <strong>'+meta.val+'</strong>','أدخل المبلغ وأكد','احتفظ بلقطة الشاشة','ارجع هنا واملأ البيانات'];
@@ -870,11 +934,11 @@ function showPayDetail(m){
     ${steps.map((s,i)=>`<div class="step-v2"><div class="num">${i+1}</div><div class="txt">${s}</div></div>`).join('')}
   </div>
   <div class="confirm-v2">
-    <h4><i class="fas fa-check-circle"></i> تأكيد عملية ${m==='vf'||m==='inst'?'الإيداع':'الدفع'}</h4>
-    <label class="lb">${m==='vf'||m==='inst'?'المبلغ (بالجنيه المصري)':'المبلغ (بالدولار)'}</label>
+    <h4><i class="fas fa-check-circle"></i> تأكيد عملية ${isEGP?'الإيداع':'الدفع'}</h4>
+    <label class="lb">${isEGP?'المبلغ (بالجنيه المصري)':'المبلغ (بالدولار الأمريكي)'}</label>
     <input type="number" class="ip" id="fAmt" value="${meta.amtVal}" step="0.01">
-    <label class="lb">${m==='vf'||m==='inst'?'رقم الهاتف الذي قمت بالتحويل منه':'معرّف العملية / Order ID'}</label>
-    <input type="text" class="ip" id="fTx" placeholder="${m==='vf'||m==='inst'?'مثال: 01012345678':'مثال: 450955449269067776'}" style="direction:ltr;text-align:right;">
+    <label class="lb">${isEGP?'رقم الهاتف الذي قمت بالتحويل منه':'معرّف العملية / Order ID'}</label>
+    <input type="text" class="ip" id="fTx" placeholder="${isEGP?'مثال: 01012345678':'مثال: 450955449269067776'}" style="direction:ltr;text-align:right;">
     <label class="lb">لقطة شاشة (إثبات التحويل)</label>
     <label class="file-zone" id="fzBox">
       <input type="file" accept="image/*" id="fShot">
@@ -933,7 +997,8 @@ function showPayDetail(m){
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> تأكيد وإرسال للإدارة';
     if(error){toast(error.message,'er');return}
     const methodName={vf:'فودافون كاش 💚',bin:'Binance Pay 🟡',cry:'USDT TRC20 🪙',inst:'إنستا باي 🏦',red:'ريدوت باي 💳'}[m];
-    const caption=`🔔 <b>طلب إيداع جديد</b>\n\n👤 ${CU.username}\n📧 ${CU.email}\n📱 ${CU.phone||'-'}\n\n💳 ${methodName}\n💰 ${amt}\n🔖 TX: <code>${tx}</code>\n\n🆔 <code>${depRow.id}</code>`;
+    const curSym=isEGP?'ج.م':'$';
+    const caption=`🔔 <b>طلب إيداع جديد</b>\n\n👤 ${CU.username}\n📧 ${CU.email}\n📱 ${CU.phone||'-'}\n\n💳 ${methodName}\n💰 ${amt} ${curSym}\n🔖 TX: <code>${tx}</code>\n\n🆔 <code>${depRow.id}</code>`;
     const keyboard={inline_keyboard:[[{text:'✅ تأكيد',callback_data:'approve:'+depRow.id},{text:'❌ رفض',callback_data:'reject:'+depRow.id}]]};
     if(screenshotUrl){
       try{
@@ -1062,7 +1127,6 @@ R.notifications=async c=>{
     const {data,error}=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(50);
     const el=$('#notifList');
     if(error||!data||!data.length){el.innerHTML='<div class="es"><i class="fas fa-bell-slash ei"></i><p>لا توجد إشعارات حالياً</p></div>';return}
-    // فلترة: الإشعارات العامة + الخاصة بالمستخدم الحالي
     const mine=data.filter(n=>n.is_public!==false||n.user_id===CU?.id||!n.user_id);
     if(!mine.length){el.innerHTML='<div class="es"><i class="fas fa-bell-slash ei"></i><p>لا توجد إشعارات حالياً</p></div>';return}
     el.innerHTML=mine.map(n=>{
@@ -1152,7 +1216,6 @@ function initRealtime(){
     if(currentPage==='notifications')go('notifications');
   }).subscribe();
   sb.channel('notif-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},payload=>{
-    // تجاهل الإشعارات الخاصة بمستخدمين آخرين
     if(payload.new.is_public===false && payload.new.user_id && payload.new.user_id!==CU?.id)return;
     updateNotifBadge();
     notify(payload.new.title||'إشعار جديد',payload.new.body||'');
@@ -1379,9 +1442,11 @@ async function admUsers(b){
     const sub=u.subscription_end&&new Date(u.subscription_end).getTime()>Date.now();
     const st=u.banned?'<span class="ust ban">محظور</span>':sub?'<span class="ust act">مشترك</span>':'<span class="ust inact">غير مشترك</span>';
     const dLeft=sub?Math.ceil((new Date(u.subscription_end).getTime()-Date.now())/864e5):0;
+    const egp=Math.round(u.balance||0);
+    const usd=Math.round((u.balance_usd||0)*100)/100;
     return `<div class="user-row">
       <div class="ua">${(u.username||'U').charAt(0).toUpperCase()}</div>
-      <div class="uin"><div class="un">${u.username||'-'} ${st}</div><div class="ue">${u.email}</div><div class="extra">💰 ${Math.round(u.balance||0)} ج.م ${sub?`· ⏳ ${dLeft} يوم`:(u.subscription_end?'· انتهى':'')}</div></div>
+      <div class="uin"><div class="un">${u.username||'-'} ${st}</div><div class="ue">${u.email}</div><div class="extra">💰 ${egp} ج.م · $${usd} ${sub?`· ⏳ ${dLeft} يوم`:(u.subscription_end?'· انتهى':'')}</div></div>
       <button class="bs" onclick="openUser('${u.id}')" style="padding:8px 12px;"><i class="fas fa-ellipsis-v"></i></button>
     </div>`;
   }).join('');
@@ -1390,17 +1455,30 @@ window.openUser=async function(id){
   const {data:u}=await sb.from('profiles').select('*').eq('id',id).single();
   if(!u)return;
   const sub=u.subscription_end&&new Date(u.subscription_end).getTime()>Date.now();
+  const egp=Math.round(u.balance||0);
+  const usd=Math.round((u.balance_usd||0)*100)/100;
   openM(`<button class="mc" onclick="closeM()">✕</button>
     <h3><i class="fas fa-user"></i> ${u.username}</h3>
     <div style="margin-bottom:15px;color:var(--mt);font-size:.88rem;line-height:1.8;">
       <div><i class="fas fa-envelope"></i> ${u.email}</div>
       <div><i class="fas fa-phone"></i> ${u.phone||'-'}</div>
-      <div><i class="fas fa-wallet"></i> ${Math.round(u.balance||0)} ج.م</div>
-      ${u.subscription_end?`<div><i class="fas fa-clock"></i> ينتهي: ${fmtDate(u.subscription_end)}</div>`:''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+        <span class="bal-chip"><i class="fas fa-wallet"></i> ${egp} ج.م</span>
+        <span class="bal-chip usd"><i class="fas fa-dollar-sign"></i> ${usd}</span>
+      </div>
+      ${u.subscription_end?`<div style="margin-top:6px;"><i class="fas fa-clock"></i> ينتهي: ${fmtDate(u.subscription_end)}</div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       ${!sub?`<button class="bg3" onclick="admActivateUser('${id}')"><i class="fas fa-crown"></i> تفعيل 180 يوم</button>`:`<button class="bs" onclick="admCancelSub('${id}')"><i class="fas fa-times"></i> إلغاء الاشتراك</button>`}
-      <button class="bs" onclick="admAddBal('${id}')"><i class="fas fa-plus"></i> إضافة رصيد</button>
+      <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:12px;">
+        <div style="font-weight:800;color:var(--g);font-size:.85rem;margin-bottom:10px;"><i class="fas fa-coins"></i> إدارة الرصيد</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="bg3" style="font-size:.82rem;padding:10px;" onclick="admChangeBal('${id}','add','EGP')"><i class="fas fa-plus"></i> إضافة ج.م</button>
+          <button class="bg3" style="font-size:.82rem;padding:10px;" onclick="admChangeBal('${id}','add','USD')"><i class="fas fa-plus"></i> إضافة $</button>
+          <button class="bd2" style="font-size:.82rem;padding:10px;" onclick="admChangeBal('${id}','deduct','EGP')"><i class="fas fa-minus"></i> خصم ج.م</button>
+          <button class="bd2" style="font-size:.82rem;padding:10px;" onclick="admChangeBal('${id}','deduct','USD')"><i class="fas fa-minus"></i> خصم $</button>
+        </div>
+      </div>
       ${u.banned?`<button class="bg3" onclick="admUnban('${id}')"><i class="fas fa-unlock"></i> إلغاء الحظر</button>`:`<button class="bd2" onclick="admBan('${id}')"><i class="fas fa-ban"></i> حظر</button>`}
       <button class="bd2" onclick="admDelUser('${id}')"><i class="fas fa-trash"></i> حذف الحساب</button>
     </div>`);
@@ -1416,14 +1494,25 @@ window.admCancelSub=async function(id){if(!confirm('إلغاء الاشتراك�
 window.admBan=async function(id){if(!confirm('حظر هذا المستخدم؟'))return;const {error}=await sb.from('profiles').update({banned:true}).eq('id',id);if(error)return toast(error.message,'er');toast('تم الحظر','er');closeM();admRenderBody()};
 window.admUnban=async function(id){const {error}=await sb.from('profiles').update({banned:false}).eq('id',id);if(error)return toast(error.message,'er');toast('تم إلغاء الحظر','ok');closeM();admRenderBody()};
 window.admDelUser=async function(id){if(!confirm('حذف المستخدم نهائياً؟'))return;const {error}=await sb.from('profiles').delete().eq('id',id);if(error)return toast(error.message,'er');toast('تم الحذف','ok');closeM();admRenderBody()};
-window.admAddBal=async function(id){
-  const v=prompt('المبلغ (ج.م):');if(!v)return;
+
+/* 💱 إضافة / خصم الرصيد بالعملة المختارة (EGP أو USD) */
+window.admChangeBal=async function(id,op,cur){
+  const field=balanceField(cur);
+  const sym=currencySymbol(cur);
+  const actionLabel=op==='add'?'إضافة':'خصم';
+  const v=prompt(`${actionLabel} كم ${sym}؟`);if(v===null)return;
   const n=parseFloat(v);if(!n||n<=0)return toast('مبلغ غير صالح','er');
-  const {data:u}=await sb.from('profiles').select('balance').eq('id',id).single();
-  const {error}=await sb.from('profiles').update({balance:(u.balance||0)+n}).eq('id',id);
+  const {data:u}=await sb.from('profiles').select('*').eq('id',id).single();
+  if(!u)return toast('المستخدم غير موجود','er');
+  let newVal=parseFloat(u[field])||0;
+  if(op==='add')newVal+=n; else newVal=Math.max(0,newVal-n);
+  const patch={};patch[field]=newVal;
+  const {error}=await sb.from('profiles').update(patch).eq('id',id);
   if(error)return toast(error.message,'er');
-  await sb.from('notifications').insert({title:'💰 تم إضافة رصيد لحسابك',body:`تم إضافة ${n} ج.م إلى رصيدك`,type:'general',is_public:false,user_id:id});
-  toast('تم إضافة '+n+' ج.م','ok');closeM();admRenderBody();
+  const title=op==='add'?'💰 تم إضافة رصيد لحسابك':'💸 تم خصم رصيد من حسابك';
+  const body=op==='add'?`تم إضافة ${n} ${sym} إلى رصيدك`:`تم خصم ${n} ${sym} من رصيدك`;
+  await sb.from('notifications').insert({title,body,type:'general',is_public:false,user_id:id});
+  toast(`تم ${actionLabel} ${n} ${sym}`,'ok');closeM();admRenderBody();
 };
 
 /* DEPOSITS */
@@ -1444,9 +1533,12 @@ async function admDeps(b){
   const mn={vodafone:'💚 فودافون كاش',binance:'🟡 Binance Pay',crypto:'🪙 USDT TRC20',instapay:'🏦 InstaPay',redotpay:'💳 RedotPay'};
   list.innerHTML=data.map(d=>{
     const st=d.status==='approved'?'<span class="st ap">✅ مقبول</span>':d.status==='rejected'?'<span class="st rj">❌ مرفوض</span>':'<span class="st pd">⏳ معلق</span>';
+    const cur=methodCurrency(d.method);
+    const sym=currencySymbol(cur);
+    const curBadge=cur==='USD'?'<span style="background:rgba(14,203,129,.15);color:var(--gr);padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:800;margin-right:6px;">USD $</span>':'<span style="background:rgba(240,185,11,.15);color:var(--g);padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:800;margin-right:6px;">EGP ج.م</span>';
     return `<div class="dh-item">
       <div class="dh-head"><div style="font-weight:800;color:var(--tx);">${d.user_name||'-'}</div>${st}</div>
-      <div style="color:var(--mt);font-size:.8rem;margin-bottom:6px;">${mn[d.method]||d.method} · <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)}</b> · ${fmtTime(d.created_at)}</div>
+      <div style="color:var(--mt);font-size:.8rem;margin-bottom:6px;">${mn[d.method]||d.method} ${curBadge} · <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)} ${sym}</b> · ${fmtTime(d.created_at)}</div>
       <div style="color:var(--mt);font-size:.72rem;direction:ltr;text-align:left;margin-bottom:8px;">TX: ${d.tx_id||'-'}</div>
       ${d.screenshot_url?`<img src="${d.screenshot_url}" style="max-width:100%;max-height:200px;border-radius:10px;cursor:pointer;margin-bottom:8px;" onclick="viewShot('${d.screenshot_url}')">`:''}
       ${d.status==='pending'?`<div style="display:flex;gap:8px;">
@@ -1457,14 +1549,23 @@ async function admDeps(b){
   }).join('');
 }
 window.viewShot=function(url){openM(`<button class="mc" onclick="closeM()">✕</button><h3>لقطة الشاشة</h3><img src="${url}" style="width:100%;border-radius:12px;">`)};
+
+/* 💱 الموافقة على الإيداع مع توجيه الرصيد للعملة الصحيحة */
 window.admApproveDep=async function(id){
   const {data:d}=await sb.from('deposits').select('*').eq('id',id).single();
   if(!d||d.status!=='pending')return;
+  const cur=methodCurrency(d.method);
+  const field=balanceField(cur);
+  const sym=currencySymbol(cur);
+  const {data:u}=await sb.from('profiles').select('*').eq('id',d.user_id).single();
+  if(!u)return toast('المستخدم غير موجود','er');
+  const newVal=(parseFloat(u[field])||0)+parseFloat(d.amount);
+  const patch={};patch[field]=newVal;
+  const {error:upErr}=await sb.from('profiles').update(patch).eq('id',d.user_id);
+  if(upErr)return toast(upErr.message,'er');
   await sb.from('deposits').update({status:'approved',processed_at:new Date().toISOString()}).eq('id',id);
-  const {data:u}=await sb.from('profiles').select('balance').eq('id',d.user_id).single();
-  if(u)await sb.from('profiles').update({balance:(u.balance||0)+parseFloat(d.amount)}).eq('id',d.user_id);
-  await sb.from('notifications').insert({title:'✅ تم تأكيد إيداعك',body:`تم إضافة ${d.amount} إلى رصيدك. يمكنك الآن تفعيل خطتك.`,type:'deposit_approve',is_public:false,user_id:d.user_id});
-  toast('✅ تم التأكيد وإضافة الرصيد','ok');admRenderBody();
+  await sb.from('notifications').insert({title:'✅ تم تأكيد إيداعك',body:`تم إضافة ${d.amount} ${sym} إلى رصيدك. يمكنك الآن تفعيل خطتك.`,type:'deposit_approve',is_public:false,user_id:d.user_id});
+  toast(`✅ تم التأكيد وإضافة ${d.amount} ${sym}`,'ok');admRenderBody();
 };
 window.admRejectDep=async function(id){
   if(!confirm('رفض هذا الإيداع؟'))return;
@@ -1649,7 +1750,7 @@ async function admSettings(b){
         <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:#e60000;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-mobile-alt"></i></div>
-            <div style="font-weight:800;color:var(--tx);">محفظة الكاش</div>
+            <div style="font-weight:800;color:var(--tx);">محفظة الكاش <span style="color:var(--g);font-size:.7rem;">(EGP)</span></div>
           </div>
           <label class="lb">رقم المحفظة</label>
           <input type="text" class="ip" id="pVf" value="${s.pay_vf||'01001606298'}" style="direction:ltr;">
@@ -1657,7 +1758,7 @@ async function admSettings(b){
         <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:#f0b90b;color:#0b0e11;display:flex;align-items:center;justify-content:center;"><i class="fab fa-bitcoin"></i></div>
-            <div style="font-weight:800;color:var(--tx);">Binance Pay</div>
+            <div style="font-weight:800;color:var(--tx);">Binance Pay <span style="color:var(--gr);font-size:.7rem;">(USD)</span></div>
           </div>
           <label class="lb">Binance Pay ID</label>
           <input type="text" class="ip" id="pBin" value="${s.pay_bin||'746211155'}" style="direction:ltr;">
@@ -1665,7 +1766,7 @@ async function admSettings(b){
         <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:#26a17b;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-coins"></i></div>
-            <div style="font-weight:800;color:var(--tx);">USDT (TRC20)</div>
+            <div style="font-weight:800;color:var(--tx);">USDT (TRC20) <span style="color:var(--gr);font-size:.7rem;">(USD)</span></div>
           </div>
           <label class="lb">عنوان المحفظة</label>
           <input type="text" class="ip" id="pCrypto" value="${s.pay_crypto||'TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D'}" style="direction:ltr;">
@@ -1673,7 +1774,7 @@ async function admSettings(b){
         <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:#fff;color:#5c2d91;border:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;"><i class="fas fa-university"></i></div>
-            <div style="font-weight:800;color:var(--tx);">InstaPay</div>
+            <div style="font-weight:800;color:var(--tx);">InstaPay <span style="color:var(--g);font-size:.7rem;">(EGP)</span></div>
           </div>
           <label class="lb">رقم InstaPay</label>
           <input type="text" class="ip" id="pInsta" value="${s.pay_insta||'01154846407'}" style="direction:ltr;">
@@ -1681,7 +1782,7 @@ async function admSettings(b){
         <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:#e60023;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-credit-card"></i></div>
-            <div style="font-weight:800;color:var(--tx);">RedotPay</div>
+            <div style="font-weight:800;color:var(--tx);">RedotPay <span style="color:var(--gr);font-size:.7rem;">(USD)</span></div>
           </div>
           <label class="lb">RedotPay ID</label>
           <input type="text" class="ip" id="pRedot" value="${s.pay_redot||'1770425974'}" style="direction:ltr;">
@@ -1747,6 +1848,7 @@ async function boot(){
       showApp();
       initRealtime();
       askNotifPermission();
+      syncOneSignalUser();
       window._recsCache=await fetchRecos();
       window._wordsCache=await fetchWords();
       updateRB();
@@ -1762,7 +1864,7 @@ async function boot(){
     else if(event==='SIGNED_IN' && session?.user && !CU){
       AUTH=session.user;
       CU=await loadProfile();
-      if(CU&&!CU.banned)showApp();
+      if(CU&&!CU.banned){showApp();syncOneSignalUser()}
     }
   });
   setInterval(updateRB,8000);
