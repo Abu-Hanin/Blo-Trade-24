@@ -602,7 +602,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 /* ============================================================
    نظام التحديث التلقائي
    ============================================================ */
-const APP_VERSION = '2026.09.20.700';
+const APP_VERSION = '2026.09.20.800';
 
 (function forceUpdate(){
   try{
@@ -1229,10 +1229,10 @@ async function sendChatMsg(body,imageUrl){
     type:'chat_message',is_public:false,user_id:CU.id
   });
   try{
-    const msg=`💬 <b>رسالة جديدة</b>
+   const msg=`💬 <b>رسالة جديدة</b>
 
-👤 ${CU.username}
-🆔 <code>${CU.id}</code>
+👤 <code>${CU.username}</code>
+📧 ${CU.email}
 
 📝 ${body||'📷 صورة'}`;
     if(imageUrl){
@@ -1344,6 +1344,7 @@ R.chat=async c=>{
     };
     r.readAsDataURL(f);
   };
+
   
   const sendNow=async()=>{
     const t=$('#chatTxt').value.trim();if(!t)return;
