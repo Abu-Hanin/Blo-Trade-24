@@ -479,9 +479,9 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 
 <script>
 /* ============================================================
-   ✅ APP_VERSION — تحديث تلقائي للكاش عند كل نشر
+   ✅ APP_VERSION — تحديث الكاش لكل المستخدمين عند كل نشر
    ============================================================ */
-const APP_VERSION = '2026.09.16.303';
+const APP_VERSION = '2026.09.16.304';
 
 /* ============================================================
    SUPABASE
@@ -496,7 +496,6 @@ const ADMIN_EMAIL='swlyd3393@gmail.com';
 const PRICE_USD=33,SUB_DAYS=180;
 const ONESIGNAL_APP_ID='a7f57c53-725b-4db8-8b4f-a84ed71d1f98';
 
-/* ✅ تحديد العملة حسب طريقة الدفع */
 const EGP_METHODS=['vodafone','instapay'];
 function methodCurrency(m){return EGP_METHODS.includes(m)?'EGP':'USD'}
 function currencySymbol(cur){return cur==='USD'?'$':'ج.م'}
@@ -567,9 +566,6 @@ async function refreshUser(){AUTH=(await sb.auth.getUser()).data.user;if(AUTH){C
 function showAuth(){$('#auth').classList.remove('hide');$('#app').classList.remove('on');hideBootLoader()}
 function showApp(){$('#auth').classList.add('hide');$('#app').classList.add('on');refreshUI();go('home');hideBootLoader()}
 
-/* ============================================================
-   ✅ refreshUI — عرض العملتين منفصلين بدل رقم موحّد
-   ============================================================ */
 function refreshUI(){
   if(!CU)return;
   $('#mUn').textContent=CU.username||'-';
@@ -674,7 +670,6 @@ R.prof=c=>{
   if(cdInterval){clearInterval(cdInterval);cdInterval=null}
   const u=CU,s=isSub();
   const planBadge=u.role==='admin'?'<span class="pb ad">👑 أدمن</span>':s?`<span class="pb on">✅ مشترك</span>`:'<span class="pb off">⚠️ غير مشترك</span>';
-  const daysLeft=subDaysLeft();
   const egp=Math.round((parseFloat(u.balance)||0)*100)/100;
   const usd=Math.round((parseFloat(u.balance_usd)||0)*100)/100;
   const totalView=getTotalInViewCurrency();
@@ -795,7 +790,6 @@ async function renderDH(){
   }).join('');
 }
 
-/* ✅ showPayDetail — يحفظ currency صراحةً مع الإيداع */
 function showPayDetail(m){
   const c=$('#ct');c.scrollTop=0;
   const rate=APP_SETTINGS.usd_to_egp;
@@ -907,7 +901,6 @@ R.notifications=async c=>{
   }catch(e){$('#notifList').innerHTML='<div class="es"><p>خطأ في التحميل</p></div>'}
 };
 </script>
-
 <script>
 R.bubble=c=>window.renderBubblePage(c);
 R.market=c=>window.renderMarketPage(c);
@@ -945,7 +938,7 @@ window.renderGoldPage=function(c){
 };
 
 /* ============================================================
-   ADMIN — يستخدم RPC Functions بدل التحديث المباشر
+   ADMIN — يستخدم update مباشر (بدون RPC)
    ============================================================ */
 let admTab='users';let userFilter='all';let setTab='rate';
 window.renderAdminPage=function(c){if(!CU||CU.role!=='admin'){c.innerHTML='<div class="es"><i class="fas fa-ban ei"></i><p>غير مصرح</p></div>';return}c.innerHTML=`<h2 class="pt"><i class="fas fa-shield-alt"></i> لوحة الأدمن</h2><div class="adm-tabs"><div class="adm-tab ${admTab==='users'?'on':''}" data-t="users"><i class="fas fa-users"></i> المستخدمون</div><div class="adm-tab ${admTab==='deps'?'on':''}" data-t="deps"><i class="fas fa-wallet"></i> الإيداعات</div><div class="adm-tab ${admTab==='recs'?'on':''}" data-t="recs"><i class="fas fa-chart-line"></i> التوصيات</div><div class="adm-tab ${admTab==='words'?'on':''}" data-t="words"><i class="fas fa-calendar-day"></i> الكلمات</div><div class="adm-tab ${admTab==='settings'?'on':''}" data-t="settings"><i class="fas fa-cog"></i> الإعدادات</div></div><div id="admBody"></div>`;c.querySelectorAll('.adm-tab').forEach(t=>t.onclick=()=>{admTab=t.dataset.t;window.renderAdminPage(c)});admRenderBody()};
@@ -954,7 +947,7 @@ async function admRenderBody(){const b=$('#admBody');if(!b)return;if(admTab==='u
 async function admUsers(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('profiles').select('*').neq('role','admin').order('created_at',{ascending:false});
-  if(error||!data){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
+  if(error||!data){b.innerHTML='<div class="es"><p>خطأ: '+(error?.message||'')+'</p></div>';return}
   const subs=data.filter(u=>u.subscription_end&&new Date(u.subscription_end).getTime()>Date.now()).length;
   const banned=data.filter(u=>u.banned).length;
   b.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;"><div class="adm-stat ${userFilter==='all'?'on':''}" data-f="all"><div class="l">إجمالي</div><div class="v">${data.length}</div></div><div class="adm-stat ${userFilter==='subs'?'on':''}" data-f="subs"><div class="l">مشترك</div><div class="v" style="color:var(--gr)">${subs}</div></div><div class="adm-stat ${userFilter==='banned'?'on':''}" data-f="banned"><div class="l">محظور</div><div class="v" style="color:var(--rd)">${banned}</div></div></div><div id="usrList"></div>`;
@@ -984,31 +977,34 @@ window.admBan=async function(id){if(!confirm('حظر هذا المستخدم؟')
 window.admUnban=async function(id){const {error}=await sb.from('profiles').update({banned:false}).eq('id',id);if(error)return toast(error.message,'er');toast('تم إلغاء الحظر','ok');closeM();admRenderBody()};
 window.admDelUser=async function(id){if(!confirm('حذف المستخدم نهائياً؟'))return;const {error}=await sb.from('profiles').delete().eq('id',id);if(error)return toast(error.message,'er');toast('تم الحذف','ok');closeM();admRenderBody()};
 
-/* ============================================================
-   ✅ admChangeBal — يستخدم RPC admin_adjust_balance
-   ============================================================ */
+/* ✅ إضافة / خصم رصيد — update مباشر */
 window.admChangeBal=async function(id,op,cur){
   const sym=currencySymbol(cur);
   const actionLabel=op==='add'?'إضافة':'خصم';
-  const v=prompt(`${actionLabel} كم ${sym}؟`);if(v===null)return;
-  const n=parseFloat(v);if(!n||n<=0)return toast('مبلغ غير صالح','er');
+  const v=prompt(`${actionLabel} كم ${sym}؟`);
+  if(v===null)return;
+  const n=parseFloat(v);
+  if(!n||n<=0)return toast('مبلغ غير صالح','er');
   toast('⏳ جاري المعالجة...');
-  const {data,error}=await sb.rpc('admin_adjust_balance',{
-    p_user_id:id,
-    p_amount:n,
-    p_currency:cur,
-    p_operation:op
-  });
-  if(error){console.error('RPC error:',error);return toast('❌ فشل: '+error.message,'er')}
-  if(!data||!data.ok){return toast('❌ فشل: '+(data?.error||'خطأ غير معروف'),'er')}
+  const field=balanceField(cur);
+  const {data:u,error:getErr}=await sb.from('profiles').select('id,'+field).eq('id',id).single();
+  if(getErr||!u){console.error('get err:',getErr);return toast('❌ فشل: '+(getErr?.message||'المستخدم غير موجود'),'er')}
+  const current=parseFloat(u[field]||0);
+  const newVal=op==='add'?Math.round((current+n)*100)/100:Math.max(0,Math.round((current-n)*100)/100);
+  const patch={};
+  patch[field]=newVal;
+  const {error:updErr}=await sb.from('profiles').update(patch).eq('id',id);
+  if(updErr){console.error('upd err:',updErr);return toast('❌ فشل التحديث: '+updErr.message,'er')}
+  try{await sb.from('notifications').insert({title:op==='add'?'💰 تم إضافة رصيد لحسابك':'💸 تم خصم رصيد من حسابك',body:(op==='add'?'تم إضافة ':'تم خصم ')+n+' '+sym,type:'general',is_public:false,user_id:id})}catch(e){}
   toast(`✅ تم ${actionLabel} ${n} ${sym}`,'ok');
-  closeM();admRenderBody();
+  closeM();
+  admRenderBody();
 };
 
 async function admDeps(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('deposits').select('*').order('created_at',{ascending:false});
-  if(error||!data){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
+  if(error||!data){b.innerHTML='<div class="es"><p>خطأ: '+(error?.message||'')+'</p></div>';return}
   const pend=data.filter(d=>d.status==='pending').length;
   b.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;"><div class="adm-stat"><div class="l">إجمالي</div><div class="v">${data.length}</div></div><div class="adm-stat"><div class="l">قيد المراجعة</div><div class="v" style="color:var(--g)">${pend}</div></div><div class="adm-stat"><div class="l">مقبول</div><div class="v" style="color:var(--gr)">${data.filter(d=>d.status==='approved').length}</div></div></div><div id="depList"></div>`;
   const list=$('#depList');
@@ -1024,30 +1020,60 @@ async function admDeps(b){
 }
 window.viewShot=function(url){openM(`<button class="mc" onclick="closeM()">✕</button><h3>لقطة الشاشة</h3><img src="${url}" style="width:100%;border-radius:12px;">`)};
 
-/* ============================================================
-   ✅ admApproveDep — يستخدم RPC admin_approve_deposit
-   ============================================================ */
+/* ✅ تأكيد الإيداع — update مباشر + إضافة للحقل الصحيح */
 window.admApproveDep=async function(id){
   if(!confirm('تأكيد هذا الإيداع وإضافة الرصيد للمستخدم؟'))return;
   toast('⏳ جاري المعالجة...');
-  const {data,error}=await sb.rpc('admin_approve_deposit',{p_deposit_id:parseInt(id)});
-  if(error){console.error('RPC error:',error);return toast('❌ فشل: '+error.message,'er')}
-  if(!data||!data.ok){return toast('❌ فشل: '+(data?.error||'خطأ غير معروف'),'er')}
-  const sym=data.currency==='USD'?'$':'ج.م';
-  if(data.activated){toast('✅ تم التأكيد + تفعيل الباقة تلقائياً','ok')}
-  else{toast(`✅ تم التأكيد وإضافة الرصيد (${sym})`,'ok')}
+  const {data:d,error:getErr}=await sb.from('deposits').select('*').eq('id',id).single();
+  if(getErr||!d){console.error('get err:',getErr);return toast('❌ إيداع غير موجود','er')}
+  if(d.status!=='pending')return toast('❌ تمت معالجته مسبقاً','er');
+  const cur=d.currency||(EGP_METHODS.includes(d.method)?'EGP':'USD');
+  const field=balanceField(cur);
+  const sym=currencySymbol(cur);
+  const {data:locked,error:lockErr}=await sb.from('deposits').update({status:'approved',currency:cur,processed_at:new Date().toISOString()}).eq('id',id).eq('status','pending').select().single();
+  if(lockErr||!locked){console.error('lock err:',lockErr);return toast('❌ فشل تحديث الحالة: '+(lockErr?.message||''),'er')}
+  const {data:u,error:uErr}=await sb.from('profiles').select('*').eq('id',d.user_id).single();
+  if(uErr||!u){console.error('user err:',uErr);return toast('❌ المستخدم غير موجود','er')}
+  const current=parseFloat(u[field]||0);
+  const amt=parseFloat(d.amount||0);
+  const newVal=Math.round((current+amt)*100)/100;
+  const patch={};
+  patch[field]=newVal;
+  const {error:updErr}=await sb.from('profiles').update(patch).eq('id',d.user_id);
+  if(updErr){console.error('upd err:',updErr);return toast('❌ فشل تحديث الرصيد: '+updErr.message,'er')}
+  try{await sb.from('notifications').insert({title:'✅ تم تأكيد إيداعك',body:`تم إضافة ${amt} ${sym} إلى رصيدك.`,type:'deposit_approve',is_public:false,user_id:d.user_id})}catch(e){}
+  const freshUsd=field==='balance_usd'?newVal:parseFloat(u.balance_usd||0);
+  const freshEgp=field==='balance'?newVal:parseFloat(u.balance||0);
+  const {data:settings}=await sb.from('site_settings').select('usd_to_egp').eq('id',1).single();
+  const rate=parseFloat(settings?.usd_to_egp||50);
+  const requiredEgp=PRICE_USD*rate;
+  const isSubbed=u.subscription_end&&new Date(u.subscription_end)>new Date();
+  let activated=false;
+  if(!isSubbed){
+    const actPatch={subscription_end:new Date(Date.now()+SUB_DAYS*864e5).toISOString()};
+    if(freshUsd>=PRICE_USD){actPatch.balance_usd=Math.round((freshUsd-PRICE_USD)*100)/100;activated=true}
+    else if(freshEgp>=requiredEgp){actPatch.balance=Math.round((freshEgp-requiredEgp)*100)/100;activated=true}
+    if(activated){
+      const {error:actErr}=await sb.from('profiles').update(actPatch).eq('id',d.user_id);
+      if(actErr)console.error('activation err:',actErr);
+      else{
+        try{await sb.from('notifications').insert({title:'🎉 تم تفعيل باقتك تلقائياً',body:'رصيدك وصل للحد المطلوب، وتم تفعيل باقتك لمدة 180 يوم.',type:'general',is_public:false,user_id:d.user_id})}catch(e){}
+      }
+    }
+  }
+  toast(activated?'✅ تم التأكيد + تفعيل الباقة':'✅ تم التأكيد وإضافة '+amt+' '+sym,'ok');
   admRenderBody();
 };
 
-/* ============================================================
-   ✅ admRejectDep — يستخدم RPC admin_reject_deposit
-   ============================================================ */
+/* ✅ رفض الإيداع — update مباشر */
 window.admRejectDep=async function(id){
   if(!confirm('رفض هذا الإيداع؟'))return;
   toast('⏳ جاري المعالجة...');
-  const {data,error}=await sb.rpc('admin_reject_deposit',{p_deposit_id:parseInt(id)});
-  if(error){console.error('RPC error:',error);return toast('❌ فشل: '+error.message,'er')}
-  if(!data||!data.ok){return toast('❌ فشل: '+(data?.error||'خطأ غير معروف'),'er')}
+  const {data:d}=await sb.from('deposits').select('*').eq('id',id).single();
+  if(!d)return toast('❌ إيداع غير موجود','er');
+  const {error}=await sb.from('deposits').update({status:'rejected',processed_at:new Date().toISOString()}).eq('id',id);
+  if(error){console.error('reject err:',error);return toast('❌ فشل: '+error.message,'er')}
+  try{await sb.from('notifications').insert({title:'❌ تم رفض إيداعك',body:'تواصل مع الدعم لمزيد من المعلومات',type:'deposit_reject',is_public:false,user_id:d.user_id})}catch(e){}
   toast('✅ تم رفض الإيداع','ok');
   admRenderBody();
 };
@@ -1055,7 +1081,7 @@ window.admRejectDep=async function(id){
 async function admRecs(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('recommendations').select('*').order('created_at',{ascending:false});
-  if(error){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
+  if(error){b.innerHTML='<div class="es"><p>خطأ: '+error.message+'</p></div>';return}
   b.innerHTML=`<button class="bp" id="addRecoBtn" style="width:100%;margin-bottom:15px;justify-content:center;"><i class="fas fa-plus"></i> إضافة توصية جديدة</button><div id="recoAdminList" class="adm-cards-grid"></div>`;
   $('#addRecoBtn').onclick=addRecoModal;
   const list=$('#recoAdminList');
@@ -1070,7 +1096,7 @@ function addRecoModal(){openM(`<button class="mc" onclick="closeM()">✕</button
 async function admWords(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('words').select('*').order('created_at',{ascending:false});
-  if(error){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
+  if(error){b.innerHTML='<div class="es"><p>خطأ: '+error.message+'</p></div>';return}
   b.innerHTML=`<button class="bp" id="addWordBtn" style="width:100%;margin-bottom:15px;justify-content:center;"><i class="fas fa-plus"></i> إضافة كلمة اليوم</button><div id="wordAdminList" class="adm-cards-grid"></div>`;
   $('#addWordBtn').onclick=addWordModal;
   const list=$('#wordAdminList');
@@ -1085,7 +1111,7 @@ function addWordModal(){openM(`<button class="mc" onclick="closeM()">✕</button
 async function admSettings(b){
   b.innerHTML='<div class="es"><i class="fas fa-spinner fa-spin ei"></i></div>';
   const {data,error}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();
-  if(error){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
+  if(error){b.innerHTML='<div class="es"><p>خطأ: '+error.message+'</p></div>';return}
   const s=data||{};
   const rate=parseFloat(s.usd_to_egp)||50;
   b.innerHTML=`
