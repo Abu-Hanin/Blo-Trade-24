@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Blo Trade 24</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F0B90B">
@@ -472,12 +475,12 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
+
 <script>
 /* ============================================================
-   🚀 نظام تحديث النسخ التلقائي
-   غيّر الرقم ده مع كل رفعة جديدة
+   نظام التحديث التلقائي
    ============================================================ */
-const APP_VERSION = '2026.09.19.1';
+const APP_VERSION = '2026.09.19.101';
 
 (function forceUpdate(){
   try{
@@ -485,26 +488,13 @@ const APP_VERSION = '2026.09.19.1';
     if(stored !== APP_VERSION){
       localStorage.setItem('blo_app_version', APP_VERSION);
       if(stored){
-        /* مسح الكاش */
-        if('caches' in window){
-          caches.keys().then(names=>{names.forEach(name=>caches.delete(name));}).catch(()=>{});
-        }
-        /* تحديث/إلغاء الـ service worker */
-        if('serviceWorker' in navigator){
-          navigator.serviceWorker.getRegistrations().then(regs=>{
-            regs.forEach(reg=>{try{reg.update();reg.unregister();}catch(e){}});
-          }).catch(()=>{});
-        }
-        /* إعادة تحميل بدون كاش */
-        setTimeout(()=>{
-          const url = new URL(window.location.href);
-          url.searchParams.set('_v', Date.now());
-          window.location.replace(url.toString());
-        }, 300);
+        if('caches' in window){caches.keys().then(names=>{names.forEach(name=>caches.delete(name));}).catch(()=>{});}
+        if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(reg=>{try{reg.update();reg.unregister();}catch(e){}});}).catch(()=>{});}
+        setTimeout(()=>{const url = new URL(window.location.href);url.searchParams.set('_v', Date.now());window.location.replace(url.toString());}, 300);
         return;
       }
     }
-  }catch(e){console.warn('Version check error:', e);}
+  }catch(e){}
 })();
 
 /* ============================================================
@@ -545,7 +535,6 @@ function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMo
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fmtUsd(v){return '$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fmtEgp(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' ج.م'}
-
 function egpToUsd(egp){return Math.round(((parseFloat(egp)||0)/APP_SETTINGS.usd_to_egp)*100)/100}
 function usdToEgp(usd){return Math.round(((parseFloat(usd)||0)*APP_SETTINGS.usd_to_egp)*100)/100}
 
@@ -553,17 +542,13 @@ function getTotalInViewCurrency(){
   if(!CU)return 0;
   const egp=parseFloat(CU.balance||0);
   const usd=parseFloat(CU.balance_usd||0);
-  if(VIEW_CURRENCY==='USD'){
-    return Math.round((usd+egpToUsd(egp))*100)/100;
-  }else{
-    return Math.round((egp+usdToEgp(usd))*100)/100;
-  }
+  if(VIEW_CURRENCY==='USD')return Math.round((usd+egpToUsd(egp))*100)/100;
+  return Math.round((egp+usdToEgp(usd))*100)/100;
 }
 
 let CU=null,AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
 function subDaysLeft(){if(!CU.subscription_end)return 0;return Math.max(0,Math.ceil((new Date(CU.subscription_end).getTime()-Date.now())/864e5))}
-
 function hasEnoughForPlan(){
   if(!CU)return false;
   const egp=parseFloat(CU.balance||0);
@@ -571,7 +556,6 @@ function hasEnoughForPlan(){
   const requiredEgp=PRICE_USD*APP_SETTINGS.usd_to_egp;
   return (usd>=PRICE_USD) || (egp>=requiredEgp);
 }
-
 function hideBootLoader(){const b=document.getElementById('bootLoader');if(!b)return;b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}
 
 window.OneSignalDeferred=window.OneSignalDeferred||[];
@@ -719,7 +703,6 @@ R.prof=c=>{
   c.innerHTML=`
   <h2 class="pt"><i class="fas fa-user-circle"></i> الملف الشخصي</h2>
   <div class="prof-hero"><div class="prof-top"><div class="prof-av">${(u.username||'U').charAt(0).toUpperCase()}</div><div class="prof-info"><div class="n">${u.username||'-'}</div><div class="e">${u.email||'-'}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${planBadge}</div></div></div></div>
-
   <div class="bal-card">
     <div class="bal-card-head">
       <h4><i class="fas fa-wallet"></i> رصيدك</h4>
@@ -738,9 +721,7 @@ R.prof=c=>{
     </div>
     ${!s && u.role!=='admin'?`<div style="margin-top:12px" class="bal-hint"><i class="fas fa-info-circle"></i> يلزم ${fmtUsd(PRICE_USD)} أو ${PRICE_USD*APP_SETTINGS.usd_to_egp} ج.م لتفعيل الباقة</div>`:''}
   </div>
-
   ${subHTML}
-
   <div class="info-box">
     <h4><i class="fas fa-info-circle"></i> معلومات الحساب</h4>
     <div class="info-row"><span class="l">رقم الهاتف</span><span class="v">${u.phone||'-'}</span></div>
@@ -749,17 +730,11 @@ R.prof=c=>{
     <div class="info-row"><span class="l">الرصيد بالدولار</span><span class="v" style="color:var(--gr)">${fmtUsd(usd)}</span></div>
     <div class="info-row"><span class="l">حالة الحساب</span><span class="v" style="color:${u.banned?'var(--rd)':'var(--gr)'}">${u.banned?'محظور':'نشط'}</span></div>
   </div>
-
   <div style="display:flex;flex-direction:column;gap:10px;">
     <button class="bs" id="chPwdBtn" style="width:100%;"><i class="fas fa-key"></i> تغيير كلمة السر</button>
   </div>`;
 
-  c.querySelectorAll('#curToggle button').forEach(btn=>btn.onclick=()=>{
-    VIEW_CURRENCY=btn.dataset.c;
-    refreshUI();
-    R.prof(c);
-  });
-
+  c.querySelectorAll('#curToggle button').forEach(btn=>btn.onclick=()=>{VIEW_CURRENCY=btn.dataset.c;refreshUI();R.prof(c);});
   $('#actPlanBtn')?.addEventListener('click',actPlan);
   $('#actPlanBtnTop')?.addEventListener('click',actPlan);
   $('#subscribeBtn')?.addEventListener('click',()=>go('dep'));
@@ -774,19 +749,12 @@ async function actPlan(){
   if(!CU||isSub())return;
   if(!hasEnoughForPlan())return toast('رصيدك غير كافٍ','er');
   if(!confirm('تفعيل باقة 180 يوم الآن؟'))return;
-
   const egp=parseFloat(CU.balance||0);
   const usd=parseFloat(CU.balance_usd||0);
   const requiredEgp=PRICE_USD*APP_SETTINGS.usd_to_egp;
-
   let patch={subscription_end:new Date(Date.now()+SUB_DAYS*864e5).toISOString()};
-
-  if(usd>=PRICE_USD){
-    patch.balance_usd=Math.round((usd-PRICE_USD)*100)/100;
-  }else if(egp>=requiredEgp){
-    patch.balance=Math.round((egp-requiredEgp)*100)/100;
-  }
-
+  if(usd>=PRICE_USD)patch.balance_usd=Math.round((usd-PRICE_USD)*100)/100;
+  else if(egp>=requiredEgp)patch.balance=Math.round((egp-requiredEgp)*100)/100;
   const {error}=await sb.from('profiles').update(patch).eq('id',CU.id);
   if(error)return toast(error.message,'er');
   try{await sb.from('notifications').insert({title:'🎉 تم تفعيل اشتراكك بنجاح',body:`تم تفعيل باقتك لمدة ${SUB_DAYS} يوم. استمتع بكل المميزات!`,type:'general',is_public:false,user_id:CU.id})}catch(e){}
@@ -815,7 +783,8 @@ async function renderDH(){
   const mn={vodafone:'فودافون كاش',binance:'Binance Pay',crypto:'USDT TRC20',instapay:'InstaPay',redotpay:'RedotPay'};
   h.innerHTML=data.map(d=>{
     const st=d.status==='approved'?'<span class="st ap">✅ مقبول</span>':d.status==='rejected'?'<span class="st rj">❌ مرفوض</span>':'<span class="st pd">⏳ قيد المراجعة</span>';
-    const cur=methodCurrency(d.method);const sym=currencySymbol(cur);
+    const cur = d.currency || methodCurrency(d.method);
+    const sym = cur==='USD'?'$':'ج.م';
     return `<div class="dh-item"><div class="dh-head"><div style="font-weight:800;color:var(--tx);">${mn[d.method]||d.method}</div>${st}</div><div style="color:var(--mt);font-size:.82rem;margin-bottom:6px;">المبلغ: <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)} ${sym}</b> · ${fmtDate(d.created_at)}</div><div style="color:var(--mt);font-size:.72rem;direction:ltr;text-align:left;">TX: ${d.tx_id||'-'}</div></div>`;
   }).join('');
 }
@@ -850,7 +819,7 @@ function showPayDetail(m){
     let screenshotUrl='';
     try{const blobRes=await fetch(shot);const blob=await blobRes.blob();const fileName=`${CU.id}_${Date.now()}.jpg`;const {error:upErr}=await sb.storage.from('proofs').upload(fileName,blob,{contentType:'image/jpeg'});if(!upErr){const {data:pub}=sb.storage.from('proofs').getPublicUrl(fileName);screenshotUrl=pub.publicUrl}}catch(e){}
     const METHOD={vf:'vodafone',bin:'binance',cry:'crypto',inst:'instapay',red:'redotpay'}[m];
-    const {data:depRow,error}=await sb.from('deposits').insert({user_id:CU.id,user_name:CU.username,user_email:CU.email,method:METHOD,amount:amt,tx_id:tx,phone:CU.phone||'',screenshot_url:screenshotUrl,status:'pending'}).select().single();
+    const {data:depRow,error}=await sb.from('deposits').insert({user_id:CU.id,user_name:CU.username,user_email:CU.email,method:METHOD,amount:amt,currency:isEGP?'EGP':'USD',tx_id:tx,phone:CU.phone||'',screenshot_url:screenshotUrl,status:'pending'}).select().single();
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> تأكيد وإرسال للإدارة';
     if(error){toast(error.message,'er');return}
     try{const curSym=isEGP?'ج.م':'$';await sb.from('notifications').insert({title:'📥 تم استلام طلب الإيداع',body:`تم استلام طلبك بمبلغ ${amt} ${curSym} عبر ${meta.name}. في انتظار المراجعة من الإدارة.`,type:'deposit_pending',is_public:false,user_id:CU.id})}catch(e){}
@@ -1019,7 +988,8 @@ async function admDeps(b){
   const mn={vodafone:'💚 فودافون كاش',binance:'🟡 Binance Pay',crypto:'🪙 USDT TRC20',instapay:'🏦 InstaPay',redotpay:'💳 RedotPay'};
   list.innerHTML=data.map(d=>{
     const st=d.status==='approved'?'<span class="st ap">✅ مقبول</span>':d.status==='rejected'?'<span class="st rj">❌ مرفوض</span>':'<span class="st pd">⏳ معلق</span>';
-    const cur=methodCurrency(d.method);const sym=currencySymbol(cur);
+    const cur = d.currency || methodCurrency(d.method);
+    const sym = cur==='USD'?'$':'ج.م';
     const curBadge=cur==='USD'?'<span style="background:rgba(14,203,129,.15);color:var(--gr);padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:800;margin-right:6px;">USD $</span>':'<span style="background:rgba(240,185,11,.15);color:var(--g);padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:800;margin-right:6px;">EGP ج.م</span>';
     return `<div class="dh-item"><div class="dh-head"><div style="font-weight:800;color:var(--tx);">${d.user_name||'-'}</div>${st}</div><div style="color:var(--mt);font-size:.8rem;margin-bottom:6px;">${mn[d.method]||d.method} ${curBadge} · <b style="color:var(--g);direction:ltr;display:inline-block;">${fmtNum(d.amount)} ${sym}</b> · ${fmtTime(d.created_at)}</div><div style="color:var(--mt);font-size:.72rem;direction:ltr;text-align:left;margin-bottom:8px;">TX: ${d.tx_id||'-'}</div>${d.screenshot_url?`<img src="${d.screenshot_url}" style="max-width:100%;max-height:200px;border-radius:10px;cursor:pointer;margin-bottom:8px;" onclick="viewShot('${d.screenshot_url}')">`:''}${d.status==='pending'?`<div style="display:flex;gap:8px;"><button class="bg3" onclick="admApproveDep('${d.id}')" style="flex:1;justify-content:center;"><i class="fas fa-check"></i> تأكيد</button><button class="bd2" onclick="admRejectDep('${d.id}')" style="flex:1;justify-content:center;"><i class="fas fa-times"></i> رفض</button></div>`:''}</div>`;
   }).join('');
@@ -1029,25 +999,29 @@ window.viewShot=function(url){openM(`<button class="mc" onclick="closeM()">✕</
 window.admApproveDep=async function(id){
   const {data:d}=await sb.from('deposits').select('*').eq('id',id).single();
   if(!d||d.status!=='pending')return;
-  const cur=methodCurrency(d.method);
-  const field=balanceField(cur);
-  const sym=currencySymbol(cur);
 
+  /* ✅ قراءة العملة من الإيداع نفسه */
+  const cur = d.currency || methodCurrency(d.method);
+  const field = cur==='USD' ? 'balance_usd' : 'balance';
+  const sym = cur==='USD' ? '$' : 'ج.م';
+
+  /* 1) تغيير الحالة */
   const {data:upd,error:upErr}=await sb.from('deposits')
     .update({status:'approved',processed_at:new Date().toISOString()})
     .eq('id',id)
     .eq('status','pending')
     .select().single();
-  if(upErr||!upd){return toast('تم التأكيد مسبقاً','er')}
+  if(upErr||!upd)return toast('تم التأكيد مسبقاً','er');
 
+  /* 2) إضافة الرصيد */
   const {data:u}=await sb.from('profiles').select('*').eq('id',d.user_id).single();
   if(!u)return toast('المستخدم غير موجود','er');
-
   const newVal=(parseFloat(u[field])||0)+parseFloat(d.amount);
   const patch={};patch[field]=newVal;
   const {error:balErr}=await sb.from('profiles').update(patch).eq('id',d.user_id);
   if(balErr)return toast(balErr.message,'er');
 
+  /* 3) إشعار */
   await sb.from('notifications').insert({
     title:'✅ تم تأكيد إيداعك',
     body:`تم إضافة ${d.amount} ${sym} إلى رصيدك.`,
@@ -1056,6 +1030,7 @@ window.admApproveDep=async function(id){
     user_id:d.user_id
   });
 
+  /* 4) تفعيل الباقة تلقائياً لو كافي */
   const freshBal = field==='balance' ? newVal : parseFloat(u.balance||0);
   const freshUsd = field==='balance_usd' ? newVal : parseFloat(u.balance_usd||0);
   const requiredEgp = PRICE_USD*APP_SETTINGS.usd_to_egp;
@@ -1064,18 +1039,13 @@ window.admApproveDep=async function(id){
   if(!isCurrentlySub){
     let autoActivated=false;
     let activationPatch={subscription_end:new Date(Date.now()+SUB_DAYS*864e5).toISOString()};
-    if(freshUsd>=PRICE_USD){
-      activationPatch.balance_usd=Math.round((freshUsd-PRICE_USD)*100)/100;
-      autoActivated=true;
-    }else if(freshBal>=requiredEgp){
-      activationPatch.balance=Math.round((freshBal-requiredEgp)*100)/100;
-      autoActivated=true;
-    }
+    if(freshUsd>=PRICE_USD){activationPatch.balance_usd=Math.round((freshUsd-PRICE_USD)*100)/100;autoActivated=true;}
+    else if(freshBal>=requiredEgp){activationPatch.balance=Math.round((freshBal-requiredEgp)*100)/100;autoActivated=true;}
     if(autoActivated){
       await sb.from('profiles').update(activationPatch).eq('id',d.user_id);
       await sb.from('notifications').insert({
         title:'🎉 تم تفعيل باقتك تلقائياً',
-        body:`رصيدك وصل للحد المطلوب، وتم تفعيل باقتك لمدة 180 يوم. استمتع بكل المميزات!`,
+        body:`رصيدك وصل للحد المطلوب، وتم تفعيل باقتك لمدة 180 يوم.`,
         type:'general',
         is_public:false,
         user_id:d.user_id
@@ -1127,75 +1097,50 @@ async function admSettings(b){
   if(error){b.innerHTML='<div class="es"><p>خطأ</p></div>';return}
   const s=data||{};
   const rate=parseFloat(s.usd_to_egp)||50;
-
   b.innerHTML=`
     <h3 style="color:var(--g);font-size:1.1rem;font-weight:800;margin-bottom:14px;"><i class="fas fa-cog"></i> إعدادات المنصة</h3>
     <div class="set-tabs">
-      <div class="set-tab ${setTab==='rate'?'on':''}" data-st="rate">
-        <i class="fas fa-dollar-sign"></i>
-        <span>سعر الصرف</span>
-        <div class="active-label">1$ = ${rate} ج.م</div>
-      </div>
-      <div class="set-tab ${setTab==='pay'?'on':''}" data-st="pay">
-        <i class="fas fa-credit-card"></i>
-        <span>طرق الدفع</span>
-        <div class="active-label">5 طرق</div>
-      </div>
-      <div class="set-tab ${setTab==='edu'?'on':''}" data-st="edu">
-        <i class="fas fa-graduation-cap"></i>
-        <span>الفيديوهات</span>
-        <div class="active-label">5 فيديوهات</div>
-      </div>
+      <div class="set-tab ${setTab==='rate'?'on':''}" data-st="rate"><i class="fas fa-dollar-sign"></i><span>سعر الصرف</span><div class="active-label">1$ = ${rate} ج.م</div></div>
+      <div class="set-tab ${setTab==='pay'?'on':''}" data-st="pay"><i class="fas fa-credit-card"></i><span>طرق الدفع</span><div class="active-label">5 طرق</div></div>
+      <div class="set-tab ${setTab==='edu'?'on':''}" data-st="edu"><i class="fas fa-graduation-cap"></i><span>الفيديوهات</span><div class="active-label">5 فيديوهات</div></div>
     </div>
-
     <div class="set-panel ${setTab==='rate'?'on':''}" data-panel="rate">
       <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:24px;border:1px solid var(--g);">
-        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px;"><i class="fas fa-dollar-sign"></i> سعر صرف الدولار مقابل الجنيه</h4>
-        <p style="color:var(--mt);font-size:.85rem;line-height:1.7;margin-bottom:18px;">حدد سعر الصرف الحالي. سيتم تطبيقه فوراً على كل المستخدمين.</p>
-        <label class="lb">سعر 1 دولار أمريكي = كم جنيه مصري؟</label>
+        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;"><i class="fas fa-dollar-sign"></i> سعر صرف الدولار مقابل الجنيه</h4>
+        <label class="lb">سعر 1 دولار = كم جنيه؟</label>
         <input type="number" class="ip" id="rateInput" value="${rate}" min="1" step="0.5" style="font-size:1.4rem;font-weight:900;text-align:center;direction:ltr;color:var(--g);">
         <div style="margin-top:16px;background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;">
-          <div style="font-size:.78rem;color:var(--mt);margin-bottom:8px;">معاينة سريعة:</div>
           <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--mt);font-size:.85rem;">33$ =</span><span id="preview33" style="color:var(--g);font-weight:900;">${(33*rate).toFixed(2)} ج.م</span></div>
           <div style="display:flex;justify-content:space-between;"><span style="color:var(--mt);font-size:.85rem;">100$ =</span><span id="preview100" style="color:var(--g);font-weight:900;">${(100*rate).toFixed(2)} ج.م</span></div>
         </div>
         <button class="bp" id="saveRate" style="width:100%;justify-content:center;margin-top:18px;"><i class="fas fa-save"></i> حفظ سعر الصرف</button>
       </div>
     </div>
-
     <div class="set-panel ${setTab==='pay'?'on':''}" data-panel="pay">
       <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);">
-        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h4>
+        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;"><i class="fas fa-credit-card"></i> طرق الدفع</h4>
         <div class="settings-grid">
-          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:10px;background:#e60000;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-mobile-alt"></i></div><div style="font-weight:800;color:var(--tx);">محفظة الكاش</div></div><label class="lb">رقم المحفظة</label><input type="text" class="ip" id="pVf" value="${s.pay_vf||'01001606298'}" style="direction:ltr;"></div>
-          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:10px;background:#f0b90b;color:#0b0e11;display:flex;align-items:center;justify-content:center;"><i class="fab fa-bitcoin"></i></div><div style="font-weight:800;color:var(--tx);">Binance Pay</div></div><label class="lb">Binance Pay ID</label><input type="text" class="ip" id="pBin" value="${s.pay_bin||'746211155'}" style="direction:ltr;"></div>
-          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:10px;background:#26a17b;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-coins"></i></div><div style="font-weight:800;color:var(--tx);">USDT (TRC20)</div></div><label class="lb">عنوان المحفظة</label><input type="text" class="ip" id="pCrypto" value="${s.pay_crypto||'TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D'}" style="direction:ltr;"></div>
-          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:10px;background:#fff;color:#5c2d91;border:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;"><i class="fas fa-university"></i></div><div style="font-weight:800;color:var(--tx);">InstaPay</div></div><label class="lb">رقم InstaPay</label><input type="text" class="ip" id="pInsta" value="${s.pay_insta||'01154846407'}" style="direction:ltr;"></div>
-          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:36px;height:36px;border-radius:10px;background:#e60023;color:#fff;display:flex;align-items:center;justify-content:center;"><i class="fas fa-credit-card"></i></div><div style="font-weight:800;color:var(--tx);">RedotPay</div></div><label class="lb">RedotPay ID</label><input type="text" class="ip" id="pRedot" value="${s.pay_redot||'1770425974'}" style="direction:ltr;"></div>
+          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--tx);margin-bottom:10px;">محفظة الكاش</div><label class="lb">رقم المحفظة</label><input type="text" class="ip" id="pVf" value="${s.pay_vf||'01001606298'}" style="direction:ltr;"></div>
+          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--tx);margin-bottom:10px;">Binance Pay</div><label class="lb">Binance Pay ID</label><input type="text" class="ip" id="pBin" value="${s.pay_bin||'746211155'}" style="direction:ltr;"></div>
+          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--tx);margin-bottom:10px;">USDT (TRC20)</div><label class="lb">عنوان المحفظة</label><input type="text" class="ip" id="pCrypto" value="${s.pay_crypto||'TKBAMK8gPsZnVnW8PU8XSteExbidVFPU4D'}" style="direction:ltr;"></div>
+          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--tx);margin-bottom:10px;">InstaPay</div><label class="lb">رقم InstaPay</label><input type="text" class="ip" id="pInsta" value="${s.pay_insta||'01154846407'}" style="direction:ltr;"></div>
+          <div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--tx);margin-bottom:10px;">RedotPay</div><label class="lb">RedotPay ID</label><input type="text" class="ip" id="pRedot" value="${s.pay_redot||'1770425974'}" style="direction:ltr;"></div>
         </div>
         <button class="bp" id="savePay" style="width:100%;justify-content:center;margin-top:18px;"><i class="fas fa-save"></i> حفظ طرق الدفع</button>
       </div>
     </div>
-
     <div class="set-panel ${setTab==='edu'?'on':''}" data-panel="edu">
       <div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;padding:20px;border:1px solid var(--bd);">
-        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;"><i class="fas fa-graduation-cap"></i> فيديوهات التعليم (5 فيديوهات)</h4>
+        <h4 style="color:var(--g);font-size:1rem;font-weight:800;margin-bottom:16px;"><i class="fas fa-graduation-cap"></i> فيديوهات التعليم</h4>
         <div class="settings-grid">
-          ${[1,2,3,4,5].map(i=>`<div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--g);font-size:.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;"><span style="width:24px;height:24px;border-radius:50%;background:rgba(240,185,11,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;">${i}</span>الفيديو رقم ${i}</div><label class="lb">عنوان الفيديو</label><input type="text" class="ip" id="et${i}" placeholder="مثال: أساسيات التداول" value="${s['edu_title_'+i]||''}" style="margin-bottom:8px;"><label class="lb">رابط الفيديو (YouTube)</label><input type="text" class="ip" id="ev${i}" placeholder="https://www.youtube.com/watch?v=..." value="${s['edu_video_'+i]||''}" style="direction:ltr;"></div>`).join('')}
+          ${[1,2,3,4,5].map(i=>`<div style="background:#0b0e11;border:1px solid var(--bd);border-radius:12px;padding:14px;"><div style="font-weight:800;color:var(--g);font-size:.88rem;margin-bottom:10px;">الفيديو رقم ${i}</div><label class="lb">عنوان الفيديو</label><input type="text" class="ip" id="et${i}" value="${s['edu_title_'+i]||''}" style="margin-bottom:8px;"><label class="lb">رابط الفيديو</label><input type="text" class="ip" id="ev${i}" value="${s['edu_video_'+i]||''}" style="direction:ltr;"></div>`).join('')}
         </div>
         <button class="bp" id="saveEdu" style="width:100%;justify-content:center;margin-top:18px;"><i class="fas fa-save"></i> حفظ الفيديوهات</button>
       </div>
-    </div>
-  `;
+    </div>`;
 
   b.querySelectorAll('.set-tab').forEach(t=>t.onclick=()=>{setTab=t.dataset.st;admSettings(b)});
-
-  const rateInput=$('#rateInput');
-  rateInput?.addEventListener('input',()=>{
-    const r=parseFloat(rateInput.value)||0;
-    $('#preview33').textContent=(33*r).toFixed(2)+' ج.م';
-    $('#preview100').textContent=(100*r).toFixed(2)+' ج.م';
-  });
+  $('#rateInput')?.addEventListener('input',()=>{const r=parseFloat($('#rateInput').value)||0;$('#preview33').textContent=(33*r).toFixed(2)+' ج.م';$('#preview100').textContent=(100*r).toFixed(2)+' ج.م';});
 
   $('#saveRate')?.addEventListener('click',async()=>{
     const newRate=parseFloat($('#rateInput').value);
@@ -1204,9 +1149,7 @@ async function admSettings(b){
     const {error}=await sb.from('site_settings').upsert({id:1,usd_to_egp:newRate,updated_at:new Date().toISOString()});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ سعر الصرف';
     if(error)return toast(error.message,'er');
-    APP_SETTINGS.usd_to_egp=newRate;
-    toast('✅ تم حفظ سعر الصرف وتطبيقه على الكل','ok');
-    refreshUI();
+    APP_SETTINGS.usd_to_egp=newRate;toast('✅ تم حفظ سعر الصرف','ok');refreshUI();
   });
 
   $('#savePay')?.addEventListener('click',async()=>{
@@ -1215,8 +1158,7 @@ async function admSettings(b){
     const {error}=await sb.from('site_settings').upsert({id:1,...patch});
     btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ طرق الدفع';
     if(error)return toast(error.message,'er');
-    Object.assign(APP_SETTINGS,patch);
-    toast('✅ تم حفظ طرق الدفع','ok');
+    Object.assign(APP_SETTINGS,patch);toast('✅ تم حفظ طرق الدفع','ok');
   });
 
   $('#saveEdu')?.addEventListener('click',async()=>{
@@ -1248,9 +1190,7 @@ async function boot(){
   updateNotifBadge();
 }
 boot();
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js?v='+APP_VERSION).catch(()=>{});
-}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js?v='+APP_VERSION).catch(()=>{});}
 </script>
 
 </body>
