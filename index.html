@@ -602,7 +602,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 /* ============================================================
    نظام التحديث التلقائي
    ============================================================ */
-const APP_VERSION = '2026.09.20.600';
+const APP_VERSION = '2026.09.20.700';
 
 (function forceUpdate(){
   try{
@@ -1126,11 +1126,11 @@ function showPayDetail(m){
     const curSym=isEGP?'ج.م':'$';
     const caption=`💰 <b>إيداع جديد</b>
 
-👤 ${CU.username}
+👤 <code>${CU.username}</code>
+📧 ${CU.email}
 💳 ${methodLabel}
 💰 ${amt} ${curSym}
-🔖 <code>${tx}</code>
-🆔 <code>${depRow.id}</code>`;
+🔖 <code>${tx}</code>`;
     
     if(screenshotUrl){
       try{
