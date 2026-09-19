@@ -66,7 +66,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 @keyframes pls{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
 .mbtn{background:transparent;border:none;color:var(--g);font-size:1.5rem;cursor:pointer;padding:8px 10px;border-radius:10px}
 .mbtn:hover{background:var(--bg)}
-.bal{background:var(--bg);border:1px solid var(--g);padding:5px 12px;border-radius:20px;font-size:.8rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.bal{background:var(--bg);border:1px solid var(--g);padding:5px 12px;border-radius:20px;font-size:.8rem;color:var(--g);font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;transition:.2s}
 .inst-btn{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
 .inst-btn.show{display:flex}
 .notif-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;position:relative;transition:.2s}
@@ -473,6 +473,40 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
+/* ============================================================
+   🚀 نظام تحديث النسخ التلقائي
+   غيّر الرقم ده مع كل رفعة جديدة
+   ============================================================ */
+const APP_VERSION = '2026.09.19.1';
+
+(function forceUpdate(){
+  try{
+    const stored = localStorage.getItem('blo_app_version');
+    if(stored !== APP_VERSION){
+      localStorage.setItem('blo_app_version', APP_VERSION);
+      if(stored){
+        /* مسح الكاش */
+        if('caches' in window){
+          caches.keys().then(names=>{names.forEach(name=>caches.delete(name));}).catch(()=>{});
+        }
+        /* تحديث/إلغاء الـ service worker */
+        if('serviceWorker' in navigator){
+          navigator.serviceWorker.getRegistrations().then(regs=>{
+            regs.forEach(reg=>{try{reg.update();reg.unregister();}catch(e){}});
+          }).catch(()=>{});
+        }
+        /* إعادة تحميل بدون كاش */
+        setTimeout(()=>{
+          const url = new URL(window.location.href);
+          url.searchParams.set('_v', Date.now());
+          window.location.replace(url.toString());
+        }, 300);
+        return;
+      }
+    }
+  }catch(e){console.warn('Version check error:', e);}
+})();
+
 /* ============================================================
    SUPABASE
    ============================================================ */
@@ -914,7 +948,6 @@ function extractYTId(url){if(!url)return'';const m=String(url).match(/(?:youtube
 window.renderLearnPage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div id="learnGrid"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';let items=[];try{const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();if(data){for(let i=1;i<=5;i++){const id=extractYTId(data['edu_video_'+i]);if(id)items.push({id,title:(data['edu_title_'+i]||'').trim()||('درس تعليمي رقم '+i)})}}}catch(e){}if(!items.length)items=[{id:'hs38BPqtceg',title:'تعلم استخدام التوصيات خطوة بخطوة'},{id:'vliTJ2wDtUo',title:'الأساسيات والمفاهيم الأساسية'},{id:'O8BpO8EqW5A',title:'الاستراتيجيات المتقدمة والناجحة'}];$('#learnGrid').innerHTML=items.map((it,i)=>`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/${it.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe></div><div style="padding:14px 18px;display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;">${i+1}</div><div style="font-weight:700;color:var(--g);font-size:.9rem;">${it.title}</div></div></div>`).join('')};
 window.renderCoursePage=function(c){let h='<h2 class="pt"><i class="fas fa-play-circle"></i> كورس التداول</h2><div id="courseGrid">';for(let i=1;i<=30;i++)h+=`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe></div><div style="padding:12px 16px;display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;">${i}</div><div style="color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div></div></div>`;h+='</div>';c.innerHTML=h};
 window.renderWinnerPage=function(c){if(!isSub()){c.innerHTML=`<div class="ls"><div class="li"><i class="fas fa-lock"></i></div><h3>هذه الصفحة للمشتركين فقط</h3><p>اشترك في الخطة لمدة 6 شهور (33$) للوصول لصفحة اختيار الفائز</p><button class="bp" id="goDepBtn3" style="justify-content:center;"><i class="fas fa-wallet"></i> اشترك الآن</button></div>`;$('#goDepBtn3').onclick=()=>go('dep');return}c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><iframe class="iframe-wrap" src="winner.html" allow="autoplay; clipboard-write; encrypted-media; fullscreen"></iframe>`};
-
 window.renderGoldPage=function(c){
   c.innerHTML=`<h2 class="pt"><i class="fas fa-coins"></i> أسعار الذهب في مصر</h2><div id="goldWrap"><div class="gold-container"><div class="g-header"><h3>🥇 أسعار الذهب الآن</h3><div class="g-status"><span class="g-live"><span class="g-dot"></span> لحظي</span><span class="g-timer">⏳ <span id="gTimer">300</span> ث</span></div></div><div class="g-subtitle"><strong>📌 السعر الحقيقي للذهب في السوق العالمي</strong> — بدون إضافات. المصنعية تختلف من تاجر لآخر.</div><div id="gGrid" class="g-grid"></div><div class="g-section"><h4><span>🧮 احسب سعر الشراء</span></h4><div class="g-row"><div class="g-input-wrap"><input type="number" id="gGrams" value="1" step="0.1" min="0.1" placeholder="جرام"><select id="gKarat"><option value="24">عيار 24</option><option value="22">عيار 22</option><option value="21" selected>عيار 21</option><option value="18">عيار 18</option><option value="14">عيار 14</option></select></div><div class="g-result" id="gCalcResult">— ج.م</div></div></div><div class="g-section" style="border-right:3px solid var(--gr)"><div class="g-zakat-head"><h4 style="margin:0;flex:1;"><span>🧾 زكاة الذهب <span class="g-badge">2.5%</span></span></h4><span class="g-nassab">النصاب: <strong>85 جرام</strong> عيار 21</span></div><div class="g-row"><div class="g-input-wrap"><input type="number" id="gZg" value="0" step="0.01" min="0" placeholder="جرامات"><select id="gZk"><option value="24">24</option><option value="22">22</option><option value="21" selected>21</option><option value="18">18</option></select></div><div class="g-result g-zres" id="gZres">0.00 ج.م</div></div><div class="g-msg" id="gZmsg"><span style="color:var(--g)">💡 أدخل الجرامات لحساب الزكاة.</span></div></div><div class="g-footer"><div class="g-usd">💵 الدولار: <span id="gUsd">—</span> ج.م</div><div>آخر تحديث: <span id="gUpd" style="color:var(--tx);font-weight:600;">—</span></div></div></div></div>`;
   (function(){const UPDATE=300;let countdown=UPDATE,timerI=null,prev={};const grid=$('#gGrid'),usdEl=$('#gUsd'),updEl=$('#gUpd'),timerEl=$('#gTimer');const gG=$('#gGrams'),gK=$('#gKarat'),gR=$('#gCalcResult');const zG=$('#gZg'),zK=$('#gZk'),zR=$('#gZres'),zM=$('#gZmsg');function fn(v){if(v===undefined||v===null||isNaN(v))return'—';return Number(v).toFixed(2)}function render(data){const items=[{k:'gold24',n:'عيار 24',d:'ذهب خالص'},{k:'gold22',n:'عيار 22',d:'91.6%'},{k:'gold21',n:'عيار 21',d:'الأكثر تداولاً'},{k:'gold18',n:'عيار 18',d:'أكستوارات'},{k:'gold14',n:'عيار 14',d:'أكستوارات'},{k:'gold12',n:'عيار 12',d:'50%'},{k:'gold10',n:'عيار 10',d:'مشغولات'},{k:'gold9',n:'عيار 9',d:'37.5%'},{k:'silverGram',n:'الفضة',d:'سعر الجرام',cls:'silver'},{k:'goldOunce',n:'الأوقية',d:'XAU/USD',cls:'global'}];const cur={};grid.innerHTML=items.map(it=>{const v=data[it.k];cur[it.k]=v;const isG=it.k==='goldOunce';const cr=isG?'$':'ج.م';return`<div class="g-card ${it.cls||''}"><div class="g-karat">${it.n}</div><div class="g-desc">${it.d}</div><div class="g-price">${fn(v)} <span class="g-currency">${cr}</span></div></div>`}).join('');prev=cur;usdEl.textContent=fn(data.usdEg);updEl.textContent=new Date(data.timestamp).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});calc();zakat()}function calc(){const g=parseFloat(gG.value)||0,k=parseInt(gK.value);if(g<=0||!prev.gold24){gR.textContent='0.00 ج.م';return}let pp=prev['gold'+k];if(!pp||isNaN(pp))pp=prev.gold24*(k/24);gR.textContent=fn(pp*g)+' ج.م'}function zakat(){const gr=parseFloat(zG.value)||0,k=parseInt(zK.value)||21;const pp=prev['gold'+k]||0;if(pp<=0){zR.textContent='— ج.م';zM.innerHTML='<span style="color:var(--rd)">⏳ انتظر تحميل الأسعار...</span>';return}const gv=gr*pp;const p21=prev.gold21||0;if(p21<=0){zR.textContent='— ج.م';return}const nv=85*p21;let z=0,msg='';if(gv>=nv&&gv>0){z=gv*0.025;msg=`<span style="color:var(--gr)">✅ تجب عليك الزكاة</span> — قيمة الذهب ${fn(gv)} ج.م، وهو يبلغ النصاب (${fn(nv)} ج.م). الزكاة = <strong>${fn(z)} ج.م</strong>`}else if(gv>0){msg=`<span style="color:var(--rd)">⚠️ لا تجب الزكاة</span> — ${fn(gv)} ج.م أقل من النصاب (${fn(nv)} ج.م) = 85 جرام عيار 21`}else{msg='<span style="color:var(--g)">💡 أدخل الجرامات لحساب الزكاة.</span>'}zR.textContent=z>0?fn(z)+' ج.م':'0.00 ج.م';zM.innerHTML=msg}async function fetchGold(){try{grid.style.opacity='.5';const [xa,xg]=await Promise.all([fetch('https://api.gold-api.com/price/XAU'),fetch('https://api.gold-api.com/price/XAG')]);const gd=await xa.json(),sd=await xg.json();const fx=await fetch('https://open.er-api.com/v6/latest/USD');const fd=await fx.json();const usd=fd.rates.EGP,O=31.1035,ppe=(gd.price/O)*usd,so=sd.price;render({gold24:ppe,gold22:ppe*22/24,gold21:ppe*21/24,gold18:ppe*18/24,gold14:ppe*14/24,gold12:ppe*12/24,gold10:ppe*10/24,gold9:ppe*9/24,silverGram:(so/O)*usd,goldOunce:gd.price,usdEg:usd,timestamp:Date.now()});grid.style.opacity='1';countdown=UPDATE;updateT()}catch(e){grid.style.opacity='1';if(!grid.children.length)grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--rd);background:#0b0e11;border-radius:20px;">📡 تعذر الاتصال</div>`}}function updateT(){if(timerEl)timerEl.textContent=countdown}function startT(){if(timerI)clearInterval(timerI);timerI=setInterval(()=>{countdown--;if(countdown<=0){countdown=UPDATE;fetchGold()}updateT()},1000)}gG.addEventListener('input',calc);gK.addEventListener('change',calc);zG.addEventListener('input',zakat);zK.addEventListener('change',zakat);fetchGold();startT()})();
@@ -1110,7 +1143,7 @@ async function admSettings(b){
       </div>
       <div class="set-tab ${setTab==='edu'?'on':''}" data-st="edu">
         <i class="fas fa-graduation-cap"></i>
-        <span>فيديوهات التعليم</span>
+        <span>الفيديوهات</span>
         <div class="active-label">5 فيديوهات</div>
       </div>
     </div>
@@ -1215,7 +1248,9 @@ async function boot(){
   updateNotifBadge();
 }
 boot();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js?v='+APP_VERSION).catch(()=>{});
+}
 </script>
 
 </body>
