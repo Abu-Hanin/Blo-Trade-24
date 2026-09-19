@@ -481,7 +481,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 /* ============================================================
    ✅ APP_VERSION — تحديث تلقائي للكاش عند كل نشر
    ============================================================ */
-const APP_VERSION = '2026.09.16.302';
+const APP_VERSION = '2026.09.16.303';
 
 /* ============================================================
    SUPABASE
@@ -906,7 +906,9 @@ R.notifications=async c=>{
     }).join('');
   }catch(e){$('#notifList').innerHTML='<div class="es"><p>خطأ في التحميل</p></div>'}
 };
-  <script>
+</script>
+
+<script>
 R.bubble=c=>window.renderBubblePage(c);
 R.market=c=>window.renderMarketPage(c);
 R.learn=c=>window.renderLearnPage(c);
