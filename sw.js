@@ -1,4 +1,4 @@
-const CACHE_NAME = 'blotrade-v22';
+const CACHE_NAME = 'blotrade-v23';
 const urlsToCache = [
   './',
   './index.html',
