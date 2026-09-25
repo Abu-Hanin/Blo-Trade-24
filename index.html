@@ -546,7 +546,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
-const APP_VERSION = '2026.09.25.3000';
+const APP_VERSION = '2026.09.25.5000';
 
 setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}}catch(e){}},3000);
 
@@ -591,13 +591,29 @@ function fmtTime(ts){return new Date(ts).toLocaleString('ar-EG',{year:'numeric',
 function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMonth()+1} - ${d.getFullYear()}`}
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function getStoredHigh(sym){try{const v=localStorage.getItem('blo_high_'+sym);return v?parseFloat(v):0}catch(e){return 0}}
-function updateStoredHigh(sym,val){try{const cur=getStoredHigh(sym);if(val>cur)localStorage.setItem('blo_high_'+sym,val.toString())}catch(e){}}
 
-/* ⭐ تخزين دائم للأهداف المحققة لكل توصية */
-function markTargetHit(recoId,targetNum){try{const key='blo_hit_'+recoId;const current=JSON.parse(localStorage.getItem(key)||'{}');current['t'+targetNum]=true;localStorage.setItem(key,JSON.stringify(current));}catch(e){}}
-function getHitStatus(recoId){try{const key='blo_hit_'+recoId;return JSON.parse(localStorage.getItem(key)||'{}');}catch(e){return {}}}
-function markStopLossHit(recoId){try{const key='blo_hit_'+recoId;const current=JSON.parse(localStorage.getItem(key)||'{}');current.sl=true;localStorage.setItem(key,JSON.stringify(current));}catch(e){}}
+/* ⭐⭐⭐ v2 prefix — عشان نتجاهل البيانات القديمة المسببة للمشكلة ⭐⭐⭐ */
+function getStoredHigh(sym){try{const v=localStorage.getItem('blo_high_v2_'+sym);return v?parseFloat(v):0}catch(e){return 0}}
+function updateStoredHigh(sym,val){try{const cur=getStoredHigh(sym);if(val>cur)localStorage.setItem('blo_high_v2_'+sym,val.toString())}catch(e){}}
+
+/* ⭐⭐⭐ تخزين الأهداف المحققة — v2 مع تخزين السعر الحقيقي ⭐⭐⭐ */
+function markTargetHit(recoId,targetNum,priceAtHit){
+  try{
+    const key='blo_hit_v2_'+recoId;
+    const current=JSON.parse(localStorage.getItem(key)||'{}');
+    current['t'+targetNum]=priceAtHit;
+    localStorage.setItem(key,JSON.stringify(current));
+  }catch(e){}
+}
+function getHitStatus(recoId){try{const key='blo_hit_v2_'+recoId;return JSON.parse(localStorage.getItem(key)||'{}');}catch(e){return {}}}
+function markStopLossHit(recoId,priceAtHit){
+  try{
+    const key='blo_hit_v2_'+recoId;
+    const current=JSON.parse(localStorage.getItem(key)||'{}');
+    current.sl=priceAtHit;
+    localStorage.setItem(key,JSON.stringify(current));
+  }catch(e){}
+}
 
 let CU=null,AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
@@ -634,7 +650,6 @@ async function loadProfile(){
 }
 async function refreshUser(){AUTH=(await sb.auth.getUser()).data.user;if(AUTH){CU=await loadProfile()}return CU}
 
-/* إضافة tag is_admin للأدمن */
 async function syncOneSignalUser(){
   if(!AUTH)return;
   try{
@@ -846,26 +861,35 @@ R.recs=async c=>{
   c.innerHTML=`<h2 class="pt"><i class="fas fa-chart-line"></i> التوصيات</h2><div id="recoList" class="recs-grid"><div class="es" style="grid-column:1/-1"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
   await renderRecos();
   const recs=await fetchRecos();localStorage.setItem('blo_lastseen',recs[0]?.id||'');updateRB();
-  // ⭐ بدء التتبع اللحظي
   startLiveTracking();
 };
 
-async function fetchPrice(sym){try{const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym.toUpperCase()}USDT`);if(!r.ok)return null;const d=await r.json();return {price:parseFloat(d.lastPrice),high:parseFloat(d.highPrice),change:parseFloat(d.priceChangePercent)}}catch{return null}}
-function parseTarget(v){if(!v)return null;const n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));return isNaN(n)?null:n}
+/* ⭐ السعر الحالي فقط — مش أعلى 24 ساعة ⭐ */
+async function fetchPrice(sym){try{const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym.toUpperCase()}USDT`);if(!r.ok)return null;const d=await r.json();return {price:parseFloat(d.lastPrice),change:parseFloat(d.priceChangePercent)}}catch{return null}}
 
-/* ⭐⭐⭐ تحديث البطاقات بشكل لحظي بدون إعادة بناء كامل ⭐⭐⭐ */
+/* ⭐ الدالة المُصحَّحة: تاخد أول رقم بس من النص ⭐ */
+function parseTarget(v){if(!v)return null;const match=String(v).match(/-?\d+(?:\.\d+)?/);if(!match)return null;const n=parseFloat(match[0]);return isNaN(n)?null:n}
+
+/* ⭐ التحقق من hit بناءً على السعر المحفوظ (مش مجرد boolean) ⭐ */
+function isValidHit(savedValue, target, currentPrice){
+  if(savedValue===undefined||savedValue===null) return false;
+  const savedPrice = typeof savedValue === 'number' ? savedValue : parseFloat(savedValue);
+  if(isNaN(savedPrice)) return false;
+  // الهدف محقق لو السعر المحفوظ >= الهدف
+  return savedPrice >= target;
+}
+
 function updateRecoCardsLive(prices){
   _liveRecosList.forEach(r=>{
     const symUpper=r.symbol.toUpperCase();
     const p=prices[symUpper];
     if(!p) return;
     const curPrice=p.price;
-    const curHigh=Math.max(getStoredHigh(symUpper), p.high||0, curPrice||0);
+    updateStoredHigh(symUpper,curPrice);
     const t1=parseTarget(r.target1),t2=parseTarget(r.target2),t3=parseTarget(r.target3);
     const sl=parseTarget(r.stop_loss);
     const card=document.querySelector(`.rec-card[data-reco-id="${r.id}"]`);
     if(!card) return;
-    // تحديث السعر الحالي
     const priceEl=card.querySelector('.rec-price .p');
     if(priceEl) priceEl.textContent='$'+curPrice.toLocaleString(undefined,{maximumFractionDigits:curPrice<1?6:2});
     const changeEl=card.querySelector('.rec-price .c');
@@ -873,18 +897,17 @@ function updateRecoCardsLive(prices){
       changeEl.textContent=(p.change>=0?'▲ ':'▼ ')+Math.abs(p.change).toFixed(2)+'%';
       changeEl.className='c '+(p.change>=0?'c-up':'c-dn');
     }
-    // فحص كل هدف
+    // فحص كل هدف — السعر الحالي بس
     [1,2,3].forEach(num=>{
       const tgt = num===1?t1:num===2?t2:t3;
-      if(tgt!==null && curHigh>=tgt){
-        markTargetHit(r.id,num);
+      if(tgt!==null && curPrice>=tgt){
+        markTargetHit(r.id,num,curPrice);
         const box=card.querySelector(`.rt-box[data-target="${num}"]`);
         if(box) box.classList.add('hit');
       }
     });
-    // فحص وقف الخسارة
     if(sl!==null && curPrice<=sl){
-      markStopLossHit(r.id);
+      markStopLossHit(r.id,curPrice);
       const slBox=card.querySelector('.rec-sl');
       if(slBox) slBox.classList.add('hit');
     }
@@ -900,13 +923,11 @@ function startLiveTracking(){
     const newPrices={};
     await Promise.all(syms.map(async s=>{
       const p=await fetchPrice(s);
-      if(p){newPrices[s]=p;rPrices[s]=p;updateStoredHigh(s,Math.max(p.high||0,p.price||0));}
+      if(p){newPrices[s]=p;rPrices[s]=p;}
     }));
     updateRecoCardsLive(newPrices);
   };
-  // أول تشغيل بعد 3 ثواني
-  setTimeout(tick,3000);
-  // ثم كل 5 ثواني
+  setTimeout(tick,2000);
   _livePollTimer=setInterval(tick,5000);
 }
 function stopLiveTracking(){if(_livePollTimer){clearInterval(_livePollTimer);_livePollTimer=null}}
@@ -917,41 +938,26 @@ async function renderRecos(){
   const c=$('#recoList');if(!c)return;
   if(!list.length){c.innerHTML='<div class="es" style="grid-column:1/-1"><i class="fas fa-inbox ei"></i><p>لا توجد توصيات حالياً</p></div>';return}
   const syms=[...new Set(list.map(r=>r.symbol.toUpperCase()))];
-  await Promise.all(syms.map(async s=>{const p=await fetchPrice(s);if(p){rPrices[s]=p;updateStoredHigh(s,Math.max(p.high||0,p.price||0))}}));
+  await Promise.all(syms.map(async s=>{const p=await fetchPrice(s);if(p){rPrices[s]=p;updateStoredHigh(s,p.price)}}));
   c.innerHTML=list.map(r=>{
     const symUpper=r.symbol.toUpperCase();
     const p=rPrices[symUpper];const curPrice=p?p.price:null;
-    const storedHigh=getStoredHigh(symUpper);
-    const curHigh=Math.max(storedHigh,p?Math.max(p.high||0,p.price||0):0);
     const t1=parseTarget(r.target1),t2=parseTarget(r.target2),t3=parseTarget(r.target3);const sl=parseTarget(r.stop_loss);
-    // ⭐ الأهداف المحققة (محفوظة دائماً)
     const savedHits=getHitStatus(r.id);
-    const hit1Now=curHigh>0&&t1!==null&&curHigh>=t1;
-    const hit2Now=curHigh>0&&t2!==null&&curHigh>=t2;
-    const hit3Now=curHigh>0&&t3!==null&&curHigh>=t3;
-    const hitSLNow=curPrice!==null&&sl!==null&&curPrice<=sl;
-    if(hit1Now) markTargetHit(r.id,1);
-    if(hit2Now) markTargetHit(r.id,2);
-    if(hit3Now) markTargetHit(r.id,3);
-    if(hitSLNow) markStopLossHit(r.id);
-    const hit1=hit1Now||savedHits.t1===true;
-    const hit2=hit2Now||savedHits.t2===true;
-    const hit3=hit3Now||savedHits.t3===true;
-    const hitSL=hitSLNow||savedHits.sl===true;
+    // ⭐ تحقق من الـ hit بناءً على السعر المحفوظ — لو السعر >= الهدف
+    const hit1 = (curPrice!==null && t1!==null && curPrice>=t1) || (t1!==null && isValidHit(savedHits.t1, t1, curPrice));
+    const hit2 = (curPrice!==null && t2!==null && curPrice>=t2) || (t2!==null && isValidHit(savedHits.t2, t2, curPrice));
+    const hit3 = (curPrice!==null && t3!==null && curPrice>=t3) || (t3!==null && isValidHit(savedHits.t3, t3, curPrice));
+    const hitSL = (curPrice!==null && sl!==null && curPrice<=sl) || (sl!==null && savedHits.sl!==undefined && parseFloat(savedHits.sl)<=sl);
+    // سجل الـ hit الحقيقي في localStorage
+    if(curPrice!==null&&t1!==null&&curPrice>=t1) markTargetHit(r.id,1,curPrice);
+    if(curPrice!==null&&t2!==null&&curPrice>=t2) markTargetHit(r.id,2,curPrice);
+    if(curPrice!==null&&t3!==null&&curPrice>=t3) markTargetHit(r.id,3,curPrice);
+    if(curPrice!==null&&sl!==null&&curPrice<=sl) markStopLossHit(r.id,curPrice);
     const priceHtml=p?`<div class="p">$${p.price.toLocaleString(undefined,{maximumFractionDigits:p.price<1?6:2})}</div><div class="c ${p.change>=0?'c-up':'c-dn'}">${p.change>=0?'▲':'▼'} ${Math.abs(p.change).toFixed(2)}%</div>`:'<div class="p">--</div>';
     return `<div class="rec-card" data-reco-id="${r.id}"><div class="rec-head"><div class="rec-sym" data-copy="${r.symbol.toUpperCase()}"><h3>${r.symbol.toUpperCase()} <span>/USDT</span></h3></div><div class="rec-price">${priceHtml}</div></div><div class="rec-body"><div class="rec-entry"><span class="l">📍 منطقة الدخول</span><span class="v">${r.entry||'-'}</span></div><div class="rec-targets-label">🎯 الأهداف</div><div class="rec-targets"><div class="rt-box ${hit1?'hit':''}" data-target="1"><div class="rt-lbl">هدف 1</div><div class="rt-val">${r.target1||'-'}</div></div><div class="rt-box ${hit2?'hit':''}" data-target="2"><div class="rt-lbl">هدف 2</div><div class="rt-val">${r.target2||'-'}</div></div><div class="rt-box ${hit3?'hit':''}" data-target="3"><div class="rt-lbl">هدف 3</div><div class="rt-val">${r.target3||'-'}</div></div></div><div class="rec-sl ${hitSL?'hit':''}"><span class="l">🛑 وقف الخسارة</span><span class="v">${r.stop_loss||'-'}</span></div>${r.notes?`<div class="rec-notes">📝 ${r.notes}</div>`:''}<div class="rec-time">${fmtDateOnly(r.created_at)}</div></div></div>`;
   }).join('');
   c.querySelectorAll('[data-copy]').forEach(el=>{el.onclick=()=>{const sym=el.dataset.copy;navigator.clipboard.writeText(sym).then(()=>toast('تم نسخ: '+sym,'ok'))}});
-  // بعد الرسم، نسجل أي هدف اتحقق فعلاً في localStorage
-  list.forEach(r=>{
-    const symUpper=r.symbol.toUpperCase();
-    const p=rPrices[symUpper];if(!p) return;
-    const curHigh=Math.max(getStoredHigh(symUpper),p.high||0,p.price||0);
-    const t1=parseTarget(r.target1),t2=parseTarget(r.target2),t3=parseTarget(r.target3);
-    if(t1!==null&&curHigh>=t1) markTargetHit(r.id,1);
-    if(t2!==null&&curHigh>=t2) markTargetHit(r.id,2);
-    if(t3!==null&&curHigh>=t3) markTargetHit(r.id,3);
-  });
 }
 
 R.words=async c=>{
@@ -1034,7 +1040,6 @@ window.renderGoldPage=function(c){c.innerHTML=`<h2 class="pt"><i class="fas fa-c
 
 let admTab='users';let userFilter='all';let userSearch='';let setTab='pay';
 
-/* sendPushNotification مع دعم target + منع تجميع الإشعارات */
 async function sendPushNotification(title, body, url, target='all'){
   if(!ONESIGNAL_REST_KEY)return {ok:false,error:'REST API Key مش موجود'};
   try{
