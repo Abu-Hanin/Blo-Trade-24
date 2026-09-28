@@ -83,7 +83,7 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .mi{padding:13px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.2s;color:var(--tx);border-right:3px solid transparent;font-weight:500;font-size:.95rem}
 .mi:hover{background:var(--bg);border-right-color:var(--g)}
 .mi i{width:22px;text-align:center;color:var(--g);font-size:1.05rem}
-.mi.dg{color:var(--rd);margin-top:auto;border-top:1px solid var(--bd);background:rgba(246,70,93,.03)}.mi.dg i{color:var(--rd)}
+.mi.dg{color:var(--rd);border-top:1px solid var(--bd);background:rgba(246,70,93,.03)}.mi.dg i{color:var(--rd)}
 .mi.ado{display:none}.mi.ado.sh{display:flex}
 .mi .bg2{margin-right:auto;background:var(--rd);color:#fff;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:800}
 #mov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:none}
@@ -474,33 +474,31 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 @media(min-width:768px){#learnGrid{grid-template-columns:repeat(2,1fr) !important;max-width:1000px;margin-left:auto;margin-right:auto}#courseGrid{grid-template-columns:repeat(2,1fr) !important;max-width:1000px;margin-left:auto;margin-right:auto}}
 @media(min-width:1200px){#learnGrid{grid-template-columns:repeat(3,1fr) !important;max-width:1200px}#courseGrid{grid-template-columns:repeat(3,1fr) !important;max-width:1200px}}
 
-/* ============ اختيار الخطة الجديد ============ */
-.plan-picker-header{text-align:center;margin-bottom:16px;padding:14px;background:linear-gradient(135deg,rgba(240,185,11,.08),rgba(240,185,11,.02));border-radius:14px;border:1px dashed rgba(240,185,11,.35)}
-.plan-picker-header .pph-title{font-size:.95rem;color:var(--g);font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px}
-.plan-picker-header .pph-sub{font-size:.75rem;color:var(--mt);margin-top:5px;line-height:1.5}
-.plan-picker{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
-@media(max-width:520px){.plan-picker{grid-template-columns:1fr;gap:12px}}
-.plan-card{background:linear-gradient(145deg,#1c1f26,#15181e);border:2px solid var(--bd);border-radius:20px;padding:22px 16px 20px;cursor:pointer;transition:all .28s cubic-bezier(.18,.89,.32,1.28);text-align:center;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center}
-.plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:transparent;transition:.3s}
-.plan-card:hover{border-color:rgba(240,185,11,.5);transform:translateY(-3px)}
-.plan-card.on{border-color:var(--g);background:linear-gradient(145deg,rgba(240,185,11,.16),rgba(240,185,11,.04));box-shadow:0 0 0 3px rgba(240,185,11,.15),0 12px 30px -10px rgba(240,185,11,.3)}
-.plan-card.on::before{background:linear-gradient(90deg,transparent,var(--g),transparent)}
-.plan-card.perm-card.on{border-color:#8B5CF6;background:linear-gradient(145deg,rgba(139,92,246,.16),rgba(139,92,246,.04));box-shadow:0 0 0 3px rgba(139,92,246,.15),0 12px 30px -10px rgba(139,92,246,.3)}
-.plan-card.perm-card.on::before{background:linear-gradient(90deg,transparent,#8B5CF6,transparent)}
-.plan-check{position:absolute;top:12px;left:12px;width:26px;height:26px;border-radius:50%;background:var(--gr);color:#fff;display:none;align-items:center;justify-content:center;font-size:.75rem;box-shadow:0 4px 10px rgba(14,203,129,.5);animation:checkPop .35s cubic-bezier(.18,.89,.32,1.28)}
-.plan-card.on .plan-check{display:flex}
-.plan-card .plan-badge{font-size:2.6rem;margin-bottom:10px;display:block;line-height:1}
-.plan-card .plan-name{font-weight:900;font-size:1rem;color:var(--tx);margin-bottom:12px}
-.plan-card.on .plan-name{color:var(--g)}
-.plan-card.perm-card.on .plan-name{color:#C4B5FD}
-.plan-card .plan-price{font-weight:900;font-size:1.35rem;color:var(--g);direction:ltr;line-height:1;margin-bottom:6px}
-.plan-card.perm-card .plan-price{color:#C4B5FD}
-.plan-card .plan-price-egp{font-size:.75rem;color:var(--mt);direction:ltr;margin-bottom:10px}
-.plan-card .plan-feature{font-size:.72rem;color:var(--mt);line-height:1.6;padding:0 4px}
-.plan-card .plan-feature strong{color:var(--tx);font-weight:700}
-.plan-card .plan-ribbon{position:absolute;top:12px;right:-30px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;font-size:.6rem;font-weight:900;padding:4px 36px;transform:rotate(35deg);letter-spacing:.5px;box-shadow:0 4px 10px rgba(139,92,246,.4)}
-.plan-card .plan-save{display:inline-block;margin-top:10px;font-size:.65rem;font-weight:800;padding:4px 12px;border-radius:10px;background:rgba(139,92,246,.2);color:#C4B5FD;border:1px solid rgba(139,92,246,.35)}
-.pay-cta-hint{text-align:center;margin:-8px 0 18px;padding:10px 14px;background:rgba(246,70,93,.06);border:1px solid rgba(246,70,93,.25);border-radius:12px;color:var(--rd);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+/* ============ اختيار الخطة (زرارين صغيرين) ============ */
+.plan-picker-header{text-align:center;margin-bottom:12px;font-size:.82rem;color:var(--mt);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.plan-picker-header i{color:var(--g)}
+.plan-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:480px){.plan-picker{grid-template-columns:1fr 1fr;gap:8px}}
+.plan-btn{background:linear-gradient(145deg,#1c1f26,#15181e);border:2px solid var(--bd);border-radius:14px;padding:12px 10px;cursor:pointer;transition:.22s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Cairo',sans-serif;position:relative;overflow:hidden;color:var(--tx)}
+.plan-btn:hover{border-color:rgba(240,185,11,.5)}
+.plan-btn.on{border-color:var(--g);background:linear-gradient(145deg,rgba(240,185,11,.14),rgba(240,185,11,.02));box-shadow:0 0 0 2px rgba(240,185,11,.12)}
+.plan-btn.on::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:6px;left:6px;width:18px;height:18px;background:linear-gradient(135deg,#0ECB81,#0a9d65);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;box-shadow:0 3px 8px rgba(14,203,129,.5);animation:checkPop .3s ease}
+.plan-btn .pb-icon{font-size:1.3rem;line-height:1;margin-bottom:2px}
+.plan-btn .pb-txt{font-size:.85rem;font-weight:800;color:var(--tx);line-height:1.1}
+.plan-btn.on .pb-txt{color:var(--g)}
+.plan-btn .pb-price{font-size:.72rem;color:var(--mt);direction:ltr;font-weight:700;margin-top:2px}
+.plan-btn.perm.on{border-color:#8B5CF6;background:linear-gradient(145deg,rgba(139,92,246,.14),rgba(139,92,246,.02));box-shadow:0 0 0 2px rgba(139,92,246,.12)}
+.plan-btn.perm.on .pb-txt{color:#C4B5FD}
+.plan-btn.perm.on::after{background:linear-gradient(135deg,#8B5CF6,#6D28D9);box-shadow:0 3px 8px rgba(139,92,246,.5)}
+.pay-cta-hint{text-align:center;margin:-4px 0 14px;padding:8px 12px;background:rgba(240,185,11,.05);border:1px solid rgba(240,185,11,.2);border-radius:10px;color:var(--mt);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
+.pay-cta-hint strong{color:var(--g)}
+
+/* بطاقة معلومات التوصيات المكتملة */
+.done-info{background:linear-gradient(135deg,rgba(14,203,129,.09),rgba(14,203,129,.015));border:1px solid rgba(14,203,129,.3);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.done-info .di-icn{width:32px;height:32px;border-radius:9px;background:rgba(14,203,129,.15);border:1px solid rgba(14,203,129,.35);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.done-info .di-txt{flex:1;min-width:0;font-size:.76rem;line-height:1.5;color:var(--mt)}
+.done-info .di-txt b{color:var(--gr);font-weight:800}
+.done-info .di-txt .warn{color:var(--rd);font-weight:700}
 </style>
 </head>
 <body>
@@ -579,15 +577,15 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <li class="mi" data-m="done"><i class="fas fa-check-double"></i> التوصيات المكتملة</li>
 <li class="mi" data-m="words"><i class="fas fa-calendar-day"></i> كلمة اليوم</li>
 <li class="mi" data-m="gold"><i class="fas fa-coins"></i> أسعار الذهب</li>
-<li class="mi ado" data-m="admin"><i class="fas fa-shield-alt"></i> لوحة الأدمن</li>
 <li class="mi dg" data-m="logout"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</li>
+<li class="mi ado" data-m="admin"><i class="fas fa-shield-alt"></i> لوحة الأدمن</li>
 </ul>
 </aside>
 
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
-const APP_VERSION = '2026.09.28.3100';
+const APP_VERSION = '2026.09.28.3200';
 
 setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}}catch(e){}},3000);
 
@@ -636,9 +634,23 @@ function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMo
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-/* ===== نظام تتبع الأهداف لكل توصية بشكل منفصل ===== */
-function getRecoHigh(rid){try{const v=localStorage.getItem('blo_rh_'+rid);return v?parseFloat(v):0}catch(e){return 0}}
-function setRecoHigh(rid,val){try{if(val>getRecoHigh(rid))localStorage.setItem('blo_rh_'+rid,val.toString())}catch(e){}}
+/* ===== نظام تتبع الأهداف لكل توصية (v2) ===== */
+function getRecoHigh(rid){try{const v=localStorage.getItem('blo_rh_v2_'+rid);return v?parseFloat(v):0}catch(e){return 0}}
+function setRecoHigh(rid,val){try{if(!val||val<=0)return;const cur=getRecoHigh(rid);if(val>cur)localStorage.setItem('blo_rh_v2_'+rid,val.toString())}catch(e){}}
+function forceSetRecoHigh(rid,val){try{if(!val||val<=0)return;localStorage.setItem('blo_rh_v2_'+rid,val.toString())}catch(e){}}
+
+/* تحويل created_at لـ timestamp بشكل آمن */
+function safeCreatedMs(raw){
+  try{
+    const s=String(raw||'');
+    if(!s)return 0;
+    const hasTz=/Z$|[+-]\d{2}:?\d{2}$/.test(s);
+    const iso=hasTz?s:(s.replace(' ','T')+'Z');
+    const d=new Date(iso);
+    const t=d.getTime();
+    return isNaN(t)?0:t;
+  }catch(e){return 0}
+}
 
 let CU=null,AUTH=null;
 function isSub(){if(!CU)return false;if(CU.role==='admin')return true;if(!CU.subscription_end)return false;return Date.now()<new Date(CU.subscription_end).getTime()}
@@ -832,31 +844,20 @@ R.dep=c=>{
   const activeUSD = isPerm?permPrice:trialPrice;
   const activeEGP = isPerm?permEgp:trialEgp;
   c.innerHTML=`<h2 class="pt"><i class="fas fa-credit-card"></i> طرق الدفع المتاحة</h2>
-  <div class="plan-picker-header">
-    <div class="pph-title"><i class="fas fa-star"></i> اختر خطة الاشتراك أولاً</div>
-    <div class="pph-sub">لا يمكن إتمام الدفع بدون تحديد الخطة المطلوبة</div>
-  </div>
+  <div class="plan-picker-header"><i class="fas fa-star"></i> اختر خطة الاشتراك أولاً</div>
   <div class="plan-picker">
-    <div class="plan-card ${!isPerm?'on':''}" data-plan="trial">
-      <div class="plan-check"><i class="fas fa-check"></i></div>
-      <span class="plan-badge">📅</span>
-      <div class="plan-name">اشتراك 180 يوم</div>
-      <div class="plan-price">${trialPrice} $</div>
-      <div class="plan-price-egp">${trialEgp.toLocaleString('en-US')} ج.م</div>
-      <div class="plan-feature">وصول كامل <strong>لمدة 180 يوم</strong></div>
-    </div>
-    <div class="plan-card perm-card ${isPerm?'on':''}" data-plan="permanent">
-      <div class="plan-ribbon">مميز</div>
-      <div class="plan-check"><i class="fas fa-check"></i></div>
-      <span class="plan-badge">👑</span>
-      <div class="plan-name">اشتراك دائم</div>
-      <div class="plan-price">${permPrice} $</div>
-      <div class="plan-price-egp">${permEgp.toLocaleString('en-US')} ج.م</div>
-      <div class="plan-feature">وصول <strong>مدى الحياة</strong> · دفعة واحدة</div>
-      <div class="plan-save">💰 وفّر 80%</div>
-    </div>
+    <button type="button" class="plan-btn ${!isPerm?'on':''}" data-plan="trial">
+      <span class="pb-icon">📅</span>
+      <span class="pb-txt">180 يوم</span>
+      <span class="pb-price">${trialPrice}$ / ${trialEgp.toLocaleString('en-US')} ج.م</span>
+    </button>
+    <button type="button" class="plan-btn perm ${isPerm?'on':''}" data-plan="permanent">
+      <span class="pb-icon">👑</span>
+      <span class="pb-txt">دائم</span>
+      <span class="pb-price">${permPrice}$ / ${permEgp.toLocaleString('en-US')} ج.م</span>
+    </button>
   </div>
-  <div class="pay-cta-hint"><i class="fas fa-info-circle"></i> الخطة المختارة: <strong>${isPerm?'الاشتراك الدائم':'اشتراك 180 يوم'}</strong></div>
+  <div class="pay-cta-hint"><i class="fas fa-info-circle"></i> الخطة المختارة: <strong>${isPerm?'👑 الاشتراك الدائم':'📅 اشتراك 180 يوم'}</strong></div>
   <p style="color:var(--mt);font-size:.88rem;line-height:1.7;margin-bottom:18px;text-align:center;">اختر وسيلة الدفع المناسبة وقم بتحويل المبلغ المطلوب ثم أرسل لنا إثبات التحويل:</p>
   <div class="pm-list">
     <div class="pm-card pm-vf" data-m="vf"><div class="pm-icon"><i class="fas fa-mobile-alt"></i></div><div class="pm-txt"><h4>محفظة الكاش</h4><p>فودافون كاش / اتصالات كاش / أورنج كاش · <span class="pm-price">${activeEGP.toLocaleString('en-US')} ج.م</span></p></div><i class="fas fa-chevron-left pm-arrow"></i></div>
@@ -867,11 +868,11 @@ R.dep=c=>{
   </div>
   <div style="text-align:center;color:var(--mt);font-size:.85rem;margin-top:22px;padding:16px;background:var(--card);border-radius:14px;border:1px dashed var(--bd);"><i class="fas fa-lock"></i> جميع المعاملات آمنة ومشفرة</div>
   <h4 style="color:var(--g);margin:28px 0 14px;font-size:1rem;"><i class="fas fa-history"></i> سجل الإيداعات</h4><div id="dh"></div>`;
-  c.querySelectorAll('.plan-card').forEach(el=>el.onclick=()=>{
+  c.querySelectorAll('.plan-btn').forEach(el=>el.onclick=()=>{
     selectedPlan=el.dataset.plan;
-    c.querySelectorAll('.plan-card').forEach(x=>x.classList.toggle('on',x.dataset.plan===selectedPlan));
+    c.querySelectorAll('.plan-btn').forEach(x=>x.classList.toggle('on',x.dataset.plan===selectedPlan));
     const hint=c.querySelector('.pay-cta-hint');
-    if(hint)hint.innerHTML=`<i class="fas fa-info-circle"></i> الخطة المختارة: <strong>${selectedPlan==='permanent'?'الاشتراك الدائم':'اشتراك 180 يوم'}</strong>`;
+    if(hint)hint.innerHTML=`<i class="fas fa-info-circle"></i> الخطة المختارة: <strong>${selectedPlan==='permanent'?'👑 الاشتراك الدائم':'📅 اشتراك 180 يوم'}</strong>`;
     updateDepPrices();
   });
   c.querySelectorAll('.pm-card').forEach(el=>el.onclick=()=>showPayDetail(el.dataset.m));
@@ -975,23 +976,6 @@ async function fetchPricesBatch(symbols){
   }catch(e){return {};}
 }
 
-async function fetchKlinesHigh(sym, sinceMs){
-  try{
-    const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym.toUpperCase()}USDT&interval=1h&startTime=${sinceMs}&limit=1000`);
-    if(!r.ok)return 0;
-    const arr=await r.json();
-    let maxH=0;
-    for(const k of arr){
-      const openT=k[0];
-      if(openT>=sinceMs){
-        const h=parseFloat(k[2]);
-        if(h>maxH)maxH=h;
-      }
-    }
-    return maxH;
-  }catch(e){return 0;}
-}
-
 function parseTarget(v){if(!v)return null;const n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));return isNaN(n)?null:n}
 
 function buildRecoCard(r, p, recoHigh){
@@ -1045,7 +1029,7 @@ async function updateRecoPrices(){
   });
 }
 
-/* تهيئة سعر أعلى لكل توصية من klines */
+/* ===== تهيئة أعلى سعر لكل توصية (من لحظة نزولها فقط) ===== */
 async function initRecoHighs(list){
   if(!list||!list.length)return;
   const grouped={};
@@ -1056,21 +1040,28 @@ async function initRecoHighs(list){
   });
   await Promise.all(Object.keys(grouped).map(async sym=>{
     const recos=grouped[sym];
-    const earliest=Math.min(...recos.map(r=>new Date(r.created_at).getTime()));
+    const times=recos.map(r=>safeCreatedMs(r.created_at)).filter(t=>t>0);
+    if(!times.length)return;
+    const earliest=Math.min(...times);
     try{
       const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=1h&startTime=${earliest}&limit=1000`);
       if(!r.ok)return;
       const arr=await r.json();
       recos.forEach(reco=>{
-        const createdMs=new Date(reco.created_at).getTime();
+        const createdMs=safeCreatedMs(reco.created_at);
+        if(!createdMs)return;
         let maxH=0;
         for(const k of arr){
-          if(k[0]>=createdMs){
+          const openT=k[0];
+          if(openT>=createdMs){
             const h=parseFloat(k[2]);
             if(h>maxH)maxH=h;
           }
         }
-        if(maxH>0)setRecoHigh(reco.id,maxH);
+        if(maxH>0){
+          const cur=getRecoHigh(reco.id);
+          forceSetRecoHigh(reco.id, Math.max(cur, maxH));
+        }
       });
     }catch(e){}
   }));
@@ -1102,42 +1093,15 @@ async function renderRecos(){
 
 R.done=async c=>{
   c.innerHTML=`<h2 class="pt"><i class="fas fa-check-double"></i> التوصيات المكتملة</h2>
-  <div style="background:linear-gradient(135deg,rgba(14,203,129,.1),rgba(14,203,129,.02));border:1.5px solid rgba(14,203,129,.35);border-radius:18px;padding:16px 18px;margin-bottom:18px;display:flex;gap:14px;align-items:center;">
-    <div style="width:48px;height:48px;border-radius:14px;background:rgba(14,203,129,.15);border:1px solid rgba(14,203,129,.4);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">
-      <i class="fas fa-trophy"></i>
-    </div>
-    <div style="flex:1;min-width:0;">
-      <div style="color:var(--gr);font-weight:900;font-size:.95rem;margin-bottom:4px;">🎯 توصيات مكتملة</div>
-      <div style="color:var(--mt);font-size:.8rem;line-height:1.6;">هذه التوصيات حققت <b style="color:var(--tx)">الأهداف الثلاثة كاملة</b>. <b style="color:var(--rd)">لا يمكن استخدامها للتداول الآن</b> — تم تحقيقها بالفعل.</div>
-    </div>
+  <div class="done-info">
+    <div class="di-icn"><i class="fas fa-check-double"></i></div>
+    <div class="di-txt"><b>توصيات مكتملة</b> — حققت أهدافها الثلاثة بالكامل. <span class="warn">لا يمكن استخدامها للتداول الآن.</span></div>
   </div>
   <div id="doneList" class="recs-grid"><div class="es" style="grid-column:1/-1"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>`;
   let allList=[];
   try{const {data}=await sb.from('recommendations').select('*').order('created_at',{ascending:false}).limit(200);allList=data||[];}catch(e){}
   if(!allList.length){$('#doneList').innerHTML='<div class="es" style="grid-column:1/-1"><i class="fas fa-inbox ei"></i><p>لا توجد توصيات حتى الآن</p></div>';return}
   await initRecoHighs(allList);
-  const grouped={};
-  allList.forEach(r=>{const s=r.symbol.toUpperCase();if(!grouped[s])grouped[s]=[];grouped[s].push(r);});
-  await Promise.all(Object.keys(grouped).map(async sym=>{
-    const recos=grouped[sym];
-    const earliest=Math.min(...recos.map(r=>new Date(r.created_at).getTime()));
-    try{
-      const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=1h&startTime=${earliest}&limit=1000`);
-      if(!r.ok)return;
-      const arr=await r.json();
-      recos.forEach(reco=>{
-        const createdMs=new Date(reco.created_at).getTime();
-        let maxH=0;
-        for(const k of arr){
-          if(k[0]>=createdMs){
-            const h=parseFloat(k[2]);
-            if(h>maxH)maxH=h;
-          }
-        }
-        if(maxH>0)setRecoHigh(reco.id,maxH);
-      });
-    }catch(e){}
-  }));
   const completed=[];
   allList.forEach(r=>{
     const high=getRecoHigh(r.id);
@@ -1408,9 +1372,9 @@ async function admRecs(b){
     else if(act==='del')window.delReco(btn.dataset.rid);
   });
 }
-window.delReco=async function(id){if(!confirm('حذف؟'))return;const {error}=await sb.from('recommendations').delete().eq('id',id);if(error)return toast(error.message,'er');try{localStorage.removeItem('blo_rh_'+id)}catch(e){}toast('تم الحذف','ok');admRenderBody()};
+window.delReco=async function(id){if(!confirm('حذف؟'))return;const {error}=await sb.from('recommendations').delete().eq('id',id);if(error)return toast(error.message,'er');try{localStorage.removeItem('blo_rh_v2_'+id)}catch(e){}toast('تم الحذف','ok');admRenderBody()};
 window.toggleRecoHidden=async function(id,hidden){const {error}=await sb.from('recommendations').update({hidden:!hidden}).eq('id',id);if(error)return toast(error.message,'er');toast(hidden?'تم الإظهار':'تم الإخفاء','ok');admRenderBody()};
-window.editReco=async function(id){const {data:r}=await sb.from('recommendations').select('*').eq('id',id).single();if(!r)return;openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-edit"></i> تعديل التوصية</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">العملة</label><input type="text" class="ip" id="eSym" value="${esc(r.symbol)}" style="text-transform:uppercase;"></div><div><label class="lb">منطقة الدخول</label><input type="text" class="ip" id="eEnt" value="${esc(r.entry||'')}"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="lb">هدف1</label><input type="text" class="ip" id="eT1" value="${esc(r.target1||'')}"></div><div><label class="lb">هدف2</label><input type="text" class="ip" id="eT2" value="${esc(r.target2||'')}"></div><div><label class="lb">هدف3</label><input type="text" class="ip" id="eT3" value="${esc(r.target3||'')}"></div></div><div><label class="lb">وقف الخسارة</label><input type="text" class="ip" id="eSL" value="${esc(r.stop_loss||'')}"></div><div><label class="lb">ملاحظات</label><textarea class="ip" id="eNotes">${esc(r.notes||'')}</textarea></div><button class="bp" id="saveEdit"><i class="fas fa-save"></i> حفظ</button></div>`);$('#saveEdit').onclick=async()=>{const sym=$('#eSym').value.trim().toUpperCase();if(!sym)return toast('أدخل العملة','er');const {error}=await sb.from('recommendations').update({symbol:sym,entry:$('#eEnt').value.trim(),target1:$('#eT1').value.trim(),target2:$('#eT2').value.trim(),target3:$('#eT3').value.trim(),stop_loss:$('#eSL').value.trim(),notes:$('#eNotes').value.trim()}).eq('id',id);if(error)return toast(error.message,'er');closeM();toast('تم التعديل','ok');admRenderBody()}};
+window.editReco=async function(id){const {data:r}=await sb.from('recommendations').select('*').eq('id',id).single();if(!r)return;openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-edit"></i> تعديل التوصية</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">العملة</label><input type="text" class="ip" id="eSym" value="${esc(r.symbol)}" style="text-transform:uppercase;"></div><div><label class="lb">منطقة الدخول</label><input type="text" class="ip" id="eEnt" value="${esc(r.entry||'')}"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="lb">هدف1</label><input type="text" class="ip" id="eT1" value="${esc(r.target1||'')}"></div><div><label class="lb">هدف2</label><input type="text" class="ip" id="eT2" value="${esc(r.target2||'')}"></div><div><label class="lb">هدف3</label><input type="text" class="ip" id="eT3" value="${esc(r.target3||'')}"></div></div><div><label class="lb">وقف الخسارة</label><input type="text" class="ip" id="eSL" value="${esc(r.stop_loss||'')}"></div><div><label class="lb">ملاحظات</label><textarea class="ip" id="eNotes">${esc(r.notes||'')}</textarea></div><button class="bp" id="saveEdit"><i class="fas fa-save"></i> حفظ</button></div>`);$('#saveEdit').onclick=async()=>{const sym=$('#eSym').value.trim().toUpperCase();if(!sym)return toast('أدخل العملة','er');const {error}=await sb.from('recommendations').update({symbol:sym,entry:$('#eEnt').value.trim(),target1:$('#eT1').value.trim(),target2:$('#eT2').value.trim(),target3:$('#eT3').value.trim(),stop_loss:$('#eSL').value.trim(),notes:$('#eNotes').value.trim()}).eq('id',id);if(error)return toast(error.message,'er');try{localStorage.removeItem('blo_rh_v2_'+id)}catch(e){}closeM();toast('تم التعديل','ok');admRenderBody()}};
 
 function addRecoModal(){openM(`<button class="mc" onclick="closeM()">✕</button><h3><i class="fas fa-chart-line"></i> توصية جديدة</h3><div style="display:flex;flex-direction:column;gap:12px;"><div><label class="lb">العملة</label><input type="text" class="ip" id="nSym" placeholder="BTC" style="text-transform:uppercase;"></div><div><label class="lb">منطقة الدخول</label><input type="text" class="ip" id="nEnt" placeholder="34000 - 34500"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div><label class="lb">هدف1</label><input type="text" class="ip" id="nT1"></div><div><label class="lb">هدف2</label><input type="text" class="ip" id="nT2"></div><div><label class="lb">هدف3</label><input type="text" class="ip" id="nT3"></div></div><div><label class="lb">وقف الخسارة</label><input type="text" class="ip" id="nSL"></div><div><label class="lb">ملاحظات</label><textarea class="ip" id="nNotes"></textarea></div><button class="bp" id="saveReco"><i class="fas fa-paper-plane"></i> نشر</button></div>`);$('#saveReco').onclick=async()=>{const sym=$('#nSym').value.trim().toUpperCase();const ent=$('#nEnt').value.trim();if(!sym||!ent)return toast('أكمل البيانات','er');const btn=$('#saveReco');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('recommendations').insert({symbol:sym,entry:ent,target1:$('#nT1').value.trim(),target2:$('#nT2').value.trim(),target3:$('#nT3').value.trim(),stop_loss:$('#nSL').value.trim(),notes:$('#nNotes').value.trim()});btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');await sb.from('notifications').insert({title:'📈 توصية جديدة',body:'تم نزول توصية جديدة على منصة Blo Trade 24 الآن',type:'reco',is_public:true});try{await sendPushNotification('📈 توصية جديدة','تم نزول توصية جديدة على منصة Blo Trade 24 الآن','https://abu-hanin.github.io/','all');}catch(e){}try{await sendPushNotification('📈 توصية جديدة','تم نزول توصية جديدة على منصة Blo Trade 24','https://abu-hanin.github.io/','admin');}catch(e){}closeM();toast('✅ تم النشر والإشعار','ok');admRenderBody()}}
 
