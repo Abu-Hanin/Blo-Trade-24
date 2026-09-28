@@ -65,8 +65,9 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .mbtn{background:transparent;border:none;color:var(--g);font-size:1.5rem;cursor:pointer;padding:8px 10px;border-radius:10px}
 .inst-btn{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
 .inst-btn.show{display:flex}
-.share-btn{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
+.share-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;display:none;align-items:center;justify-content:center;transition:.2s}
 .share-btn.show{display:flex}
+.share-btn:active{transform:scale(.9)}
 .notif-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;position:relative;transition:.2s}
 .notif-badge{position:absolute;top:2px;left:2px;background:var(--rd);color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(246,70,93,.6);animation:pls 1.6s infinite}
 #smenu{position:fixed;top:0;right:-320px;width:300px;height:100vh;height:100dvh;background:var(--card);z-index:200;transition:right .3s;overflow-y:auto;-webkit-overflow-scrolling:touch;border-left:1px solid var(--bd);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0)}
@@ -555,7 +556,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div style="display:flex;align-items:center;gap:6px;">
 <button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
-<button class="share-btn" id="shareBtn"><i class="fas fa-share-alt"></i> مشاركة</button>
+<button class="share-btn" id="shareBtn" title="مشاركة التطبيق" aria-label="مشاركة"><i class="fas fa-share-alt"></i></button>
 <button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
 </div>
 <div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
@@ -566,7 +567,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div class="bni" data-n="recs"><i class="fas fa-chart-line"></i><span>التوصيات</span></div>
 <div class="bni" data-n="done"><i class="fas fa-check-double"></i><span>المكتملة</span></div>
 <div class="bni" data-n="chat" id="navChatBtn"><i class="fas fa-comments"></i><span>المحادثة</span></div>
-<div class="bni" data-n="prof"><i class="fas fa-user"></i><span>حسابي</span></div>
+<div class="bni" data-n="prof" id="navProfBtn"><i class="fas fa-user"></i><span>حسابي</span></div>
 </nav>
 </div>
 
@@ -594,7 +595,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
-const APP_VERSION = '2026.09.28.3400';
+const APP_VERSION = '2026.09.28.3500';
 
 setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}}catch(e){}},3000);
 
@@ -732,7 +733,7 @@ function refreshUI(){
   else if(isSub())b.innerHTML='<span class="pb on">✅ مشترك - '+subDaysLeft()+' يوم</span>';
   else b.innerHTML='<span class="pb off">⚠️ غير مشترك</span>';
   $$('.mi.ado').forEach(el=>el.classList.toggle('sh',CU.role==='admin'));
-  // تبديل زر المحادثة في الشريط السفلي للأدمن
+
   const navChat=document.getElementById('navChatBtn');
   if(navChat){
     if(CU.role==='admin'){
@@ -743,6 +744,19 @@ function refreshUI(){
       navChat.dataset.n='chat';
       navChat.querySelector('i').className='fas fa-comments';
       navChat.querySelector('span').textContent='المحادثة';
+    }
+  }
+
+  const navProf=document.getElementById('navProfBtn');
+  if(navProf){
+    if(CU.role==='admin'){
+      navProf.dataset.n='addreco';
+      navProf.querySelector('i').className='fas fa-plus-circle';
+      navProf.querySelector('span').textContent='إضافة توصية';
+    }else{
+      navProf.dataset.n='prof';
+      navProf.querySelector('i').className='fas fa-user';
+      navProf.querySelector('span').textContent='حسابي';
     }
   }
 }
@@ -783,7 +797,11 @@ $('#mBtn').onclick=()=>{$('#smenu').classList.add('on');$('#mov').classList.add(
 const closeMenu=()=>{$('#smenu').classList.remove('on');$('#mov').classList.remove('on')};
 $('#cBtn').onclick=closeMenu;$('#mov').onclick=closeMenu;
 $$('.mi').forEach(it=>it.onclick=()=>{const a=it.dataset.m;closeMenu();if(a==='logout'){if(confirm('تسجيل الخروج؟'))doLogout()}else go(a)});
-$$('.bni').forEach(it=>it.onclick=()=>go(it.dataset.n));
+$$('.bni').forEach(it=>it.onclick=()=>{
+  const n=it.dataset.n;
+  if(n==='addreco'&&CU&&CU.role==='admin'){admTab='recs';go('admin');return;}
+  go(n);
+});
 const R={};let currentPage='home';
 function go(p){
   if(!VALID_PAGES.includes(p))p='home';
@@ -1206,7 +1224,6 @@ R.gold=c=>window.renderGoldPage(c);
 R.admin=c=>window.renderAdminPage(c);
 function updateRB(){const last=localStorage.getItem('blo_lastseen')||'';const first=window._recsCache[0]?.id||'';const b=$('#rBdg');if(b)b.style.display=(first&&first!==last)?'inline-block':'none'}
 
-/* ===== Install / Share ===== */
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('#instBtn')?.classList.add('show')});
 
