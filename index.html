@@ -65,6 +65,8 @@ body{background:var(--bg);color:var(--tx);overflow-x:hidden}
 .mbtn{background:transparent;border:none;color:var(--g);font-size:1.5rem;cursor:pointer;padding:8px 10px;border-radius:10px}
 .inst-btn{background:linear-gradient(135deg,var(--g),var(--g2));color:var(--bg);border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
 .inst-btn.show{display:flex}
+.share-btn{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;padding:6px 12px;border-radius:20px;font-size:.8rem;font-weight:800;cursor:pointer;display:none;align-items:center;gap:5px}
+.share-btn.show{display:flex}
 .notif-btn{background:transparent;border:none;color:var(--g);font-size:1.25rem;cursor:pointer;padding:8px 10px;border-radius:10px;position:relative;transition:.2s}
 .notif-badge{position:absolute;top:2px;left:2px;background:var(--rd);color:#fff;font-size:.6rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(246,70,93,.6);animation:pls 1.6s infinite}
 #smenu{position:fixed;top:0;right:-320px;width:300px;height:100vh;height:100dvh;background:var(--card);z-index:200;transition:right .3s;overflow-y:auto;-webkit-overflow-scrolling:touch;border-left:1px solid var(--bd);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0)}
@@ -305,8 +307,14 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .adm-card-row .val{color:var(--tx);font-weight:700;direction:ltr}
 .adm-card-actions{display:flex;gap:8px;flex-wrap:wrap}
 .adm-card-actions button{flex:1;min-width:0;padding:10px;font-size:.8rem;justify-content:center}
-.chat-shell{display:flex;flex-direction:column;height:calc(100dvh - 205px);min-height:300px}
-@media(min-width:768px){.chat-shell{max-width:900px;margin:0 auto;width:100%;height:calc(100dvh - 215px);max-height:760px}}
+
+/* ====== المحادثة - تخطيط Flex طبيعي ====== */
+.chat-shell{display:flex;flex-direction:column;min-height:0}
+@media(min-width:768px){.chat-shell{max-width:900px;margin:0 auto;width:100%}}
+.ct.chat-page{padding:10px 14px;overflow:hidden;display:flex;flex-direction:column}
+.ct.chat-page .pt{font-size:1.2rem;margin-bottom:10px;padding-bottom:10px;flex-shrink:0}
+.ct.chat-page .chat-shell{flex:1;min-height:0}
+
 .chat-top{display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(145deg,#1a1e26,#14171d);border:1px solid var(--bd);border-radius:16px;margin-bottom:14px;flex-shrink:0;position:relative;overflow:hidden}
 .chat-top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.6}
 .chat-brand-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--g2));display:flex;align-items:center;justify-content:center;color:#0b0e11;font-size:1.2rem;flex-shrink:0;box-shadow:0 6px 16px -6px rgba(240,185,11,.5);position:relative}
@@ -348,7 +356,8 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .chat-empty h4{color:var(--tx);font-size:1rem;font-weight:800;margin-bottom:6px}
 .chat-empty p{font-size:.85rem;line-height:1.6;max-width:280px}
 @media(max-width:600px){
-  .chat-shell{height:calc(100dvh - 175px);min-height:280px}
+  .ct.chat-page{padding:8px 10px}
+  .ct.chat-page .pt{font-size:1.05rem;margin-bottom:8px;padding-bottom:8px}
   .chat-top{padding:9px 11px;gap:9px;margin-bottom:9px;border-radius:12px}
   .chat-brand-av{width:38px;height:38px;font-size:1rem}
   .chat-brand-av .status-dot{width:10px;height:10px;border-width:2px}
@@ -475,7 +484,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 @media(min-width:768px){#learnGrid{grid-template-columns:repeat(2,1fr) !important;max-width:1000px;margin-left:auto;margin-right:auto}#courseGrid{grid-template-columns:repeat(2,1fr) !important;max-width:1000px;margin-left:auto;margin-right:auto}}
 @media(min-width:1200px){#learnGrid{grid-template-columns:repeat(3,1fr) !important;max-width:1200px}#courseGrid{grid-template-columns:repeat(3,1fr) !important;max-width:1200px}}
 
-/* ============ اختيار الخطة (زرارين صغيرين) ============ */
 .plan-picker-header{text-align:center;margin-bottom:12px;font-size:.82rem;color:var(--mt);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
 .plan-picker-header i{color:var(--g)}
 .plan-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -494,7 +502,6 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 .pay-cta-hint{text-align:center;margin:-4px 0 14px;padding:8px 12px;background:rgba(240,185,11,.05);border:1px solid rgba(240,185,11,.2);border-radius:10px;color:var(--mt);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px}
 .pay-cta-hint strong{color:var(--g)}
 
-/* بطاقة معلومات التوصيات المكتملة */
 .done-info{background:linear-gradient(135deg,rgba(14,203,129,.09),rgba(14,203,129,.015));border:1px solid rgba(14,203,129,.3);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center}
 .done-info .di-icn{width:32px;height:32px;border-radius:9px;background:rgba(14,203,129,.15);border:1px solid rgba(14,203,129,.35);color:var(--gr);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
 .done-info .di-txt{flex:1;min-width:0;font-size:.76rem;line-height:1.5;color:var(--mt)}
@@ -548,6 +555,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div style="display:flex;align-items:center;gap:6px;">
 <button class="mbtn" id="mBtn"><i class="fas fa-bars"></i></button>
 <button class="inst-btn" id="instBtn"><i class="fas fa-download"></i> تثبيت</button>
+<button class="share-btn" id="shareBtn"><i class="fas fa-share-alt"></i> مشاركة</button>
 <button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
 </div>
 <div class="lg"><span class="live-dot"></span><span class="lg-txt">Blo Trade 24</span></div>
@@ -557,7 +565,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div class="bni on" data-n="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
 <div class="bni" data-n="recs"><i class="fas fa-chart-line"></i><span>التوصيات</span></div>
 <div class="bni" data-n="done"><i class="fas fa-check-double"></i><span>المكتملة</span></div>
-<div class="bni" data-n="chat"><i class="fas fa-comments"></i><span>المحادثة</span></div>
+<div class="bni" data-n="chat" id="navChatBtn"><i class="fas fa-comments"></i><span>المحادثة</span></div>
 <div class="bni" data-n="prof"><i class="fas fa-user"></i><span>حسابي</span></div>
 </nav>
 </div>
@@ -586,7 +594,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
-const APP_VERSION = '2026.09.28.3300';
+const APP_VERSION = '2026.09.28.3400';
 
 setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}}catch(e){}},3000);
 
@@ -597,8 +605,17 @@ setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classL
       localStorage.setItem('blo_app_version', APP_VERSION);
       if(stored){
         if('caches' in window){caches.keys().then(names=>{names.forEach(name=>caches.delete(name));}).catch(()=>{});}
-        setTimeout(()=>{const url = new URL(window.location.href);url.searchParams.set('_v', Date.now());window.location.replace(url.toString());}, 500);
+        if(!sessionStorage.getItem('blo_reloaded_'+APP_VERSION)){
+          sessionStorage.setItem('blo_reloaded_'+APP_VERSION,'1');
+          const cleanUrl = window.location.origin + window.location.pathname + (window.location.hash||'');
+          setTimeout(()=>{window.location.replace(cleanUrl);}, 400);
+          return;
+        }
       }
+    }
+    if(window.location.search && window.location.search.indexOf('_v=')!==-1){
+      const cleanUrl = window.location.origin + window.location.pathname + (window.location.hash||'');
+      window.history.replaceState(null,'',cleanUrl);
     }
   }catch(e){}
 })();
@@ -612,6 +629,9 @@ const TG_API='https://api.telegram.org/bot'+TG_TOKEN;
 const ADMIN_EMAIL='swlyd3393@gmail.com';
 const SUB_DAYS=180;
 const ONESIGNAL_APP_ID='a7f57c53-725b-4db8-8b4f-a84ed71d1f98';
+const SITE_URL='https://abu-hanin.github.io';
+const SITE_TITLE='Blo Trade 24';
+const SITE_TEXT='منصة Blo Trade 24 - توصيات احترافية للتداول الفوري للعملات الرقمية';
 
 let SUB_PRICE_USD = 33;
 let SUB_PRICE_USD_PERMANENT = 100;
@@ -635,7 +655,6 @@ function fmtDateOnly(ts){const d=new Date(ts);return `${d.getDate()} - ${d.getMo
 function fmtNum(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-/* ===== نظام تتبع الأهداف لكل توصية (v2) ===== */
 function getRecoHigh(rid){try{const v=localStorage.getItem('blo_rh_v2_'+rid);return v?parseFloat(v):0}catch(e){return 0}}
 function setRecoHigh(rid,val){try{if(!val||val<=0)return;const cur=getRecoHigh(rid);if(val>cur)localStorage.setItem('blo_rh_v2_'+rid,val.toString())}catch(e){}}
 function forceSetRecoHigh(rid,val){try{if(!val||val<=0)return;localStorage.setItem('blo_rh_v2_'+rid,val.toString())}catch(e){}}
@@ -713,6 +732,19 @@ function refreshUI(){
   else if(isSub())b.innerHTML='<span class="pb on">✅ مشترك - '+subDaysLeft()+' يوم</span>';
   else b.innerHTML='<span class="pb off">⚠️ غير مشترك</span>';
   $$('.mi.ado').forEach(el=>el.classList.toggle('sh',CU.role==='admin'));
+  // تبديل زر المحادثة في الشريط السفلي للأدمن
+  const navChat=document.getElementById('navChatBtn');
+  if(navChat){
+    if(CU.role==='admin'){
+      navChat.dataset.n='admin';
+      navChat.querySelector('i').className='fas fa-shield-alt';
+      navChat.querySelector('span').textContent='لوحة الأدمن';
+    }else{
+      navChat.dataset.n='chat';
+      navChat.querySelector('i').className='fas fa-comments';
+      navChat.querySelector('span').textContent='المحادثة';
+    }
+  }
 }
 
 $$('.atab').forEach(t=>t.onclick=()=>{$$('.atab').forEach(x=>x.classList.remove('on'));t.classList.add('on');$$('.afrm').forEach(f=>f.classList.remove('on'));$(t.dataset.t==='login'?'#lf':'#rf').classList.add('on');$$('.aerr,.aok').forEach(x=>x.classList.remove('on'))});
@@ -760,6 +792,7 @@ function go(p){
   if(p!=='recs')stopRecoTicker();
   $$('.bni').forEach(e=>e.classList.toggle('on',e.dataset.n===p));
   const c=$('#ct');c.scrollTop=0;
+  c.classList.toggle('chat-page',p==='chat');
   (R[p]||(()=>{c.innerHTML='<div class="es"><i class="fas fa-tools ei"></i><p>قيد التطوير</p></div>'}))(c);
 }
 window.go=go;
@@ -774,6 +807,7 @@ window.addEventListener('hashchange',()=>{
   if(p!=='recs')stopRecoTicker();
   $$('.bni').forEach(e=>e.classList.toggle('on',e.dataset.n===p));
   const c=$('#ct');c.scrollTop=0;
+  c.classList.toggle('chat-page',p==='chat');
   (R[p]||(()=>{c.innerHTML='<div class="es"><i class="fas fa-tools ei"></i><p>قيد التطوير</p></div>'}))(c);
 });
 
@@ -813,7 +847,7 @@ R.home=async c=>{
   try{const {data}=await sb.from('admin_messages').select('*').eq('user_id',CU.id).eq('is_read',false).order('created_at',{ascending:false});if(data)adminMsgs=data;}catch(e){}
   const msgsHTML = adminMsgs.map(m=>`<div class="msg-banner ${m.type==='info'?'msg-info':''}" data-msg-id="${m.id}"><div class="msg-head"><div class="msg-icon"><i class="fas ${m.type==='warning'?'fa-exclamation-triangle':'fa-info-circle'}"></i></div><div style="flex:1"><div class="msg-title">${esc(m.title||'رسالة من الإدارة')}</div></div></div><div class="msg-body">${esc(m.body||'')}</div><div class="msg-time"><span><i class="fas fa-clock"></i> ${fmtTime(m.created_at)}</span><div class="msg-actions"><button class="reply-btn" data-reply="${m.id}"><i class="fas fa-reply"></i> رد</button><button class="dismiss-btn" data-dismiss="${m.id}"><i class="fas fa-check"></i> تم</button></div></div></div>`).join('');
   const subSection = !s ? `<div style="margin-top:24px;background:linear-gradient(145deg,#1c1f26,#15181e);border:1px solid var(--g);border-radius:22px;padding:24px;text-align:center;max-width:600px;margin-left:auto;margin-right:auto;"><i class="fas fa-crown" style="color:var(--g);font-size:2.2rem;margin-bottom:12px;"></i><h3 style="color:var(--g);margin-bottom:8px;font-weight:900;font-size:1.2rem;">اشترك الآن - اختر خطتك</h3><p style="color:var(--mt);margin-bottom:16px;font-size:.88rem;line-height:1.6;">خطة 180 يوم بـ ${SUB_PRICE_USD}$ · أو اشتراك دائم بـ ${SUB_PRICE_USD_PERMANENT}$</p><div class="plan-picker-mini"><button class="plan-btn" data-g="dep" data-plan="trial"><i class="fas fa-calendar-alt"></i> 180 يوم - ${SUB_PRICE_USD}$</button><button class="plan-btn premium" data-g="dep" data-plan="permanent"><i class="fas fa-infinity"></i> دائم - ${SUB_PRICE_USD_PERMANENT}$</button></div></div>` : '';
-  c.innerHTML=`<div class="home-wrap">${msgsHTML}<div class="hero"><div class="hero-logo"><h1>Blo Trade 24</h1><span class="hero-live"></span></div><div class="hero-tag"><span class="dot2"></span> بث مباشر · 24 ساعة</div><div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('en-US')} زيارة</div><div class="hero-title">التداول الفوري للعملات الرقمية المشفرة</div><div class="hero-sub">نقدم لكم توصيات للتداول الفوري للعملات المشفرة احترافية بشكل يومي، والتوصيات مدروسة من قبل الخبراء في التداول.</div></div><div class="gi"><a class="gic ${s?'unlocked':''}" data-g="recs">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-chart-line"></i></div><div class="txt"><div class="ttl">التوصيات</div><div class="ds">توصيات يومية مدروسة</div></div></a><a class="gic ${s?'unlocked':''}" data-g="words">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-calendar-day"></i></div><div class="txt"><div class="ttl">كلمة اليوم</div><div class="ds">كلمة باينانس اليومية</div></div></a><a class="gic" data-g="done"><div class="icn"><i class="fas fa-check-double"></i></div><div class="txt"><div class="ttl">التوصيات المكتملة</div><div class="ds">توصيات حققت كل أهدافها الثلاثة</div></div></a><a class="gic ${s?'unlocked':''}" data-g="winner">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-trophy"></i></div><div class="txt"><div class="ttl">اختيار الفائز</div><div class="ds">سحب عشوائي من التعليقات</div></div></a><a class="gic" data-g="gold"><div class="icn"><i class="fas fa-coins"></i></div><div class="txt"><div class="ttl">أسعار الذهب</div><div class="ds">أسعار لحظية + زكاة</div></div></a><a class="gic" data-g="bubble"><div class="icn"><i class="fas fa-fire"></i></div><div class="txt"><div class="ttl">فقاعة العملات</div><div class="ds">أعلى العملات تغيراً</div></div></a><a class="gic" data-g="learn"><div class="icn"><i class="fas fa-graduation-cap"></i></div><div class="txt"><div class="ttl">تعليم التداول</div><div class="ds">دروس تعليمية شاملة</div></div></a><a class="gic" data-g="course"><div class="icn"><i class="fas fa-play-circle"></i></div><div class="txt"><div class="ttl">كورس التداول</div><div class="ds">30 درس فيديو</div></div></a><a class="gic" data-g="market"><div class="icn"><i class="fas fa-globe"></i></div><div class="txt"><div class="ttl">سوق العملات</div><div class="ds">أسعار لحظية مباشرة</div></div></a></div>${subSection}</div>`;
+  c.innerHTML=`<div class="home-wrap">${msgsHTML}<div class="hero"><div class="hero-logo"><h1>Blo Trade 24</h1><span class="hero-live"></span></div><div class="hero-tag"><span class="dot2"></span> بث مباشر · 24 ساعة</div><div class="visitor-badge"><i class="fas fa-users"></i> ${visits.toLocaleString('en-US')} زيارة</div><div class="hero-title">التداول الفوري للعملات الرقمية المشفرة</div><div class="hero-sub">نقدم لكم توصيات للتداول الفوري للعملات المشفرة احترافية بشكل يومي، والتوصيات مدروسة من قبل الخبراء في التداول.</div></div><div class="gi"><a class="gic ${s?'unlocked':''}" data-g="recs">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-chart-line"></i></div><div class="txt"><div class="ttl">التوصيات</div><div class="ds">توصيات يومية مدروسة</div></div></a><a class="gic ${s?'unlocked':''}" data-g="words">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-calendar-day"></i></div><div class="txt"><div class="ttl">كلمة اليوم</div><div class="ds">كلمة باينانس اليومية</div></div></a><a class="gic ${s?'unlocked':''}" data-g="winner">${s?'':'<div class="lk"><i class="fas fa-lock"></i></div>'}<div class="icn"><i class="fas fa-trophy"></i></div><div class="txt"><div class="ttl">اختيار الفائز</div><div class="ds">سحب عشوائي من التعليقات</div></div></a><a class="gic" data-g="done"><div class="icn"><i class="fas fa-check-double"></i></div><div class="txt"><div class="ttl">التوصيات المكتملة</div><div class="ds">توصيات حققت كل أهدافها الثلاثة</div></div></a><a class="gic" data-g="gold"><div class="icn"><i class="fas fa-coins"></i></div><div class="txt"><div class="ttl">أسعار الذهب</div><div class="ds">أسعار لحظية + زكاة</div></div></a><a class="gic" data-g="bubble"><div class="icn"><i class="fas fa-fire"></i></div><div class="txt"><div class="ttl">فقاعة العملات</div><div class="ds">أعلى العملات تغيراً</div></div></a><a class="gic" data-g="learn"><div class="icn"><i class="fas fa-graduation-cap"></i></div><div class="txt"><div class="ttl">تعليم التداول</div><div class="ds">دروس تعليمية شاملة</div></div></a><a class="gic" data-g="course"><div class="icn"><i class="fas fa-play-circle"></i></div><div class="txt"><div class="ttl">كورس التداول</div><div class="ds">30 درس فيديو</div></div></a><a class="gic" data-g="market"><div class="icn"><i class="fas fa-globe"></i></div><div class="txt"><div class="ttl">سوق العملات</div><div class="ds">أسعار لحظية مباشرة</div></div></a></div>${subSection}</div>`;
   c.querySelectorAll('[data-g]').forEach(el=>el.onclick=()=>{if(el.dataset.plan)selectedPlan=el.dataset.plan;go(el.dataset.g)});
   c.querySelectorAll('[data-dismiss]').forEach(btn=>{btn.onclick=async()=>{const id=btn.dataset.dismiss;try{await sb.from('admin_messages').update({is_read:true,read_at:new Date().toISOString()}).eq('id',id);toast('✅ تم', 'ok');const banner=c.querySelector(`.msg-banner[data-msg-id="${id}"]`);if(banner)banner.remove();}catch(e){toast('خطأ','er')}};});
   c.querySelectorAll('[data-reply]').forEach(btn=>{btn.onclick=()=>go('chat');});
@@ -1171,10 +1205,74 @@ R.winner=c=>window.renderWinnerPage(c);
 R.gold=c=>window.renderGoldPage(c);
 R.admin=c=>window.renderAdminPage(c);
 function updateRB(){const last=localStorage.getItem('blo_lastseen')||'';const first=window._recsCache[0]?.id||'';const b=$('#rBdg');if(b)b.style.display=(first&&first!==last)?'inline-block':'none'}
+
+/* ===== Install / Share ===== */
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('#instBtn')?.classList.add('show')});
-$('#instBtn')?.addEventListener('click',async()=>{if(!deferredPrompt)return toast('التثبيت غير متاح');deferredPrompt.prompt();const {outcome}=await deferredPrompt.userChoice;if(outcome==='accepted')toast('🎉 شكراً لتثبيت التطبيق','ok');deferredPrompt=null;$('#instBtn').classList.remove('show')});
-window.addEventListener('appinstalled',()=>{deferredPrompt=null;$('#instBtn')?.classList.remove('show');toast('✅ تم التثبيت بنجاح','ok')});
+
+function isPWAInstalled(){
+  try{
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }catch(e){return false;}
+}
+function showShareBtn(){const s=$('#shareBtn');if(s)s.classList.add('show');}
+function hideInstallBtn(){const b=$('#instBtn');if(b)b.classList.remove('show');}
+
+$('#instBtn')?.addEventListener('click',async()=>{
+  if(!deferredPrompt)return toast('التثبيت غير متاح');
+  deferredPrompt.prompt();
+  const {outcome}=await deferredPrompt.userChoice;
+  if(outcome==='accepted')toast('🎉 شكراً لتثبيت التطبيق','ok');
+  deferredPrompt=null;
+  hideInstallBtn();
+  showShareBtn();
+});
+
+window.addEventListener('appinstalled',()=>{
+  deferredPrompt=null;
+  hideInstallBtn();
+  showShareBtn();
+  toast('✅ تم التثبيت بنجاح','ok');
+});
+
+if(isPWAInstalled()){showShareBtn();hideInstallBtn();}
+
+$('#shareBtn')?.addEventListener('click',async()=>{
+  const url=SITE_URL;
+  const text=SITE_TEXT;
+  if(navigator.share){
+    try{
+      await navigator.share({title:SITE_TITLE,text,url});
+      return;
+    }catch(e){if(e&&e.name==='AbortError')return;}
+  }
+  openShareModal(url,text);
+});
+
+function openShareModal(url,text){
+  const enc=encodeURIComponent;
+  openM(`<button class="mc" onclick="closeM()">✕</button>
+    <h3 style="justify-content:center;"><i class="fas fa-share-alt"></i> مشاركة التطبيق</h3>
+    <p style="color:var(--mt);font-size:.85rem;line-height:1.6;margin-bottom:18px;text-align:center;">شارك Blo Trade 24 مع أصدقائك</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+      <a href="https://wa.me/?text=${enc(text+' '+url)}" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;padding:14px 10px;border-radius:12px;text-decoration:none;text-align:center;font-weight:800;font-size:.86rem;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;"><i class="fab fa-whatsapp"></i> واتساب</a>
+      <a href="https://t.me/share/url?url=${enc(url)}&text=${enc(text)}" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#229ED9,#0088cc);color:#fff;padding:14px 10px;border-radius:12px;text-decoration:none;text-align:center;font-weight:800;font-size:.86rem;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;"><i class="fab fa-telegram"></i> تلجرام</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${enc(url)}" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#1877F2,#0a5dc7);color:#fff;padding:14px 10px;border-radius:12px;text-decoration:none;text-align:center;font-weight:800;font-size:.86rem;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;"><i class="fab fa-facebook-f"></i> فيسبوك</a>
+      <a href="https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(text)}" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#1a1a1a,#000);color:#fff;padding:14px 10px;border-radius:12px;text-decoration:none;text-align:center;font-weight:800;font-size:.86rem;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;"><i class="fab fa-x-twitter"></i> X</a>
+    </div>
+    <button class="bs" onclick="copyShareLink('${url}')" style="width:100%;justify-content:center;margin-top:14px;padding:14px;"><i class="fas fa-copy"></i> نسخ الرابط</button>
+  `);
+}
+window.copyShareLink=function(url){
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(()=>toast('✅ تم نسخ الرابط','ok')).catch(()=>toast('تعذر النسخ','er'));
+    } else {
+      const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('✅ تم نسخ الرابط','ok');
+    }
+  }catch(e){toast('تعذر النسخ','er');}
+};
+
 async function askNotifPermission(){if(!('Notification' in window))return;if(Notification.permission==='default'){try{await Notification.requestPermission()}catch{}}}
 function notify(title,body){if(!('Notification' in window))return;if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png'})}catch{}}}
 async function updateNotifBadge(){try{const {data,error}=await sb.from('notifications').select('created_at,is_public,user_id').order('created_at',{ascending:false}).limit(50);const badge=$('#notifBadge');if(!badge)return;if(error||!data||!data.length){badge.style.display='none';return}const lastSeen=localStorage.getItem('blo_notif_seen')||'';const mine=data.filter(n=>n.is_public!==false||n.user_id===CU?.id||!n.user_id);const unread=mine.filter(n=>n.created_at>lastSeen);if(unread.length>0){badge.textContent=unread.length>9?'9+':unread.length;badge.style.display='flex'}else badge.style.display='none'}catch(e){}}
@@ -1434,7 +1532,7 @@ window.admCloseChat=function(){adminChatUserId=null;admRenderBody()};
 
 async function admChatView(b,uid){
   const {data:p}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
-  b.innerHTML=`<button class="bs" data-backchat style="margin-bottom:12px;"><i class="fas fa-arrow-right"></i> رجوع للمحادثات</button><div class="chat-shell" style="height:calc(100vh - 260px);height:calc(100dvh - 260px);min-height:320px;"><div class="chat-top"><div class="chat-brand-av" style="background:linear-gradient(135deg,var(--g),var(--g2));">${(p?.username||'U').charAt(0).toUpperCase()}</div><div class="chat-brand-info"><div class="nm">${esc(p?.username||'مستخدم')}</div><div class="st" style="color:var(--mt);">${esc(p?.email||'')}</div></div><button class="bs" data-openuser="${uid}" style="padding:8px 14px;font-size:.78rem;"><i class="fas fa-cog"></i></button></div><div class="chat-scroll" id="adminChatBody"></div><div class="chat-compose"><label class="attach-btn"><i class="fas fa-image"></i><input type="file" accept="image/*" id="adminChatImg"></label><div class="input-wrap"><input type="text" id="adminChatTxt" placeholder="اكتب ردك هنا..."></div><button class="send-btn" id="adminChatSend"><i class="fas fa-paper-plane"></i></button></div></div>`;
+  b.innerHTML=`<button class="bs" data-backchat style="margin-bottom:12px;"><i class="fas fa-arrow-right"></i> رجوع للمحادثات</button><div class="chat-shell" style="min-height:340px;"><div class="chat-top"><div class="chat-brand-av" style="background:linear-gradient(135deg,var(--g),var(--g2));">${(p?.username||'U').charAt(0).toUpperCase()}</div><div class="chat-brand-info"><div class="nm">${esc(p?.username||'مستخدم')}</div><div class="st" style="color:var(--mt);">${esc(p?.email||'')}</div></div><button class="bs" data-openuser="${uid}" style="padding:8px 14px;font-size:.78rem;"><i class="fas fa-cog"></i></button></div><div class="chat-scroll" id="adminChatBody"></div><div class="chat-compose"><label class="attach-btn"><i class="fas fa-image"></i><input type="file" accept="image/*" id="adminChatImg"></label><div class="input-wrap"><input type="text" id="adminChatTxt" placeholder="اكتب ردك هنا..."></div><button class="send-btn" id="adminChatSend"><i class="fas fa-paper-plane"></i></button></div></div>`;
   b.querySelector('[data-backchat]')?.addEventListener('click',()=>window.admCloseChat());
   b.querySelector('[data-openuser]')?.addEventListener('click',()=>window.openUser(uid));
   const renderMsgs=async()=>{const {data:msgs}=await sb.from('chat_messages').select('*').eq('user_id',uid).order('created_at',{ascending:true});const body=$('#adminChatBody');if(!body)return;if(!msgs?.length){body.innerHTML=`<div class="chat-empty"><div class="ce-icon"><i class="fas fa-comments"></i></div><h4>لا توجد رسائل بعد</h4><p>لم يرسل هذا المستخدم أي رسالة حتى الآن.</p></div>`;return;}let lastDay='';const html=[];msgs.forEach(m=>{const d=new Date(m.created_at);const dayKey=d.toDateString();if(dayKey!==lastDay){lastDay=dayKey;html.push(`<div class="chat-day-sep">${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</div>`);}const isAdmin=m.sender==='admin';html.push(`<div class="bubble-wrap ${isAdmin?'mine':'them'}"><div class="mini-av">${isAdmin?'<i class="fas fa-headset" style="font-size:.75rem"></i>':(p?.username||'U').charAt(0).toUpperCase()}</div><div class="bubble">${m.body?esc(m.body):''}${m.image_url?`<img src="${m.image_url}" onclick="window.open('${m.image_url}','_blank')">`:''}<div class="meta">${d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} <i class="fas fa-check-double"></i></div></div></div>`);});body.innerHTML=html.join('');body.scrollTop=body.scrollHeight;};
