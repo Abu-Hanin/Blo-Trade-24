@@ -595,7 +595,7 @@ label.lb{display:block;color:var(--mt);font-size:.82rem;margin-bottom:6px;font-w
 <div id="mod"><div class="mbx" id="mbx"></div></div>
 <div id="tst"></div>
 <script>
-const APP_VERSION = '2026.09.28.3500';
+const APP_VERSION = '2026.09.30.3600';
 
 setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classList.add('out');setTimeout(()=>{try{b.remove()}catch(e){}},450)}}catch(e){}},3000);
 
@@ -624,6 +624,32 @@ setTimeout(()=>{try{const b=document.getElementById('bootLoader');if(b){b.classL
 const SUPABASE_URL='https://wfcizftmcclhnzgvukuy.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmY2l6ZnRtY2NsaG56Z3Z1a3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDI3ODYsImV4cCI6MjEwNDYxODc4Nn0.HZ852U2kZzHkXQveGEWT0qLra-vsVOwZOsT1Zl8nQ80';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+/* ===== Proxy لدعم Binance من جميع الدول ===== */
+const PROXY_URL = SUPABASE_URL + '/functions/v1/prices-proxy';
+async function binanceFetch(params){
+  // حاول عبر Proxy أولاً (يعمل في كل الدول)
+  try{
+    const qs = new URLSearchParams(params).toString();
+    const r = await fetch(PROXY_URL + '?' + qs);
+    if(r.ok) return r;
+  }catch(e){}
+  // Fallback: Binance مباشر (يعمل خارج أمريكا)
+  try{
+    if(params.endpoint==='ticker24hr'){
+      const url = params.symbols
+        ? `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(params.symbols)}`
+        : `https://api.binance.com/api/v3/ticker/24hr`;
+      return await fetch(url);
+    }
+    if(params.endpoint==='klines'){
+      const url = `https://api.binance.com/api/v3/klines?symbol=${params.symbol}&interval=${params.interval}&startTime=${params.startTime}&limit=${params.limit}`;
+      return await fetch(url);
+    }
+  }catch(e){}
+  return null;
+}
+
 const TG_TOKEN='8848036284:AAGVbG_UylFYsYagJM56Fg_kIqaDdiT9AuM';
 const TG_CHAT='6242313550';
 const TG_API='https://api.telegram.org/bot'+TG_TOKEN;
@@ -1020,10 +1046,11 @@ let rPrices={};
 async function fetchPricesBatch(symbols){
   if(!symbols.length)return {};
   try{
-    const symsParam=encodeURIComponent('['+symbols.map(s=>'"'+s.toUpperCase()+'USDT"').join(',')+']');
-    const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symsParam}`);
-    if(!r.ok)return {};
+    const symsParam='['+symbols.map(s=>'"'+s.toUpperCase()+'USDT"').join(',')+']';
+    const r=await binanceFetch({endpoint:'ticker24hr',symbols:symsParam});
+    if(!r||!r.ok)return {};
     const arr=await r.json();
+    if(!Array.isArray(arr))return {};
     const out={};
     arr.forEach(d=>{out[d.symbol.replace('USDT','')]={price:parseFloat(d.lastPrice),high:parseFloat(d.highPrice),change:parseFloat(d.priceChangePercent)};});
     return out;
@@ -1097,9 +1124,10 @@ async function initRecoHighs(list){
     if(!times.length)return;
     const earliest=Math.min(...times);
     try{
-      const r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=1h&startTime=${earliest}&limit=1000`);
-      if(!r.ok)return;
+      const r=await binanceFetch({endpoint:'klines',symbol:sym+'USDT',interval:'1h',startTime:String(earliest),limit:'1000'});
+      if(!r||!r.ok)return;
       const arr=await r.json();
+      if(!Array.isArray(arr))return;
       recos.forEach(reco=>{
         const createdMs=safeCreatedMs(reco.created_at);
         if(!createdMs)return;
@@ -1303,8 +1331,8 @@ function initRealtime(){
   sb.channel('admin-messages').on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages'},payload=>{if(payload.new.user_id===CU?.id){notify('📩 رسالة من الإدارة',payload.new.title||'لديك رسالة جديدة');if(currentPage==='home')go('home');}}).subscribe();
   sb.channel('chat-msg-user').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},payload=>{if(payload.new.user_id===CU?.id&&payload.new.sender==='admin'){notify('💬 رد من الإدارة',payload.new.body||'📷 صورة');if(currentPage==='chat')go('chat');}}).subscribe();
 }
-window.renderBubblePage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-fire"></i> فقاعة العملات</h2><div id="bw"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';try{const r=await fetch('https://api.binance.com/api/v3/ticker/24hr');const d=await r.json();const mj=['BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','ADAUSDT','DOGEUSDT','DOTUSDT','AVAXUSDT','LINKUSDT','MATICUSDT','LTCUSDT','TRXUSDT','ATOMUSDT','ETCUSDT','FILUSDT','APTUSDT','NEARUSDT','UNIUSDT','AAVEUSDT','SHIBUSDT','PEPEUSDT','ARBUSDT','OPUSDT'];const cs=d.filter(x=>mj.includes(x.symbol)).map(x=>({s:x.symbol.replace('USDT',''),p:parseFloat(x.lastPrice),ch:parseFloat(x.priceChangePercent)})).sort((a,b)=>b.ch-a.ch);$('#bw').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">${cs.map(x=>`<div style="background:linear-gradient(145deg,var(--card),#191d26);border-radius:16px;padding:14px;text-align:center;border:1px solid var(--bd);border-top:3px solid ${x.ch>=0?'var(--gr)':'var(--rd)'};"><div style="font-weight:800;font-size:1.05rem;">${x.s}</div><div style="color:var(--mt);font-size:.8rem;margin:5px 0;direction:ltr;">$${x.p.toLocaleString(undefined,{maximumFractionDigits:x.p<1?6:2})}</div><div style="color:${x.ch>=0?'var(--gr)':'var(--rd)'};font-weight:800;font-size:.9rem;">${x.ch>=0?'▲':'▼'} ${Math.abs(x.ch).toFixed(2)}%</div></div>`).join('')}</div>`}catch(e){$('#bw').innerHTML='<div class="es"><p>فشل التحميل</p></div>'}};
-window.renderMarketPage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-globe"></i> سوق العملات</h2><div id="mw"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';try{const r=await fetch('https://api.binance.com/api/v3/ticker/24hr');const d=await r.json();const t=d.filter(x=>x.symbol.endsWith('USDT')).sort((a,b)=>parseFloat(b.quoteVolume)-parseFloat(a.quoteVolume)).slice(0,80);$('#mw').innerHTML=`<div style="overflow-x:auto;background:var(--card);border-radius:14px;border:1px solid var(--bd);"><table style="width:100%;border-collapse:collapse;font-size:.85rem;"><thead><tr style="background:var(--card2);color:var(--mt);"><th style="padding:12px;text-align:right;font-weight:700;">العملة</th><th style="padding:12px;text-align:left;font-weight:700;">السعر</th><th style="padding:12px;text-align:left;font-weight:700;">التغير</th></tr></thead><tbody>${t.map(x=>{const ch=parseFloat(x.priceChangePercent);const p=parseFloat(x.lastPrice);return`<tr style="border-bottom:1px solid var(--bd);"><td style="padding:12px;font-weight:700;">${x.symbol.replace('USDT','')}</td><td style="padding:12px;text-align:left;direction:ltr;">$${p.toLocaleString(undefined,{maximumFractionDigits:p<1?6:2})}</td><td style="padding:12px;text-align:left;color:${ch>=0?'var(--gr)':'var(--rd)'};font-weight:700;">${ch>=0?'+':''}${ch.toFixed(2)}%</td></tr>`}).join('')}</tbody></table></div>`}catch(e){$('#mw').innerHTML='<div class="es"><p>فشل التحميل</p></div>'}};
+window.renderBubblePage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-fire"></i> فقاعة العملات</h2><div id="bw"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';try{const r=await binanceFetch({endpoint:'ticker24hr'});const d=await r.json();const mj=['BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','ADAUSDT','DOGEUSDT','DOTUSDT','AVAXUSDT','LINKUSDT','MATICUSDT','LTCUSDT','TRXUSDT','ATOMUSDT','ETCUSDT','FILUSDT','APTUSDT','NEARUSDT','UNIUSDT','AAVEUSDT','SHIBUSDT','PEPEUSDT','ARBUSDT','OPUSDT'];const cs=d.filter(x=>mj.includes(x.symbol)).map(x=>({s:x.symbol.replace('USDT',''),p:parseFloat(x.lastPrice),ch:parseFloat(x.priceChangePercent)})).sort((a,b)=>b.ch-a.ch);$('#bw').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">${cs.map(x=>`<div style="background:linear-gradient(145deg,var(--card),#191d26);border-radius:16px;padding:14px;text-align:center;border:1px solid var(--bd);border-top:3px solid ${x.ch>=0?'var(--gr)':'var(--rd)'};"><div style="font-weight:800;font-size:1.05rem;">${x.s}</div><div style="color:var(--mt);font-size:.8rem;margin:5px 0;direction:ltr;">$${x.p.toLocaleString(undefined,{maximumFractionDigits:x.p<1?6:2})}</div><div style="color:${x.ch>=0?'var(--gr)':'var(--rd)'};font-weight:800;font-size:.9rem;">${x.ch>=0?'▲':'▼'} ${Math.abs(x.ch).toFixed(2)}%</div></div>`).join('')}</div>`}catch(e){$('#bw').innerHTML='<div class="es"><p>فشل التحميل</p></div>'}};
+window.renderMarketPage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-globe"></i> سوق العملات</h2><div id="mw"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';try{const r=await binanceFetch({endpoint:'ticker24hr'});const d=await r.json();const t=d.filter(x=>x.symbol.endsWith('USDT')).sort((a,b)=>parseFloat(b.quoteVolume)-parseFloat(a.quoteVolume)).slice(0,80);$('#mw').innerHTML=`<div style="overflow-x:auto;background:var(--card);border-radius:14px;border:1px solid var(--bd);"><table style="width:100%;border-collapse:collapse;font-size:.85rem;"><thead><tr style="background:var(--card2);color:var(--mt);"><th style="padding:12px;text-align:right;font-weight:700;">العملة</th><th style="padding:12px;text-align:left;font-weight:700;">السعر</th><th style="padding:12px;text-align:left;font-weight:700;">التغير</th></tr></thead><tbody>${t.map(x=>{const ch=parseFloat(x.priceChangePercent);const p=parseFloat(x.lastPrice);return`<tr style="border-bottom:1px solid var(--bd);"><td style="padding:12px;font-weight:700;">${x.symbol.replace('USDT','')}</td><td style="padding:12px;text-align:left;direction:ltr;">$${p.toLocaleString(undefined,{maximumFractionDigits:p<1?6:2})}</td><td style="padding:12px;text-align:left;color:${ch>=0?'var(--gr)':'var(--rd)'};font-weight:700;">${ch>=0?'+':''}${ch.toFixed(2)}%</td></tr>`}).join('')}</tbody></table></div>`}catch(e){$('#mw').innerHTML='<div class="es"><p>فشل التحميل</p></div>'}};
 function extractYTId(url){if(!url)return'';const m=String(url).match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:''}
 window.renderLearnPage=async function(c){c.innerHTML='<h2 class="pt"><i class="fas fa-graduation-cap"></i> تعليم التداول</h2><div id="learnGrid" style="display:grid;grid-template-columns:1fr;gap:14px;"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div>';let items=[];try{const {data}=await sb.from('site_settings').select('*').eq('id',1).maybeSingle();if(data){for(let i=1;i<=5;i++){const id=extractYTId(data['edu_video_'+i]);if(id)items.push({id,title:(data['edu_title_'+i]||'').trim()||('درس تعليمي رقم '+i)})}}}catch(e){}if(!items.length)items=[{id:'hs38BPqtceg',title:'تعلم استخدام التوصيات خطوة بخطوة'},{id:'vliTJ2wDtUo',title:'الأساسيات والمفاهيم الأساسية'},{id:'O8BpO8EqW5A',title:'الاستراتيجيات المتقدمة والناجحة'}];$('#learnGrid').innerHTML=items.map((it,i)=>`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/${it.id}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe></div><div style="padding:14px 18px;display:flex;align-items:center;gap:10px;"><div style="width:28px;height:28px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;">${i+1}</div><div style="font-weight:700;color:var(--g);font-size:.9rem;">${it.title}</div></div></div>`).join('')};
 window.renderCoursePage=function(c){let h='<h2 class="pt"><i class="fas fa-play-circle"></i> كورس التداول</h2><div id="courseGrid" style="display:grid;grid-template-columns:1fr;gap:14px;">';for(let i=1;i<=30;i++)h+=`<div style="background:linear-gradient(145deg,#1c1f26,#15181e);border-radius:16px;overflow:hidden;border:1px solid var(--bd);"><div style="position:relative;padding-top:56.25%;"><iframe src="https://www.youtube.com/embed/?list=PLEII8wEnfjhZsW9ZjqlkcwcSvU0wfuB57&index=${i}" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allowfullscreen loading="lazy"></iframe></div><div style="padding:12px 16px;display:flex;align-items:center;gap:10px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(240,185,11,.15);color:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;">${i}</div><div style="color:var(--mt);font-size:.85rem;font-weight:600;">الدرس رقم ${i}</div></div></div>`;h+='</div>';c.innerHTML=h};
