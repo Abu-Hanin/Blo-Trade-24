@@ -176,7 +176,8 @@ body.is-admin .dr-links a.adm{display:flex}
 @media(max-width:360px){.bni span{font-size:.56rem}}
 
 /* ===== زرار الدعم الفني العايم ===== */
-.sup-fab{position:fixed;left:16px;bottom:calc(var(--bn) + 26px + env(safe-area-inset-bottom,0px));z-index:1450;width:56px;height:56px;border-radius:50%;background:var(--grad);color:#fff;font-size:1.35rem;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(124,58,237,.55),inset 0 1px 0 rgba(255,255,255,.3);animation:fabFloat 3.2s ease-in-out infinite;transition:transform .2s}
+.sup-fab{position:fixed;left:14px;bottom:calc(var(--bn) + 22px + env(safe-area-inset-bottom,0px));z-index:1450;width:44px;height:44px;border-radius:50%;background:var(--grad);color:#fff;font-size:1.05rem;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(124,58,237,.5),inset 0 1px 0 rgba(255,255,255,.3);animation:fabFloat 3.2s ease-in-out infinite;transition:transform .3s,opacity .3s}
+.sup-fab.away{opacity:0;transform:translateX(-80px) scale(.6);pointer-events:none}
 .sup-fab:hover{transform:scale(1.08)}
 .sup-fab .sf-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(236,72,153,.55);animation:fabRing 2.2s ease-out infinite}
 .sup-fab .sf-dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--err);border:2px solid #0B0619}
@@ -263,6 +264,12 @@ html:not(.has-sess) #tst{bottom:24px}
 .aerr{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.5);color:#FCA5A5}
 .aok{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.5);color:var(--ok2)}
 .aerr.on,.aok.on{display:block}
+.g-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px;border-radius:14px;background:#fff;color:#1f1f1f;font-weight:800;font-size:.95rem;box-shadow:0 8px 22px rgba(0,0,0,.28);transition:transform .2s,box-shadow .2s}
+.g-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(66,133,244,.35)}
+.g-btn:disabled{opacity:.7;cursor:wait;transform:none}
+.g-logo{width:22px;height:22px;flex-shrink:0}
+.g-or{display:flex;align-items:center;gap:10px;margin:14px 0 12px;color:var(--mt);font-size:.76rem;font-weight:700}
+.g-or::before,.g-or::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.45),transparent)}
 .auth-note{margin-top:14px;text-align:center;font-size:.74rem;color:var(--mt)}
 .auth-note i{color:var(--p2)}
 @media(max-width:820px){.auth-gate{grid-template-columns:1fr}.auth-side{padding:22px 20px}.auth-side p,.auth-points{display:none}.auth-side h2{font-size:1.1rem;margin:10px 0}.auth-form-side{padding:24px 18px}.auth-coins img{width:34px;height:34px}}
@@ -379,15 +386,15 @@ html:not(.has-sess) #tst{bottom:24px}
 .foot-copy span{color:#D8B4FE;font-weight:800}
 
 /* ===== رئيسية العميل ===== */
-.welcome-box{position:relative;overflow:hidden;padding:12px 14px;border-radius:22px;margin-bottom:14px;background:radial-gradient(420px 200px at 100% 0%,rgba(168,85,247,.4),transparent 70%),radial-gradient(300px 200px at 0% 100%,rgba(236,72,153,.22),transparent 70%),linear-gradient(160deg,#1E1240,#0B0619 80%);border:1px solid rgba(168,85,247,.45);box-shadow:0 20px 50px rgba(124,58,237,.22)}
-.wb-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.wb-av{width:44px;height:44px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.15rem;flex-shrink:0;box-shadow:0 8px 20px rgba(124,58,237,.45)}
-.wb-hi{flex:1;min-width:120px}
-.wb-hi small{color:#CFC6F2;font-size:.72rem;display:block;line-height:1.3}
-.wb-hi h2{color:#fff;font-size:1.05rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.wb-meta{display:flex;gap:6px;flex-wrap:wrap}
-.wb-meta .chip{font-size:.68rem;padding:3px 9px}
-@media(max-width:560px){.wb-meta{width:100%}}
+.welcome-box{position:relative;overflow:hidden;padding:10px 12px;border-radius:20px;margin-bottom:12px;background:radial-gradient(420px 200px at 100% 0%,rgba(168,85,247,.4),transparent 70%),radial-gradient(300px 200px at 0% 100%,rgba(236,72,153,.22),transparent 70%),linear-gradient(160deg,#1E1240,#0B0619 80%);border:1px solid rgba(168,85,247,.45);box-shadow:0 20px 50px rgba(124,58,237,.22)}
+.wb-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.wb-av{width:38px;height:38px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1rem;flex-shrink:0;box-shadow:0 6px 16px rgba(124,58,237,.45)}
+.wb-hi{flex:1;min-width:110px}
+.wb-hi small{color:#CFC6F2;font-size:.66rem;display:block;line-height:1.2}
+.wb-hi h2{color:#fff;font-size:.95rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.wb-meta{display:flex;gap:5px;flex-wrap:nowrap;min-width:0}
+.wb-meta .chip{font-size:.62rem;padding:3px 8px;white-space:nowrap}
+@media(max-width:560px){.wb-meta{width:100%}.wb-meta .chip{flex:1;justify-content:center;padding:4px 4px;font-size:.6rem;min-width:0;overflow:hidden;text-overflow:ellipsis}}
 .wb-cta{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
 .mini-tk{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:640px){.mini-tk{grid-template-columns:repeat(2,1fr)}}
@@ -595,6 +602,18 @@ html:not(.has-sess) #tst{bottom:24px}
 .dh-h b{color:#fff;font-size:.9rem}
 
 /* ===== المحادثة ===== */
+.ct.chatp{padding:calc(var(--tb) + 10px) 12px calc(var(--bn) + 20px + env(safe-area-inset-bottom,0px))}
+.ct.chatp .chat-shell{height:calc(100dvh - var(--tb) - var(--bn) - 34px - env(safe-area-inset-bottom,0px))}
+.chat-top{position:relative}
+.chat-top .chat-av{width:48px;height:48px;font-size:1.2rem}
+.chat-top .nm{font-size:1.05rem!important}
+.chat-hint{margin-right:auto;font-size:.68rem;font-weight:800;color:#CFC6F2;padding:5px 10px;border-radius:10px;background:rgba(255,255,255,.06);white-space:nowrap}
+.quick-r{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;scrollbar-width:none}
+.quick-r::-webkit-scrollbar{display:none}
+.quick-r button{flex-shrink:0;padding:7px 12px;border-radius:20px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);color:#E9D5FF;font-weight:700;font-size:.76rem;white-space:nowrap}
+.quick-r button:hover{background:rgba(168,85,247,.25)}
+@media(max-width:640px){.ct.chatp{padding-left:0;padding-right:0;padding-top:var(--tb)}.ct.chatp .chat-shell{height:calc(100dvh - var(--tb) - var(--bn) - 20px - env(safe-area-inset-bottom,0px));border:none;border-radius:0;background:transparent;box-shadow:none}.ct.chatp .chat-top{border-radius:0;background:rgba(18,12,34,.95)}.chat-hint{display:none}}
+body[data-page="chat"] .sup-fab{display:none}
 .chat-shell{display:flex;flex-direction:column;height:calc(100dvh - var(--tb) - var(--bn) - 120px);min-height:380px;max-width:900px;margin:0 auto;border-radius:24px;background:var(--glass);border:1px solid var(--line);overflow:hidden}
 .chat-top{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
 .chat-av{width:44px;height:44px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;position:relative;font-weight:900}
@@ -816,7 +835,7 @@ body{background-attachment:scroll}
 .orb{animation:none!important}
 .tile:hover,.feat:hover,.pm:hover,.plan:hover{transform:none}
 }
-@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* الحركة شغالة على كل الأجهزة (حتى لو وضع توفير البطارية أو تقليل الحركة مفعّل على الموبايل) */
 </style>
 </head>
 <body>
@@ -942,6 +961,8 @@ body{background-attachment:scroll}
 <h3 id="authTitle">أهلاً بيك من جديد 👋</h3>
 <div class="af-sub" id="authSub">سجّل دخولك وكمّل متابعة التوصيات</div>
 <div class="atabs"><div class="atab on" data-t="login">تسجيل الدخول</div><div class="atab" data-t="reg">إنشاء حساب</div></div>
+<button type="button" class="g-btn" id="gBtn"><svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span>الدخول بحساب جوجل</span></button>
+<div class="g-or">أو بالبريد الإلكتروني</div>
 <form class="afrm on" id="lf" novalidate>
 <div class="aerr" id="le"></div>
 <div class="ff"><i class="fas fa-envelope"></i><input type="email" id="lE" placeholder="البريد الإلكتروني" required autocomplete="email"></div>
@@ -1005,8 +1026,6 @@ body{background-attachment:scroll}
 <a data-m="gold"><span class="dl-ico"><i class="fas fa-coins"></i></span><span class="dl-txt">أسعار الذهب<small>أسعار لحظية + حاسبة</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <div class="dr-sec">حسابي</div>
 <a data-m="affiliate"><span class="dl-ico"><i class="fas fa-handshake"></i></span><span class="dl-txt">التسويق بالعمولة<small>5$ و10$ عن كل اشتراك</small></span><em class="dl-new">جديد</em><i class="fas fa-chevron-left dl-arr"></i></a>
-<a data-m="chat"><span class="dl-ico"><i class="fas fa-headset"></i></span><span class="dl-txt">المحادثة مع الإدارة<small>رد مباشر</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
-<a data-m="notifications"><span class="dl-ico"><i class="fas fa-bell"></i></span><span class="dl-txt">الإشعارات<small>تحديثات التوصيات والإيداعات</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <a data-m="prof"><span class="dl-ico"><i class="fas fa-user-circle"></i></span><span class="dl-txt">الملف الشخصي<small>اشتراكك وبيانات حسابك</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <a class="adm" data-m="admin"><span class="dl-ico"><i class="fas fa-user-shield"></i></span><span class="dl-txt">لوحة الأدمن<small>إدارة المنصة</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <a class="out" data-m="logout"><span class="dl-ico"><i class="fas fa-right-from-bracket"></i></span><span class="dl-txt">تسجيل الخروج</span></a>
@@ -1024,7 +1043,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.26.5';
+const APP_VERSION='2026.10.27.1';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1071,7 +1090,7 @@ const SITE_URL='https://abu-hanin.github.io';
 const APP_URL='https://abu-hanin.github.io/Blo-Trade-24/';
 const SITE_TITLE='Blo Trade 24';
 const SITE_TEXT='منصة Blo Trade 24 - توصيات احترافية للتداول الفوري للعملات الرقمية';
-const AFF_TRIAL_USD=5,AFF_PERM_USD=10,AFF_MIN_PAYOUT=10;
+const AFF_TRIAL_USD=5,AFF_PERM_USD=10,AFF_MIN_PAYOUT=20;
 
 let SUB_PRICE_USD=33,SUB_PRICE_USD_PERMANENT=100,USD_RATE_EGP=50;
 function PRICE_EGP(){return SUB_PRICE_USD*USD_RATE_EGP}
@@ -1175,6 +1194,21 @@ $('#authClose').onclick=closeAuth;
 document.addEventListener('click',e=>{const a=e.target.closest('[data-auth]');if(a){e.preventDefault();openAuth(a.dataset.auth)}const s=e.target.closest('[data-scroll]');if(s){e.preventDefault();const id=s.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}});
 function aErr(id,m){const e=$('#'+id);e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4500)}
 let loginBusy=false;
+/* الدخول بجوجل: بيروح لجوجل وبيرجع على الموقع والجلسة بتتسجل تلقائياً (الحساب بيتعمل أول مرة تلقائياً) */
+$('#gBtn').onclick=async()=>{
+  const b=$('#gBtn');b.disabled=true;b.querySelector('span').textContent='جاري التحويل لجوجل...';
+  try{
+    const ac=new AbortController();const at=setTimeout(()=>ac.abort(),6000);
+    const st=await fetch(SUPABASE_URL+'/auth/v1/settings',{headers:{apikey:SUPABASE_KEY},signal:ac.signal}).then(r=>r.json()).catch(()=>null);clearTimeout(at);
+    if(st&&st.external&&st.external.google===false)throw new Error('provider not enabled');
+    const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}});
+    if(error)throw error;
+  }catch(e){
+    b.disabled=false;b.querySelector('span').textContent='الدخول بحساب جوجل';
+    const tab=$('#rf').classList.contains('on')?'re':'le';
+    aErr(tab,/not enabled|provider/i.test(e.message||'')?'الدخول بجوجل لسه متفعّلش من الإدارة':'تعذر الدخول بجوجل، جرب تاني');
+  }
+};
 const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
 $('#lf').onsubmit=async e=>{
   e.preventDefault();
@@ -1212,7 +1246,16 @@ $('#rf').onsubmit=async e=>{
   finally{loginBusy=false;btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> إنشاء الحساب'}
 };
 function afterLogin(){showApp();[syncOneSignalUser,initRealtime,applyPendingReferral].forEach(f=>{try{f()}catch(e){}});fetchRecos().then(l=>{window._recsCache=l;updateRB()}).catch(()=>{})}
-async function doLogout(){try{history.replaceState(null,'','#')}catch(e){}stopAllTimers();removeRealtime();await sb.auth.signOut();AUTH=null;CU=null;cacheCU();$('#lE').value='';$('#lP').value='';showLanding();window.scrollTo(0,0)}
+/* خروج فوري: بنمسح الجلسة من الجهاز ونرجع للرئيسية على طول، وإبلاغ السيرفر بيكمل في الخلفية */
+async function doLogout(){
+  let tok=null;try{tok=JSON.parse(localStorage.getItem(SB_STORE_KEY)||'null')?.access_token||null}catch(e){}
+  try{history.replaceState(null,'','#')}catch(e){}stopAllTimers();removeRealtime();AUTH=null;CU=null;cacheCU();
+  try{localStorage.removeItem(SB_STORE_KEY)}catch(e){}
+  $('#lE').value='';$('#lP').value='';showLanding();window.scrollTo(0,0);toast('تم تسجيل الخروج','ok');
+  /* إلغاء الجلسة على السيرفر (التوكن مبيفضلش صالح) + تنضيف الذاكرة */
+  if(tok)fetch(SUPABASE_URL+'/auth/v1/logout?scope=local',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+tok},keepalive:true}).catch(()=>{});
+  sb.auth.signOut({scope:'local'}).catch(()=>{});
+}
 window.doLogout=doLogout;
 
 /* ===== القائمة والتنقل ===== */
@@ -1229,7 +1272,7 @@ function renderPage(p){
   $$('.bni').forEach(e=>e.classList.toggle('on',e.dataset.n===p));
   $$('.dr-links a[data-m]').forEach(e=>e.classList.toggle('cur',e.dataset.m===p));
   const c=$('#ct');window.scrollTo(0,0);
-  c.classList.toggle('full',false);
+  c.classList.remove('full','chatp');document.body.dataset.page=p;
   (R[p]||(()=>{c.innerHTML='<div class="es"><i class="fas fa-tools ei"></i><p>قيد التطوير</p></div>'}))(c);
 }
 function go(p){
@@ -1249,6 +1292,8 @@ $('#mod').onclick=e=>{if(e.target.id==='mod')closeM()};
 $('#mbx').addEventListener('click',e=>{if(e.target.closest('.mc'))closeM()});
 $('#notifBtn').onclick=()=>go('notifications');
 $('#supFab').onclick=()=>{$('#supDot').style.display='none';go('chat')};
+/* زرار الدعم بيختفي وإنت بتعمل سكرول ويرجع بعد ما تقف */
+(function(){let t=0;const fab=$('#supFab');window.addEventListener('scroll',()=>{fab.classList.add('away');clearTimeout(t);t=setTimeout(()=>fab.classList.remove('away'),700)},{passive:true})})();
 
 async function getVisitorCount(){try{const {data}=await sb.from('site_stats').select('visits').eq('id',1).maybeSingle();return data?.visits||0}catch(e){return 0}}
 async function incrementVisitor(){try{const key='blo_visited_'+new Date().toDateString();if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');await sb.rpc('increment_visits')}catch(e){}}
@@ -1567,14 +1612,17 @@ function renderBubbles(body,msgs,isMineFn,mineAv,themAv,emptyHTML){if(!msgs.leng
 function compressImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');let w=img.width,h=img.height;if(w>1200){h=h*1200/w;w=1200}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cv.toBlob(b=>b?res(b):rej(new Error('img')),'image/jpeg',.85)};img.onerror=rej;img.src=ev.target.result};r.onerror=rej;r.readAsDataURL(file)})}
 R.chat=async c=>{
   if(!CU)return;
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-headset"></i> المحادثة مع الإدارة</h2><div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right">متصل الآن · رد سريع</div></div></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
+  c.classList.add('chatp');
+  c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="chat-scroll" id="chatBody"></div><div class="quick-r" id="quickR"><button>عايز أشترك 👑</button><button>عندي مشكلة في الدفع 💳</button><button>سؤال عن توصية 📈</button><button>اتأكد من إيداعي ✅</button></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
   const av=esc((CU.username||'أ').charAt(0).toUpperCase());
   const renderMsgs=async()=>{const msgs=await fetchChatMsgs();const body=$('#chatBody');if(!body)return;renderBubbles(body,msgs,m=>m.sender==='user',av,'<i class="fas fa-headset" style="font-size:.7rem"></i>',`<div class="chat-empty"><i class="fas fa-comments"></i><h4>أهلاً بيك 👋</h4><p>مفيش رسايل لسه. ابدأ المحادثة مع فريق الإدارة وهنرد عليك في أسرع وقت.</p></div>`)};
   await renderMsgs();
   try{await sb.from('chat_messages').update({is_read:true}).eq('user_id',CU.id).eq('sender','admin')}catch(e){}
   $('#chatImg').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024)return toast('الصورة كبيرة (max 5MB)','er');toast('جاري رفع الصورة...');try{const blob=await compressImage(f);const fn=`chat_${CU.id}_${Date.now()}.jpg`;const {error:up}=await sb.storage.from('proofs').upload(fn,blob,{contentType:'image/jpeg'});if(up)return toast('خطأ في الرفع','er');await sendChatMsg(null,sb.storage.from('proofs').getPublicUrl(fn).data.publicUrl);toast('✅ تم إرسال الصورة','ok');renderMsgs()}catch(err){toast('خطأ','er')}};
-  const sendNow=async()=>{const t=$('#chatTxt').value.trim();if(!t)return;const btn=$('#chatSend');btn.disabled=true;try{await sendChatMsg(t,null);$('#chatTxt').value='';await renderMsgs()}catch(e){toast('خطأ','er')}btn.disabled=false};
-  $('#chatSend').onclick=sendNow;$('#chatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
+  /* الرسالة بتظهر فوراً (قبل رد السيرفر) وبعدين بتتأكد */
+  const sendNow=async(preset)=>{const t=(typeof preset==='string'?preset:$('#chatTxt').value).trim();if(!t)return;const body=$('#chatBody');$('#chatTxt').value='';body.querySelector('.chat-empty')?.remove();body.insertAdjacentHTML('beforeend',bubbleHTML({body:t,created_at:new Date().toISOString()},true,av,''));const pend=body.lastElementChild;pend.style.opacity='.6';body.scrollTop=body.scrollHeight;try{await sendChatMsg(t,null);pend.style.opacity='';renderMsgs()}catch(e){pend.remove();$('#chatTxt').value=t;toast('الرسالة متبعتتش، جرب تاني','er')}};
+  $('#chatSend').onclick=()=>sendNow();$('#chatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
+  $$('#quickR button').forEach(b=>b.onclick=()=>sendNow(b.textContent));
   if(chatChannel){try{sb.removeChannel(chatChannel)}catch(e){}}
   chatChannel=sb.channel('chat-user-'+CU.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${CU.id}`},()=>{if(currentPage==='chat')renderMsgs()}).subscribe();
 };
