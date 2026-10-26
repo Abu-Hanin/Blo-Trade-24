@@ -440,17 +440,17 @@ html:not(.has-sess) #tst{bottom:24px}
 .pf{padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);font-size:.72rem;color:var(--mt);font-weight:700}
 .pf b{font-family:Poppins,sans-serif;direction:ltr;display:inline-block;margin-right:3px}
 /* مسار الأهداف: بيبدأ من اليمين (منطقة الدخول) ويكمّل للشمال، وكل نقطة فوق الهدف بتاعها */
-.rc-track{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 -4px;padding-right:6px}
-.rc-track::before{content:'';position:absolute;right:0;top:50%;width:10px;height:10px;border-radius:50%;transform:translateY(-50%);background:#A855F7;box-shadow:0 0 0 3px rgba(168,85,247,.25),0 0 10px #A855F7}
-.trk{display:flex;align-items:center;height:28px;min-width:0}
-.trk .tb2{position:relative;flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;margin-left:-3px;border:1px solid rgba(255,255,255,.05)}
-.trk .tb2 i{position:absolute;top:0;bottom:0;right:0;width:0;border-radius:6px;background:linear-gradient(270deg,#7C3AED,#A855F7 45%,#22D3EE);box-shadow:0 0 10px rgba(34,211,238,.45);transition:width 1s cubic-bezier(.2,.9,.2,1)}
-.trk .nd{position:relative;z-index:1;width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;font-family:Poppins,sans-serif;color:#CFC6F2;background:#1A1233;border:2px solid #4C3D7A;transition:.4s}
-.trk.done .tb2{border-color:rgba(74,222,128,.45)}
-.trk.done .tb2 i{width:100%!important;background:linear-gradient(270deg,#16A34A,#22C55E,#86EFAC);box-shadow:0 0 14px rgba(74,222,128,.7)}
-.trk.done .tb2::after{content:'';position:absolute;inset:0;background:linear-gradient(250deg,transparent 30%,rgba(255,255,255,.6) 50%,transparent 70%);background-size:220% 100%;animation:segShine 2.4s ease-in-out infinite}
-.trk.done .nd{color:#fff;background:linear-gradient(135deg,#16A34A,#22C55E);border-color:#BBF7D0;box-shadow:0 0 0 4px rgba(34,197,94,.18),0 0 14px rgba(74,222,128,.8)}
-.trk.just .nd{animation:segPop 1.4s cubic-bezier(.2,1.4,.4,1)}
+.rc-track{position:relative;height:28px;margin:8px 0 12px}
+.rc-track::before{content:'';position:absolute;right:-1px;top:50%;width:10px;height:10px;border-radius:50%;transform:translateY(-50%);background:#A855F7;box-shadow:0 0 0 3px rgba(168,85,247,.25),0 0 10px #A855F7;z-index:2}
+.trk-line{position:absolute;top:50%;right:0;left:16.6667%;height:6px;transform:translateY(-50%);border-radius:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06);overflow:hidden}
+.trk-line i{position:absolute;top:0;bottom:0;right:0;width:0;border-radius:6px;transition:width 1.1s cubic-bezier(.2,.9,.2,1)}
+.trk-line .pg{background:linear-gradient(270deg,#7C3AED,#A855F7 50%,#22D3EE);box-shadow:0 0 10px rgba(34,211,238,.45)}
+.trk-line .ok{background:linear-gradient(270deg,#16A34A,#22C55E,#86EFAC);box-shadow:0 0 12px rgba(74,222,128,.7);overflow:hidden}
+.trk-line .ok::after{content:'';position:absolute;inset:0;background:linear-gradient(250deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:220% 100%;animation:segShine 2.6s ease-in-out infinite}
+.rc-track .nd{position:absolute;top:50%;transform:translate(50%,-50%);z-index:3;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;font-family:Poppins,sans-serif;color:#CFC6F2;background:#1A1233;border:2px solid #4C3D7A;transition:background .4s,border-color .4s,box-shadow .4s}
+.rc-track .nd.done{color:#fff;background:linear-gradient(135deg,#16A34A,#22C55E);border-color:#BBF7D0;box-shadow:0 0 0 4px rgba(34,197,94,.18),0 0 14px rgba(74,222,128,.8)}
+.rc-track .nd.just{animation:ndPop 1.4s cubic-bezier(.2,1.4,.4,1)}
+@keyframes ndPop{0%{transform:translate(50%,-50%) scale(1)}25%{transform:translate(50%,-50%) scale(1.3)}100%{transform:translate(50%,-50%) scale(1)}}
 .rc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:4px 0 2px}
 .sg-bar{position:relative;height:9px;border-radius:7px;background:rgba(255,255,255,.07);overflow:hidden;border:1px solid rgba(255,255,255,.05)}
 .sg-bar i{position:absolute;inset:0 auto 0 0;border-radius:7px;background:linear-gradient(90deg,#7C3AED,#22D3EE);transition:width .9s cubic-bezier(.2,.9,.2,1);box-shadow:0 0 10px rgba(34,211,238,.45)}
@@ -475,11 +475,12 @@ html:not(.has-sess) #tst{bottom:24px}
 .tg .tl{font-size:.64rem;color:var(--mt);font-weight:800}
 .tg .tv{font-size:.88rem;font-weight:800;color:#fff;direction:ltr;font-family:Poppins,sans-serif;word-break:break-all;margin-top:2px}
 .tg .tv small{font-size:.58rem;color:var(--mt);font-weight:700}
+.tg.hit::after{display:none!important}
 .tg .tp2{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:8px;font-size:.66rem;font-weight:800;color:var(--ok2);background:rgba(34,197,94,.12);direction:ltr;font-family:Poppins,sans-serif}
 .tg.hit .tv small{color:#86EFAC}
 .tg.hit{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.55)}
 .tg.hit .tv{color:var(--ok2)}
-.tg.hit::after{display:none;content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:-8px;left:-6px;width:22px;height:22px;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;box-shadow:0 4px 10px rgba(34,197,94,.5);animation:checkPop .35s cubic-bezier(.18,.89,.32,1.28)}
+.tg.hit::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:-8px;left:-6px;width:22px;height:22px;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;box-shadow:0 4px 10px rgba(34,197,94,.5);animation:checkPop .35s cubic-bezier(.18,.89,.32,1.28)}
 @keyframes checkPop{from{transform:scale(0)}to{transform:scale(1)}}
 .rc-sl{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3)}
 .rc-sl span{color:#FCA5A5;font-size:.78rem;font-weight:800}
@@ -1021,7 +1022,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.26.3';
+const APP_VERSION='2026.10.26.4';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1415,6 +1416,10 @@ function recoState(r,price,high){
   const seg=[0,1,2].map(i=>{if(hit[i])return 100;const a=P[i],b=P[i+1];if(a==null||b==null||b<=a||!ref)return 0;return Math.max(0,Math.min(100,(ref-a)/(b-a)*100))});
   return {cls,label,hit,hitSL,best,live,pos,nowPos,mk,tp,n,seg};
 }
+/* مسار الأهداف: شريط واحد متصل من منطقة الدخول (يمين) لحد هدف 3 (شمال)، وكل نقطة قصاد الهدف بتاعها */
+const TRK_POS=[100/6,50,500/6];
+function trackFill(st){const P=[0,...TRK_POS];let all=0,ok=0;for(let i=0;i<3;i++){const L=P[i+1]-P[i];if(st.hit[i]){all=P[i+1];ok=P[i+1];continue}all=P[i]+L*(st.seg[i]||0)/100;break}return {all:all/TRK_POS[2]*100,ok:ok/TRK_POS[2]*100}}
+function trackHTML(st){const f=trackFill(st);return `<div class="rc-track"><div class="trk-line"><i class="pg" style="width:${f.all}%"></i><i class="ok" style="width:${f.ok}%"></i></div>${TRK_POS.map((p,i)=>`<span class="nd ${st.hit[i]?'done':''}" data-seg="${i+1}" style="right:${p}%">${st.hit[i]?'<i class="fas fa-check"></i>':i+1}</span>`).join('')}</div>`}
 /* عرض الهدف: السعر + USDT + النسبة فقط (من غير أي كلام زيادة مكتوب في نص الهدف) */
 function targetView(t,calcPct){const s=String(t||'').replace(/,/g,'');const m=s.match(/\d+(\.\d+)?/);const pm=s.match(/([+\-]?\d+(?:\.\d+)?)\s*%/);let pct=null;if(pm){const v=parseFloat(pm[1]);pct=(v>=0&&!/^[+\-]/.test(pm[1])?'+':'')+pm[1]+'%'}else if(calcPct!=null)pct=pctStr(calcPct);return {price:m?esc(m[0])+' <small>USDT</small>':esc(t||'-'),pct}}
 function buildRecoCard(r,p,recoHigh,opts){
@@ -1427,7 +1432,7 @@ function buildRecoCard(r,p,recoHigh,opts){
   <div class="rc-body">
   <div class="rc-stat"><span class="rc-lbl">${st.label}</span><button class="rc-chart" data-chart="${sym}"><i class="fas fa-chart-area"></i> المؤشر</button><div class="rc-profit"><span class="pf">الربح المحقق <b class="${st.best!=null?'up':''} rc-best">${st.best!=null?pctStr(st.best):'—'}</b></span>${opts.noLive?'':`<span class="pf">من الدخول <b class="rc-live ${st.live!=null?(st.live>=0?'up':'dn'):''}">${st.live!=null?pctStr(st.live):'—'}</b></span>`}</div></div>
   <div class="rc-entry"><span>📍 منطقة الدخول</span><b>${esc(r.entry||'-')}</b></div>
-  <div class="rc-track">${[0,1,2].map(i=>`<div class="trk ${st.hit[i]?'done':''}" data-seg="${i+1}"><div class="tb2"><i style="width:${st.seg[i]}%"></i></div><span class="nd">${st.hit[i]?'<i class="fas fa-check"></i>':i+1}</span></div>`).join('')}</div>
+  ${trackHTML(st)}
   <div class="rc-tg">${[r.target1,r.target2,r.target3].map((t,i)=>{const v=targetView(t,st.tp[i]);return `<div class="tg ${st.hit[i]?'hit':''}" data-t="${i+1}"><div class="tl">هدف ${i+1}</div><div class="tv">${v.price}</div>${v.pct?`<div class="tp2">${v.pct}</div>`:''}</div>`}).join('')}</div>
   <div class="rc-sl ${st.hitSL?'hit':''}"><span>🛑 وقف الخسارة</span><b>${esc(r.stop_loss||'-')}</b></div>
   ${r.notes&&!opts.noNotes?`<div class="rc-notes">📝 ${esc(r.notes)}</div>`:''}
@@ -1454,7 +1459,8 @@ async function updateRecoPrices(quiet){
     const be=card.querySelector('.rc-best');if(be){be.textContent=st.best!=null?pctStr(st.best):'—';be.className='rc-best '+(st.best!=null?'up':'')}
     const le=card.querySelector('.rc-live');if(le&&st.live!=null){le.textContent=pctStr(st.live);le.className='rc-live '+(st.live>=0?'up':'dn')}
     /* الهدف اللي اتحقق بيفضل متعلّم ✓ حتى لو السعر نزل بعد كده (مبنيين على أعلى سعر وصله) */
-    [0,1,2].forEach(i=>{const sg=card.querySelector(`.trk[data-seg="${i+1}"]`);if(!sg)return;const bar=sg.querySelector('.tb2 i');if(sg.classList.contains('done'))return;if(bar)bar.style.width=st.seg[i]+'%';if(st.hit[i]){sg.classList.add('done','just');sg.querySelector('.nd').innerHTML='<i class="fas fa-check"></i>';setTimeout(()=>sg.classList.remove('just'),1600);if(!quiet&&card.dataset.ready==='1')toast('🎯 '+card.dataset.sym+' حققت هدف '+(i+1),'ok')}});
+    {const f=trackFill(st),pg=card.querySelector('.trk-line .pg'),okb=card.querySelector('.trk-line .ok');if(pg&&f.all>=parseFloat(pg.style.width||0))pg.style.width=f.all+'%';if(okb&&f.ok>=parseFloat(okb.style.width||0))okb.style.width=f.ok+'%'}
+    [0,1,2].forEach(i=>{const nd=card.querySelector(`.rc-track .nd[data-seg="${i+1}"]`);if(!nd||nd.classList.contains('done')||!st.hit[i])return;nd.classList.add('done','just');nd.innerHTML='<i class="fas fa-check"></i>';setTimeout(()=>nd.classList.remove('just'),1600);if(!quiet&&card.dataset.ready==='1')toast('🎯 '+card.dataset.sym+' حققت هدف '+(i+1),'ok')});
     if(quiet)card.dataset.ready='1';
   });
 }
