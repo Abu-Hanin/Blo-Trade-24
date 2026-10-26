@@ -211,6 +211,17 @@ html.has-sess .guest-only,html:not(.has-sess) .user-only{display:none!important}
 .pf .pst:active{transform:translateY(-50%) scale(.92)}
 .pf .ip.pasted{border-color:#22C55E;box-shadow:0 0 0 3px rgba(34,197,94,.22)}
 .pf-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.pf-3 .ip{padding-left:36px;font-size:.85rem}.pf-3 .pst{width:28px;height:28px;left:4px}
+.push-card{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 14px;border-radius:18px;background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(236,72,153,.18));border:1px solid rgba(236,72,153,.45);box-shadow:0 10px 30px rgba(124,58,237,.18)}
+.push-card.on{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.35);box-shadow:none}
+.push-card .pc-ico{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff;font-size:1.05rem;animation:pcRing 2.4s ease-in-out infinite}
+.push-card.on .pc-ico{background:rgba(34,197,94,.2);color:#4ADE80;animation:none}
+@keyframes pcRing{0%,70%,100%{transform:rotate(0)}75%{transform:rotate(-14deg)}80%{transform:rotate(12deg)}85%{transform:rotate(-8deg)}90%{transform:rotate(5deg)}}
+.push-card .pc-t{flex:1;min-width:0}.push-card .pc-t b{display:block;color:#fff;font-size:.92rem}.push-card .pc-t small{display:block;color:#D8CCF5;font-size:.72rem;line-height:1.6;margin-top:2px}
+.push-card .pc-btn{flex:none;padding:9px 12px;border-radius:12px;background:#fff;color:#1A0B33;font-weight:800;font-size:.76rem;white-space:nowrap;cursor:pointer}
+.push-card .pc-btn.ghost{background:rgba(255,255,255,.08);color:#E9D5FF;border:1px solid rgba(255,255,255,.15)}.push-card .pc-btn:disabled{opacity:.7}
+.chat-push .push-card{margin:8px 10px 0;padding:10px 12px}
+@media(max-width:420px){.push-card{flex-wrap:wrap}.push-card .pc-btn{width:100%;text-align:center}}
+.push-steps{margin:10px 0 0;padding-right:20px;display:flex;flex-direction:column;gap:10px;color:#E9D5FF;font-size:.88rem;line-height:1.8}.push-steps b{color:#fff}
 .pf-hint{display:flex;align-items:center;gap:8px;font-size:.74rem;font-weight:700;color:#C4B5FD;background:rgba(168,85,247,.10);border:1px dashed rgba(168,85,247,.35);border-radius:12px;padding:8px 10px}
 #tst{position:fixed;left:50%;bottom:calc(var(--bn) + 26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(30px);z-index:99990;display:flex;align-items:center;gap:10px;max-width:min(92vw,440px);padding:12px 18px;border-radius:18px;background:linear-gradient(160deg,rgba(34,22,68,.97),rgba(11,6,25,.97));border:1px solid rgba(168,85,247,.5);color:#fff;font-weight:700;font-size:.9rem;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 30px rgba(168,85,247,.25);opacity:0;pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,1.2,.3,1)}
 #tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -685,7 +696,7 @@ body[data-page="chat"] .sup-fab{display:none}
 
 /* ===== مؤشر سعر العملة ===== */
 #mod.chart{padding:2vh 2vw}
-.mbx.wide{width:min(1280px,96vw);height:min(94vh,900px);max-height:none;padding:18px 18px 14px;display:flex;flex-direction:column}
+.mbx.wide{width:min(1280px,96vw);height:min(94vh,900px);max-height:none;padding:18px 18px 14px;display:flex;flex-direction:column;background:linear-gradient(165deg,#1A1033 0%,#0B0619 55%,#07040F 100%)}
 .mbx.wide .ch-box{flex:1;height:auto;min-height:220px}
 @media(max-width:640px){#mod.chart{padding:0}.mbx.wide{width:100vw;height:100dvh;border-radius:0;border:none;padding:14px 12px calc(12px + env(safe-area-inset-bottom,0px))}}
 .ch-big{font-size:1.7rem!important;font-weight:900}
@@ -1082,7 +1093,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.27.2';
+const APP_VERSION='2026.10.27.3';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1183,8 +1194,50 @@ OneSignalDeferred.push(async function(OneSignal){
 function syncOneSignalUser(){
   if(!AUTH)return;
   try{window.OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.login(AUTH.id);if(AUTH.email)await OneSignal.User.addTag('email',AUTH.email);if(AUTH.email&&AUTH.email.toLowerCase()===ADMIN_EMAIL.toLowerCase()){await OneSignal.User.addAlias('external_id','admin');await OneSignal.User.addTag('is_admin','true')}}catch(e){}})}catch(e){}
-  syncSubTag();
+  syncSubTag();ensurePush();
 }
+/* ===== إشعارات الجهاز (زي واتساب: بتوصل في شريط الإشعارات حتى والتطبيق مقفول) =====
+   السيرفر بيبعت للجهاز المربوط بحساب المستخدم — فلازم الجهاز يكون مسموح له ومربوط بالحساب */
+const IS_IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const IS_STANDALONE=(()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}})();
+function osReady(){return new Promise(res=>{let done=false;const t=setTimeout(()=>{if(!done){done=true;res(null)}},9000);window.OneSignalDeferred.push(async OS=>{if(done)return;done=true;clearTimeout(t);res(OS)})})}
+function pushState(){if(IS_IOS&&!IS_STANDALONE)return 'ios-install';if(!('Notification' in window)||!('serviceWorker' in navigator))return 'unsupported';if(Notification.permission==='denied')return 'denied';if(Notification.permission==='granted'&&pushOn())return 'on';return 'off'}
+let ensuring=false;
+async function ensurePush(){if(!AUTH||ensuring)return;ensuring=true;try{const OS=await osReady();if(!OS)return;if(OS.User.externalId!==AUTH.id)await OS.login(AUTH.id);if(Notification.permission==='granted'&&!OS.User.PushSubscription.optedIn)await OS.User.PushSubscription.optIn()}catch(e){}finally{ensuring=false;renderPushCard()}}
+async function enablePush(btn){
+  if(IS_IOS&&!IS_STANDALONE){pushHelp('ios');return}
+  const OS=await osReady();if(!OS){toast('الإشعارات مش جاهزة دلوقتي، جرب تاني كمان شوية','er');return}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري التفعيل...'}
+  try{
+    if(Notification.permission!=='granted')await OS.Notifications.requestPermission();
+    if(Notification.permission==='granted'){await OS.login(AUTH.id);if(!OS.User.PushSubscription.optedIn)await OS.User.PushSubscription.optIn();lastSubTag=null;syncSubTag();toast('✅ الإشعارات اتفعلت','ok');setTimeout(()=>testPush(true),3500)}
+    else if(Notification.permission==='denied')pushHelp('denied');
+  }catch(e){toast('تعذر تفعيل الإشعارات، جرب تاني','er')}
+  finally{renderPushCard()}
+}
+async function testPush(auto){
+  const r=await notifyServer('test_push',{});
+  if(r&&r.ok){if(!auto)toast('📨 اتبعتلك إشعار تجريبي، بص على شريط الإشعارات','ok');return}
+  if(auto){setTimeout(()=>notifyServer('test_push',{}),6000);return}
+  toast((r&&r.error)||'الإشعار ما اتبعتش، جرب تاني','er');
+}
+function pushHelp(kind){
+  const steps=kind==='ios'?['اضغط زرار المشاركة <i class="fas fa-arrow-up-from-bracket"></i> تحت في سفاري','اختار <b>إضافة إلى الشاشة الرئيسية</b>','افتح التطبيق من الأيقونة الجديدة وفعّل الإشعارات من جوه']
+    :['لو فاتح من المتصفح: اضغط على القفل 🔒 جنب الرابط ← <b>الأذونات</b> ← <b>الإشعارات</b> ← سماح','لو فاتح التطبيق المثبت: إعدادات الموبايل ← <b>التطبيقات</b> ← <b>Blo Trade 24</b> ← <b>الإشعارات</b> ← تشغيل','ارجع للتطبيق واضغط <b>تفعيل الإشعارات</b> تاني'];
+  openM(`<button class="mc">✕</button><h3><i class="fas fa-bell"></i> ${kind==='ios'?'تفعيل الإشعارات على الآيفون':'الإشعارات مقفولة على الجهاز'}</h3><ol class="push-steps">${steps.map(s=>`<li>${s}</li>`).join('')}</ol>`);
+}
+function renderPushCard(){
+  $$('.push-slot').forEach(el=>{
+    const st=pushState(),full=el.dataset.full==='1';
+    if(st==='unsupported'||(st==='on'&&!full)){el.innerHTML='';return}
+    if(st==='on'){el.innerHTML=`<div class="push-card on"><span class="pc-ico"><i class="fas fa-bell"></i></span><div class="pc-t"><b>الإشعارات شغالة ✅</b><small>هتوصلك الرسايل والتوصيات على طول</small></div><button class="pc-btn ghost" data-ptest>إشعار تجريبي</button></div>`}
+    else{const txt=st==='denied'?['الإشعارات مقفولة على جهازك','افتحها من الإعدادات عشان توصلك ردود الدعم والتوصيات','إزاي أفتحها؟']:st==='ios-install'?['ضيف التطبيق للشاشة الرئيسية','على الآيفون الإشعارات بتشتغل من التطبيق المثبت بس','إزاي؟']:['فعّل الإشعارات 🔔','عشان توصلك ردود الدعم والتوصيات الجديدة فوراً — حتى والتطبيق مقفول','تفعيل الإشعارات'];
+      el.innerHTML=`<div class="push-card"><span class="pc-ico"><i class="fas fa-bell"></i></span><div class="pc-t"><b>${txt[0]}</b><small>${txt[1]}</small></div><button class="pc-btn" data-pon>${txt[2]}</button></div>`}
+    el.querySelector('[data-pon]')?.addEventListener('click',e=>{const s=pushState();if(s==='denied')pushHelp('denied');else enablePush(e.currentTarget)});
+    el.querySelector('[data-ptest]')?.addEventListener('click',()=>testPush(false));
+  });
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH)ensurePush()});
 /* تاج المشترك: إشعارات تحقيق الأهداف بتروح للمشتركين بس (السيرفر بيفلتر عليه) */
 let lastSubTag=null;
 function syncSubTag(){if(!AUTH||!CU)return;const v=isSub()?'1':'0';if(v===lastSubTag)return;lastSubTag=v;try{window.OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.User.addTag('sub',v)}catch(e){lastSubTag=null}})}catch(e){}}
@@ -1374,11 +1427,12 @@ R.home=async c=>{
   const tiles=[['recs','fa-chart-line','التوصيات','توصيات يومية مدروسة','#7C3AED',!s],['words','fa-key','كلمة اليوم','كلمة باينانس اليومية','#F59E0B',!s],['news','fa-newspaper','أخبار العملات','آخر أخبار الكريبتو بالعربي','#EC4899'],['done','fa-check-double','التوصيات المكتملة','حققت أهدافها الثلاثة','#22C55E'],['bubble','fa-circle-nodes','فقاعة العملات','+100 عملة لحظياً','#22D3EE'],['market','fa-globe','سوق العملات','أسعار لحظية مباشرة','#3B82F6'],['gold','fa-coins','أسعار الذهب','أسعار لحظية + حاسبة','#FBBF24'],['affiliate','fa-handshake','التسويق بالعمولة','5$ و10$ عن كل اشتراك','#16A34A']];
   if(CU.role==='admin')tiles.push(['winner','fa-trophy','اختيار الفائز','للأدمن فقط','#F59E0B']);
   const cd=s&&!isPermanentSub()&&CU.role!=='admin'?`<span class="chip pur"><i class="fas fa-hourglass-half"></i> متبقي ${subDaysLeft()} يوم</span>`:'';
-  c.innerHTML=`<div id="admMsgs"></div>
+  c.innerHTML=`<div id="admMsgs"></div><div class="push-slot"></div>
   <div class="welcome-box reveal"><div class="wb-top"><div class="wb-av">${esc((CU.username||'U').charAt(0).toUpperCase())}</div><div class="wb-hi"><small>أهلاً بيك 👋</small><h2>${esc(CU.username||'')}</h2></div><div class="wb-meta">${planChip()}${cd}<span class="chip pur" id="visBadge"><i class="fas fa-eye"></i> — زيارة</span></div></div></div>
   <div class="mini-tk" id="miniTk">${['BTC','ETH','BNB','SOL'].map(x=>`<div class="mt-c" data-s="${x}">${coinImg(x)}<div><b>${x}/USDT</b><div class="mp">—</div><div class="mch">—</div></div></div>`).join('')}</div>
   <div class="tiles">${tiles.map((t,i)=>`<a class="tile reveal" style="--c:${t[4]};animation-delay:${i*.04}s" data-go="${t[0]}">${t[5]?'<span class="lk"><i class="fas fa-lock"></i></span>':''}<span class="t-ico"><i class="fas ${t[1]}"></i></span><span class="t-txt"><b>${t[2]}</b><small>${t[3]}</small></span></a>`).join('')}</div>
   ${!s?`<h3 class="sub-t" style="margin-top:26px"><i class="fas fa-crown"></i> اختار خطتك</h3><div class="plans">${plansHTML(false)}</div>`:''}`;
+  renderPushCard();
   getVisitorCount().then(v=>{const b=$('#visBadge');if(b)b.innerHTML='<i class="fas fa-eye"></i> '+v.toLocaleString('en-US')+' زيارة'});
   const paintMini=pr=>{$$('#miniTk .mt-c').forEach(el=>{const p=pr[el.dataset.s];if(!p)return;const mp=el.querySelector('.mp'),ch=el.querySelector('.mch');const old=parseFloat(mp.dataset.v||0);mp.textContent=fmtPx(p.price);mp.dataset.v=p.price;if(old&&old!==p.price){mp.classList.remove('flash-up','flash-dn');void mp.offsetWidth;mp.classList.add(p.price>old?'flash-up':'flash-dn');setTimeout(()=>mp.classList.remove('flash-up','flash-dn'),900)}ch.textContent=(p.change>=0?'▲ ':'▼ ')+Math.abs(p.change).toFixed(2)+'%';ch.className='mch '+(p.change>=0?'up':'dn')})};
   const MS=['BTC','ETH','BNB','SOL'];const upd=async()=>paintMini(await fetchPricesBatch(MS));
@@ -1397,7 +1451,7 @@ R.prof=c=>{
     setTimeout(()=>{function tick(){const diff=end-Date.now();if(diff<=0){clearInterval(cdInterval);toast('انتهى اشتراكك','er');refreshUser().then(()=>go('prof'));return}const set=(id,v)=>{const el=$(id);if(el)el.textContent=v};set('#cdD',Math.floor(diff/864e5));set('#cdH',Math.floor(diff%864e5/36e5));set('#cdM',Math.floor(diff%36e5/6e4));set('#cdS',Math.floor(diff%6e4/1000))}tick();cdInterval=setInterval(tick,1000)},30)}
   else if(u.subscription_end&&new Date(u.subscription_end).getTime()<Date.now())subHTML=`<div class="gc" style="border-color:rgba(239,68,68,.5)"><h3 class="sub-t" style="margin-top:0;color:#FCA5A5"><i class="fas fa-circle-exclamation"></i> انتهى اشتراكك</h3><p style="color:var(--mt);font-size:.88rem;margin-bottom:12px">جدّد اشتراكك عشان ترجع تتابع التوصيات.</p><button class="btn-p btn-w" data-go="plans"><i class="fas fa-rotate"></i> تجديد الاشتراك</button></div>`;
   else subHTML=`<div class="gc"><h3 class="sub-t" style="margin-top:0"><i class="fas fa-star"></i> لم تشترك بعد</h3><p style="color:var(--mt);font-size:.88rem;line-height:1.8">خطة 180 يوم بـ <b style="color:#E9D5FF">${SUB_PRICE_USD}$</b> (${PRICE_EGP().toLocaleString('en-US')} ج.م) أو اشتراك دائم بـ <b style="color:#FDE68A">${SUB_PRICE_USD_PERMANENT}$</b>.</p><button class="btn-p btn-w" data-go="plans" style="margin-top:12px"><i class="fas fa-crown"></i> شوف الخطط</button></div>`;
-  c.innerHTML=`<h2 class="pt"><i class="fas fa-user-circle"></i> الملف الشخصي</h2>
+  c.innerHTML=`<h2 class="pt"><i class="fas fa-user-circle"></i> الملف الشخصي</h2><div class="push-slot" data-full="1"></div>
   <div class="gc reveal" style="margin-bottom:14px"><div class="prof-hero"><div class="prof-av">${esc((u.username||'U').charAt(0).toUpperCase())}</div><div class="pi"><div class="pn">${esc(u.username||'-')}</div><div class="pe">${esc(u.email||'-')}</div><div style="margin-top:8px">${planChip()}</div></div></div></div>
   <div class="reveal">${subHTML}</div>
   <h3 class="sub-t"><i class="fas fa-id-card"></i> معلومات الحساب</h3>
@@ -1412,6 +1466,7 @@ R.prof=c=>{
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px"><button class="btn-g btn-w" id="chPwdBtn"><i class="fas fa-key"></i> تغيير كلمة السر</button><button class="btn-d btn-p btn-w" id="profLogoutBtn"><i class="fas fa-right-from-bracket"></i> تسجيل خروج</button></div>`;
   $('#chPwdBtn').onclick=chPwdM;
   $('#profLogoutBtn').onclick=async()=>{if(await smConfirm('تسجيل الخروج؟','',true))doLogout()};
+  renderPushCard();
 };
 function chPwdM(){openM(`<button class="mc">✕</button><h3><i class="fas fa-key"></i> تغيير كلمة السر</h3><div class="mform"><div><label class="lb">كلمة السر الجديدة</label><input type="password" class="ip" id="nP" minlength="6" autocomplete="new-password"></div><div><label class="lb">تأكيد كلمة السر</label><input type="password" class="ip" id="nP2" minlength="6" autocomplete="new-password"></div><button class="btn-p" id="svP"><i class="fas fa-save"></i> حفظ</button></div>`);$('#svP').onclick=async()=>{const n1=$('#nP').value,n2=$('#nP2').value;if(n1.length<6)return toast('كلمة السر قصيرة','er');if(n1!==n2)return toast('غير متطابقتين','er');const btn=$('#svP');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.auth.updateUser({password:n1});btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> حفظ';if(error)return toast(error.message,'er');closeM();toast('تم تغيير كلمة السر','ok')}}
 
@@ -1664,8 +1719,9 @@ function compressImage(file){return new Promise((res,rej)=>{const r=new FileRead
 R.chat=async c=>{
   if(!CU)return;
   c.classList.add('chatp');
-  c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
+  c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="push-slot chat-push"></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
   const av=esc((CU.username||'أ').charAt(0).toUpperCase());
+  renderPushCard();
   const renderMsgs=async()=>{const msgs=await fetchChatMsgs();const body=$('#chatBody');if(!body)return;renderBubbles(body,msgs,m=>m.sender==='user',av,'<i class="fas fa-headset" style="font-size:.7rem"></i>',`<div class="chat-empty"><i class="fas fa-comments"></i><h4>أهلاً بيك 👋</h4><p>مفيش رسايل لسه. ابدأ المحادثة مع فريق الإدارة وهنرد عليك في أسرع وقت.</p></div>`)};
   await renderMsgs();
   try{await sb.from('chat_messages').update({is_read:true}).eq('user_id',CU.id).eq('sender','admin')}catch(e){}
@@ -1780,122 +1836,57 @@ function startBubbles(){
   size();
 }
 
-/* ===== مؤشرات العملة: شموع + متوسطات + بولينجر + حجم + RSI + MACD + ملخص فني (بيانات باينانس لحظية) ===== */
+/* ===== مؤشر العملة: شموع يابانية نضيفة (أخضر/أحمر) من باينانس لحظياً ===== */
 const CH_TF=[['15m','15 دقيقة',9e5],['1h','ساعة',36e5],['4h','4 ساعات',144e5],['1d','يوم',864e5],['1w','أسبوع',6048e5]];
-const CH_SHOW=110,CH_FETCH=320;
+const CH_SHOW=90;
 let CH=null;const CH_CACHE=new Map();
 function closeChart(){if(CH){clearInterval(CH.timer);clearInterval(CH.kTimer);window.removeEventListener('resize',CH.onR);CH=null}}
-/* --- حسابات المؤشرات (نفس المعادلات القياسية المستخدمة في منصات التداول) --- */
-function emaArr(v,n){const k=2/(n+1),o=new Array(v.length).fill(null);if(v.length<n)return o;let s=0;for(let i=0;i<n;i++)s+=v[i];let e=s/n;o[n-1]=e;for(let i=n;i<v.length;i++){e=v[i]*k+e*(1-k);o[i]=e}return o}
-function smaArr(v,n){const o=new Array(v.length).fill(null);let s=0;for(let i=0;i<v.length;i++){s+=v[i];if(i>=n)s-=v[i-n];if(i>=n-1)o[i]=s/n}return o}
-function rsiArr(c,n=14){const o=new Array(c.length).fill(null);if(c.length<=n)return o;let g=0,l=0;for(let i=1;i<=n;i++){const d=c[i]-c[i-1];if(d>=0)g+=d;else l-=d}g/=n;l/=n;o[n]=l===0?100:100-100/(1+g/l);for(let i=n+1;i<c.length;i++){const d=c[i]-c[i-1];g=(g*(n-1)+Math.max(d,0))/n;l=(l*(n-1)+Math.max(-d,0))/n;o[i]=l===0?100:100-100/(1+g/l)}return o}
-function macdArr(c){const a=emaArr(c,12),b=emaArr(c,26);const m=c.map((_,i)=>a[i]!=null&&b[i]!=null?a[i]-b[i]:null);const st=m.findIndex(x=>x!=null);const sig=new Array(c.length).fill(null);if(st>=0){const e=emaArr(m.slice(st),9);e.forEach((x,i)=>sig[st+i]=x)}return {m,sig,h:m.map((x,i)=>x!=null&&sig[i]!=null?x-sig[i]:null)}}
-function bbArr(c,n=20,k=2){const mid=smaArr(c,n),up=[],lo=[];for(let i=0;i<c.length;i++){if(mid[i]==null){up.push(null);lo.push(null);continue}let s=0;for(let j=i-n+1;j<=i;j++)s+=(c[j]-mid[i])**2;const sd=Math.sqrt(s/n);up.push(mid[i]+k*sd);lo.push(mid[i]-k*sd)}return {mid,up,lo}}
-function atrArr(d,n=14){const tr=d.map((x,i)=>i?Math.max(x.h-x.l,Math.abs(x.h-d[i-1].c),Math.abs(x.l-d[i-1].c)):x.h-x.l);const o=new Array(d.length).fill(null);if(d.length<n)return o;let a=tr.slice(0,n).reduce((s,v)=>s+v,0)/n;o[n-1]=a;for(let i=n;i<d.length;i++){a=(a*(n-1)+tr[i])/n;o[i]=a}return o}
-function stochArr(d,n=14,sm=3){const k=d.map((x,i)=>{if(i<n-1)return null;let hh=-Infinity,ll=Infinity;for(let j=i-n+1;j<=i;j++){hh=Math.max(hh,d[j].h);ll=Math.min(ll,d[j].l)}return hh===ll?50:(x.c-ll)/(hh-ll)*100});const st=k.findIndex(x=>x!=null);const kk=new Array(d.length).fill(null);if(st>=0)smaArr(k.slice(st),sm).forEach((x,i)=>kk[st+i]=x);return kk}
-function calcInd(d){const c=d.map(x=>x.c);const I={e20:emaArr(c,20),e50:emaArr(c,50),e200:emaArr(c,200),rsi:rsiArr(c),macd:macdArr(c),bb:bbArr(c),atr:atrArr(d),st:stochArr(d)};
-  const n=c.length-1,px=c[n],L=a=>a[n];const sig=[];const add=(name,val,s,txt)=>sig.push({name,val,s,txt});
-  const r=L(I.rsi);if(r!=null)add('RSI (14)',r.toFixed(1),r<30?1:r>70?-1:0,r<30?'تشبع بيع':r>70?'تشبع شراء':r>=50?'زخم إيجابي':'زخم سلبي');
-  const st=L(I.st);if(st!=null)add('Stochastic (14,3)',st.toFixed(1),st<20?1:st>80?-1:0,st<20?'تشبع بيع':st>80?'تشبع شراء':'محايد');
-  const m=L(I.macd.m),sg=L(I.macd.sig),h=L(I.macd.h),hp=I.macd.h[n-1];if(m!=null&&sg!=null){const cross=hp!=null&&Math.sign(hp)!==Math.sign(h);add('MACD (12,26,9)',(h>=0?'+':'')+fmtSig(h,px),m>sg?1:-1,cross?(h>0?'تقاطع صاعد جديد':'تقاطع هابط جديد'):(m>sg?'فوق خط الإشارة':'تحت خط الإشارة'))}
-  [['EMA 20',I.e20],['EMA 50',I.e50],['EMA 200',I.e200]].forEach(([nm,a])=>{const v=L(a);if(v!=null)add(nm,fmtPx(v),px>v?1:-1,px>v?'السعر فوقه':'السعر تحته')});
-  const e20=L(I.e20),e50=L(I.e50);if(e20!=null&&e50!=null)add('اتجاه المتوسطات',e20>e50?'20 > 50':'20 < 50',e20>e50?1:-1,e20>e50?'اتجاه صاعد':'اتجاه هابط');
-  const up=L(I.bb.up),lo=L(I.bb.lo);if(up!=null){const pb=(px-lo)/(up-lo)*100;add('Bollinger (20,2)',pb.toFixed(0)+'%',px<lo?1:px>up?-1:0,px<lo?'تحت الحد السفلي':px>up?'فوق الحد العلوي':pb>50?'النص العلوي':'النص السفلي')}
-  if(c.length>11){const mo=(px-c[n-10])/c[n-10]*100;add('الزخم (10)',(mo>=0?'+':'')+mo.toFixed(2)+'%',mo>0?1:-1,mo>0?'إيجابي':'سلبي')}
-  const score=sig.length?sig.reduce((s,x)=>s+x.s,0)/sig.length:0;
-  const verdict=score>=.5?['شراء قوي','sb']:score>=.15?['شراء','b']:score<=-.5?['بيع قوي','ss']:score<=-.15?['بيع','s']:['محايد','n'];
-  const look=d.slice(-50);const res=Math.max(...look.map(x=>x.h)),sup=Math.min(...look.map(x=>x.l));const atr=L(I.atr);
-  return {I,sig,score,verdict,buy:sig.filter(x=>x.s>0).length,sell:sig.filter(x=>x.s<0).length,neu:sig.filter(x=>x.s===0).length,res,sup,atrPct:atr!=null?atr/px*100:null}}
-function fmtSig(v,ref){const a=Math.abs(v);const dp=ref<0.01?8:ref<1?6:ref<100?4:2;return a.toFixed(dp)}
 function openChart(sym,info){
   sym=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(!sym)return;
   closeChart();
-  openM(`<button class="mc" id="chClose">✕</button><div class="ind">
-  <div class="ch-head">${coinBadge(sym)}<div><b>${sym}/USDT <span class="ch-live"><span class="live-dot"></span> لحظي</span></b><div class="chp ch-big" id="chPx">${info&&info.price?fmtPx(info.price):(PXC[sym]?fmtPx(PXC[sym].price):'—')}</div></div><span class="chip" id="chCh" style="margin-right:auto"></span></div>
-  <div class="ind-bar"><div class="ch-tf" id="chTf">${CH_TF.map((t,i)=>`<button data-i="${i}" class="${i===1?'on':''}">${t[1]}</button>`).join('')}</div><div class="ch-tf ind-type" id="chType"><button data-t="c" class="on" title="شموع"><i class="fas fa-chart-column"></i></button><button data-t="l" title="خط"><i class="fas fa-chart-line"></i></button></div></div>
-  <div class="ind-legend"><span><i style="background:#FBBF24"></i>EMA 20</span><span><i style="background:#A78BFA"></i>EMA 50</span><span><i style="background:#38BDF8"></i>EMA 200</span><span><i class="bbk"></i>Bollinger</span></div>
-  <div class="ch-box ind-main" id="chBox"><canvas id="chCv"></canvas><div class="ind-tip" id="chTip"></div><div class="ch-load" id="chLoad"><i class="fas fa-spinner fa-spin"></i> جاري تحميل المؤشرات...</div></div>
-  <div class="ind-sub"><div class="ind-sub-h"><b>RSI 14</b><span id="chRsiV">—</span></div><canvas id="chRsi"></canvas></div>
-  <div class="ind-sub"><div class="ind-sub-h"><b>MACD 12·26·9</b><span id="chMacdV">—</span></div><canvas id="chMacd"></canvas></div>
-  <div class="ind-grid">
-    <div class="ind-sum"><div class="ind-sum-h">الملخص الفني <small id="chSumTf"></small></div><canvas id="chGauge" width="260" height="150"></canvas><div class="ind-verdict" id="chVerdict">—</div><div class="ind-cnt"><span class="b"><b id="chBuy">0</b>شراء</span><span class="n"><b id="chNeu">0</b>محايد</span><span class="s"><b id="chSell">0</b>بيع</span></div></div>
-    <div class="ind-list" id="chList"></div>
-  </div>
-  <div class="ch-stats"><div><small>أعلى 24 ساعة</small><b id="chHi">—</b></div><div><small>أقل 24 ساعة</small><b id="chLo">—</b></div><div><small>حجم تداول 24 ساعة</small><b id="chVol">${info&&info.vol?'$'+fmtBig(info.vol):'—'}</b></div><div><small>التذبذب (ATR)</small><b id="chAtr">—</b></div><div><small>أقرب دعم</small><b id="chSup">—</b></div><div><small>أقرب مقاومة</small><b id="chRes">—</b></div></div>
-  <p class="ind-note"><i class="fas fa-circle-info"></i> المؤشرات محسوبة لحظياً من بيانات باينانس وللمعلومات فقط، مش نصيحة استثمارية.</p></div>`);
-  $('#mbx').classList.add('wide','ind');$('#mod').classList.add('chart');
-  const S=CH={sym,tf:1,type:'c',data:[],A:null,timer:0,kTimer:0,hover:null};
-  const cv=$('#chCv'),box=$('#chBox'),ctx=cv.getContext('2d'),rcv=$('#chRsi'),rctx=rcv.getContext('2d'),mcv=$('#chMacd'),mctx=mcv.getContext('2d');
-  const close=()=>{closeChart();$('#mbx').classList.remove('wide','ind');$('#mod').classList.remove('chart')};
+  openM(`<button class="mc" id="chClose">✕</button><div class="ch-head">${coinBadge(sym)}<div><b>${sym}/USDT <span class="ch-live"><span class="live-dot"></span> لحظي</span></b><div class="chp ch-big" id="chPx">${info&&info.price?fmtPx(info.price):(PXC[sym]?fmtPx(PXC[sym].price):'—')}</div></div><span class="chip" id="chCh" style="margin-right:auto"></span></div>
+  <div class="ch-tf" id="chTf">${CH_TF.map((t,i)=>`<button data-i="${i}" class="${i===1?'on':''}">${t[1]}</button>`).join('')}</div>
+  <div class="ch-box" id="chBox"><canvas id="chCv"></canvas><div class="ind-tip" id="chTip"></div><div class="ch-load" id="chLoad"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الشموع...</div></div>`);
+  $('#mbx').classList.add('wide');$('#mod').classList.add('chart');
+  const S=CH={sym,tf:1,data:[],timer:0,kTimer:0,hover:null,geo:null};
+  const cv=$('#chCv'),box=$('#chBox'),ctx=cv.getContext('2d');
+  const close=()=>{closeChart();$('#mbx').classList.remove('wide');$('#mod').classList.remove('chart')};
   $('#chClose').onclick=()=>{close();closeM()};
   const mod=$('#mod');const prevMod=mod.onclick;mod.onclick=e=>{if(e.target.id==='mod'){close();closeM();mod.onclick=prevMod}};
-  const set=(id,v,cls)=>{const e=$(id);if(e){e.textContent=v;if(cls!==undefined)e.className=cls}};
   async function load(force){
     const t=CH_TF[S.tf],ck=sym+'_'+t[0],tf=S.tf;
-    const cached=CH_CACHE.get(ck);if(cached&&!force){S.data=cached.d.map(x=>({...x}));$('#chLoad')?.remove();recalc();if(Date.now()-cached.at<30000)return}
-    try{const r=await binanceFetch({endpoint:'klines',symbol:sym+'USDT',interval:t[0],startTime:String(Date.now()-CH_FETCH*t[2]),limit:String(CH_FETCH)});if(!r||!r.ok)throw 0;const a=await r.json();if(!Array.isArray(a)||!a.length)throw 0;
-      const d=a.map(k=>({t:k[0],o:parseFloat(k[1]),h:parseFloat(k[2]),l:parseFloat(k[3]),c:parseFloat(k[4]),v:parseFloat(k[7])}));CH_CACHE.set(ck,{at:Date.now(),d});if(CH!==S||S.tf!==tf)return;S.data=d.map(x=>({...x}));$('#chLoad')?.remove();recalc()}
-    catch(e){if(S.data.length)return;const l=$('#chLoad');if(l)l.innerHTML='<i class="fas fa-triangle-exclamation"></i> تعذر تحميل المؤشرات، جرب تاني'}
+    const cached=CH_CACHE.get(ck);if(cached&&!force){S.data=cached.d.map(x=>({...x}));$('#chLoad')?.remove();draw();if(Date.now()-cached.at<30000)return}
+    try{const r=await binanceFetch({endpoint:'klines',symbol:sym+'USDT',interval:t[0],startTime:String(Date.now()-(CH_SHOW+2)*t[2]),limit:String(CH_SHOW+2)});if(!r||!r.ok)throw 0;const a=await r.json();if(!Array.isArray(a)||!a.length)throw 0;
+      const d=a.slice(-CH_SHOW).map(k=>({t:k[0],o:parseFloat(k[1]),h:parseFloat(k[2]),l:parseFloat(k[3]),c:parseFloat(k[4])}));CH_CACHE.set(ck,{at:Date.now(),d});if(CH!==S||S.tf!==tf)return;S.data=d.map(x=>({...x}));$('#chLoad')?.remove();draw()}
+    catch(e){if(S.data.length)return;const l=$('#chLoad');if(l)l.innerHTML='<i class="fas fa-triangle-exclamation"></i> تعذر تحميل الشموع، جرب تاني'}
   }
-  async function stats24(){try{const r=await binanceFetch({endpoint:'ticker24hr',symbols:'["'+sym+'USDT"]'});if(!r||!r.ok)return;const a=await r.json();const x=Array.isArray(a)?a[0]:a;if(!x||CH!==S)return;set('#chHi',fmtPx(parseFloat(x.highPrice)));set('#chLo',fmtPx(parseFloat(x.lowPrice)));set('#chVol','$'+fmtBig(parseFloat(x.quoteVolume)))}catch(e){}}
   async function live(){const pr=await fetchPricesBatch([sym]);if(CH!==S)return;const p=pr[sym];if(!p)return;const px=$('#chPx');if(px){px.textContent=fmtPx(p.price);px.className='chp ch-big '+(p.change>=0?'up':'dn')}const c=$('#chCh');if(c){c.className='chip '+(p.change>=0?'ok':'bad');c.textContent='24س '+pctStr(p.change)}
-    if(S.data.length){const L=S.data[S.data.length-1];L.c=p.price;if(p.price>L.h)L.h=p.price;if(p.price<L.l)L.l=p.price;recalc()}}
-  function recalc(){if(!S.data.length)return;S.A=calcInd(S.data);drawAll();panel()}
-  function panel(){const A=S.A,px=S.data[S.data.length-1].c;
-    set('#chVerdict',A.verdict[0],'ind-verdict v-'+A.verdict[1]);set('#chBuy',A.buy);set('#chNeu',A.neu);set('#chSell',A.sell);set('#chSumTf','· فريم '+CH_TF[S.tf][1]);
-    set('#chSup',fmtPx(A.sup));set('#chRes',fmtPx(A.res));set('#chAtr',A.atrPct!=null?A.atrPct.toFixed(2)+'%':'—');
-    const r=A.I.rsi[A.I.rsi.length-1];set('#chRsiV',r!=null?r.toFixed(1):'—',r==null?'':r>70?'dn':r<30?'up':'');
-    const h=A.I.macd.h[A.I.macd.h.length-1];set('#chMacdV',h!=null?(h>=0?'+':'-')+fmtSig(h,px):'—',h==null?'':h>=0?'up':'dn');
-    const list=$('#chList');if(list)list.innerHTML=A.sig.map(x=>`<div class="ind-row"><span class="nm">${esc(x.name)}</span><span class="vl">${esc(String(x.val))}</span><span class="tg ${x.s>0?'b':x.s<0?'s':'n'}">${x.s>0?'شراء':x.s<0?'بيع':'محايد'}</span><small>${esc(x.txt)}</small></div>`).join('');
-    gauge(A.score)}
-  function gauge(score){const g=$('#chGauge');if(!g)return;const c=g.getContext('2d'),W=260,H=150,cx=W/2,cy=132,R=104;c.clearRect(0,0,W,H);
-    const segs=[['#EF4444','بيع قوي'],['#F97316','بيع'],['#94A3B8','محايد'],['#4ADE80','شراء'],['#16A34A','شراء قوي']];
-    segs.forEach((s,i)=>{const a0=Math.PI+i*Math.PI/5+.02,a1=Math.PI+(i+1)*Math.PI/5-.02;c.beginPath();c.arc(cx,cy,R,a0,a1);c.strokeStyle=s[0];c.lineWidth=16;c.lineCap='round';c.stroke()});
-    c.font='700 9px Cairo, Arial';c.fillStyle='rgba(220,215,245,.75)';c.textAlign='center';segs.forEach((s,i)=>{const a=Math.PI+(i+.5)*Math.PI/5;c.fillText(s[1],cx+Math.cos(a)*(R-26),cy+Math.sin(a)*(R-26)+3)});
-    const a=Math.PI+(Math.max(-1,Math.min(1,score))+1)/2*Math.PI;c.save();c.translate(cx,cy);c.rotate(a);c.beginPath();c.moveTo(0,-4);c.lineTo(R-18,0);c.lineTo(0,4);c.closePath();c.fillStyle='#fff';c.shadowColor='rgba(168,85,247,.8)';c.shadowBlur=10;c.fill();c.restore();
-    c.beginPath();c.arc(cx,cy,9,0,Math.PI*2);c.fillStyle='#fff';c.fill();c.beginPath();c.arc(cx,cy,4,0,Math.PI*2);c.fillStyle='#7C3AED';c.fill()}
-  function fit(canvas,h){const dpr=Math.min(devicePixelRatio||1,2),W=canvas.parentElement.clientWidth;canvas.style.height=h+'px';canvas.width=W*dpr;canvas.height=h*dpr;const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,h);return W}
-  const PAD_R=66,PAD_L=6;
-  function view(){const n=S.data.length,s=Math.max(0,n-CH_SHOW);return {s,d:S.data.slice(s)}}
-  function drawAll(){draw();drawRsi();drawMacd()}
+    if(S.data.length){const L=S.data[S.data.length-1];L.c=p.price;if(p.price>L.h)L.h=p.price;if(p.price<L.l)L.l=p.price;draw()}}
+  const PAD_R=64,PAD_L=6;
   function draw(){
-    const {s,d}=view();if(!d.length)return;const A=S.A;const dpr=Math.min(devicePixelRatio||1,2);const W=box.clientWidth,H=box.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-    const padT=14,volH=Math.round(H*.17),pH=H-padT-volH-18;const n=d.length,pw=(W-PAD_L-PAD_R)/n;
+    const d=S.data;if(!d.length)return;const dpr=Math.min(devicePixelRatio||1,2);const W=box.clientWidth,H=box.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+    const padT=16,padB=16,pH=H-padT-padB,n=d.length,pw=(W-PAD_L-PAD_R)/n;
     let mn=Infinity,mx=-Infinity;d.forEach(x=>{mn=Math.min(mn,x.l);mx=Math.max(mx,x.h)});const rg=(mx-mn)||mx*.01;mn-=rg*.06;mx+=rg*.06;
     const X=i=>PAD_L+(i+.5)*pw,Y=v=>padT+(1-(v-mn)/(mx-mn))*pH;
     ctx.font='600 10px Poppins, Arial';ctx.textAlign='left';ctx.lineWidth=1;
-    for(let k=0;k<=5;k++){const v=mn+(mx-mn)*k/5,y=Y(v);ctx.strokeStyle='rgba(168,85,247,.09)';ctx.beginPath();ctx.moveTo(PAD_L,y);ctx.lineTo(W-PAD_R,y);ctx.stroke();ctx.fillStyle='rgba(180,172,215,.75)';ctx.fillText(fmtPx(v),W-PAD_R+6,y+3)}
-    /* بولينجر */
-    const bu=A.I.bb.up.slice(s),bl=A.I.bb.lo.slice(s);ctx.beginPath();let st=false;bu.forEach((v,i)=>{if(v==null)return;st?ctx.lineTo(X(i),Y(v)):(ctx.moveTo(X(i),Y(v)),st=true)});for(let i=n-1;i>=0;i--){if(bl[i]!=null)ctx.lineTo(X(i),Y(bl[i]))}ctx.closePath();ctx.fillStyle='rgba(56,189,248,.06)';ctx.fill();
-    [[bu,'rgba(56,189,248,.35)'],[bl,'rgba(56,189,248,.35)']].forEach(([a,col])=>line(a,col,1,[3,3]));
-    /* الحجم */
-    const vmax=Math.max(...d.map(x=>x.v))||1;d.forEach((x,i)=>{const h=x.v/vmax*volH,up=x.c>=x.o;ctx.fillStyle=up?'rgba(34,197,94,.35)':'rgba(239,68,68,.35)';ctx.fillRect(X(i)-pw*.35,H-18-h,Math.max(1,pw*.7),h)});
-    /* الشموع أو الخط */
-    if(S.type==='c'){d.forEach((x,i)=>{const up=x.c>=x.o,col=up?'#22C55E':'#EF4444';ctx.strokeStyle=col;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(X(i),Y(x.h));ctx.lineTo(X(i),Y(x.l));ctx.stroke();const y1=Y(Math.max(x.o,x.c)),y2=Y(Math.min(x.o,x.c));ctx.fillRect(X(i)-pw*.34,y1,Math.max(1,pw*.68),Math.max(1,y2-y1))})}
-    else{const g=ctx.createLinearGradient(0,padT,0,padT+pH);g.addColorStop(0,'rgba(168,85,247,.35)');g.addColorStop(1,'rgba(168,85,247,0)');ctx.beginPath();d.forEach((x,i)=>i?ctx.lineTo(X(i),Y(x.c)):ctx.moveTo(X(i),Y(x.c)));ctx.lineTo(X(n-1),padT+pH);ctx.lineTo(X(0),padT+pH);ctx.closePath();ctx.fillStyle=g;ctx.fill();ctx.beginPath();d.forEach((x,i)=>i?ctx.lineTo(X(i),Y(x.c)):ctx.moveTo(X(i),Y(x.c)));ctx.strokeStyle='#C084FC';ctx.lineWidth=2;ctx.stroke()}
-    line(A.I.e200.slice(s),'#38BDF8',1.4);line(A.I.e50.slice(s),'#A78BFA',1.6);line(A.I.e20.slice(s),'#FBBF24',1.6);
-    function line(a,col,w,dash){ctx.save();ctx.beginPath();let on=false;a.forEach((v,i)=>{if(v==null)return;on?ctx.lineTo(X(i),Y(v)):(ctx.moveTo(X(i),Y(v)),on=true)});ctx.strokeStyle=col;ctx.lineWidth=w;if(dash)ctx.setLineDash(dash);ctx.stroke();ctx.restore()}
-    /* آخر سعر */
-    const last=d[n-1],ly=Y(last.c),up=last.c>=last.o;ctx.setLineDash([4,4]);ctx.strokeStyle=up?'rgba(34,197,94,.6)':'rgba(239,68,68,.6)';ctx.beginPath();ctx.moveTo(PAD_L,ly);ctx.lineTo(W-PAD_R,ly);ctx.stroke();ctx.setLineDash([]);
+    for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);ctx.strokeStyle='rgba(168,85,247,.08)';ctx.beginPath();ctx.moveTo(PAD_L,y);ctx.lineTo(W-PAD_R,y);ctx.stroke();ctx.fillStyle='rgba(180,172,215,.7)';ctx.fillText(fmtPx(v),W-PAD_R+6,y+3)}
+    const bw=Math.max(1,Math.min(14,pw*.66));
+    d.forEach((x,i)=>{const up=x.c>=x.o,col=up?'#22C55E':'#EF4444';ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=Math.max(1,Math.min(1.6,pw*.12));ctx.beginPath();ctx.moveTo(X(i),Y(x.h));ctx.lineTo(X(i),Y(x.l));ctx.stroke();const y1=Y(Math.max(x.o,x.c)),y2=Y(Math.min(x.o,x.c));if(ctx.roundRect&&bw>4){ctx.beginPath();ctx.roundRect(X(i)-bw/2,y1,bw,Math.max(1.5,y2-y1),1.5);ctx.fill()}else ctx.fillRect(X(i)-bw/2,y1,bw,Math.max(1.5,y2-y1))});
+    const last=d[n-1],ly=Y(last.c),up=last.c>=last.o;ctx.setLineDash([4,4]);ctx.strokeStyle=up?'rgba(34,197,94,.55)':'rgba(239,68,68,.55)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PAD_L,ly);ctx.lineTo(W-PAD_R,ly);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle=up?'#16A34A':'#DC2626';ctx.beginPath();ctx.roundRect?ctx.roundRect(W-PAD_R+2,ly-10,PAD_R-4,20,5):ctx.rect(W-PAD_R+2,ly-10,PAD_R-4,20);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 10px Poppins, Arial';ctx.fillText(fmtPx(last.c),W-PAD_R+5,ly+4);
-    /* المؤشر عند اللمس */
     const tip=$('#chTip');
-    if(S.hover!=null&&S.hover>=0&&S.hover<n){const i=S.hover,x=d[i],cx=X(i);ctx.strokeStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.moveTo(cx,padT);ctx.lineTo(cx,H-18);ctx.stroke();
-      const ch=(x.c-x.o)/x.o*100;if(tip){tip.style.display='flex';tip.innerHTML=`<span>${new Date(x.t).toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span><span>O <b>${fmtPx(x.o)}</b></span><span>H <b>${fmtPx(x.h)}</b></span><span>L <b>${fmtPx(x.l)}</b></span><span>C <b class="${ch>=0?'up':'dn'}">${fmtPx(x.c)}</b></span><span class="${ch>=0?'up':'dn'}">${pctStr(ch)}</span>`}}
+    if(S.hover!=null&&S.hover>=0&&S.hover<n){const i=S.hover,x=d[i],cx=X(i);ctx.strokeStyle='rgba(255,255,255,.3)';ctx.beginPath();ctx.moveTo(cx,padT);ctx.lineTo(cx,H-padB);ctx.stroke();
+      const ch=(x.c-x.o)/x.o*100;if(tip){tip.style.display='flex';tip.innerHTML=`<span>${new Date(x.t).toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span><span>O <b>${fmtPx(x.o)}</b></span><span>H <b>${fmtPx(x.h)}</b></span><span>L <b>${fmtPx(x.l)}</b></span><span>C <b class="${ch>=0?'up':'dn'}">${fmtPx(x.c)}</b></span>`}}
     else if(tip)tip.style.display='none';
-    S.geo={X,pw,n};
+    S.geo={pw,n};
   }
-  function sub(canvas,c,h,draw){const W=fit(canvas,h);const {s,d}=view();const n=d.length,pw=(W-PAD_L-PAD_R)/n,X=i=>PAD_L+(i+.5)*pw;draw(c,W,h,s,n,X,pw);if(S.hover!=null&&S.hover<n){c.strokeStyle='rgba(255,255,255,.3)';c.beginPath();c.moveTo(X(S.hover),0);c.lineTo(X(S.hover),h);c.stroke()}}
-  function drawRsi(){sub(rcv,rctx,84,(c,W,h,s,n,X)=>{const a=S.A.I.rsi.slice(s),Y=v=>4+(1-v/100)*(h-8);c.fillStyle='rgba(168,85,247,.08)';c.fillRect(PAD_L,Y(70),W-PAD_L-PAD_R,Y(30)-Y(70));c.setLineDash([3,3]);c.strokeStyle='rgba(255,255,255,.22)';[70,30].forEach(v=>{c.beginPath();c.moveTo(PAD_L,Y(v));c.lineTo(W-PAD_R,Y(v));c.stroke()});c.setLineDash([]);c.font='600 9px Poppins, Arial';c.fillStyle='rgba(180,172,215,.7)';c.fillText('70',W-PAD_R+6,Y(70)+3);c.fillText('30',W-PAD_R+6,Y(30)+3);c.beginPath();let on=false;a.forEach((v,i)=>{if(v==null)return;on?c.lineTo(X(i),Y(v)):(c.moveTo(X(i),Y(v)),on=true)});c.strokeStyle='#E879F9';c.lineWidth=1.6;c.stroke()})}
-  function drawMacd(){sub(mcv,mctx,84,(c,W,h,s,n,X,pw)=>{const M=S.A.I.macd,m=M.m.slice(s),sg=M.sig.slice(s),hh=M.h.slice(s);const all=[...m,...sg,...hh].filter(v=>v!=null);if(!all.length)return;const mx=Math.max(...all.map(Math.abs))||1,Y=v=>h/2-(v/mx)*(h/2-6);c.strokeStyle='rgba(255,255,255,.15)';c.beginPath();c.moveTo(PAD_L,h/2);c.lineTo(W-PAD_R,h/2);c.stroke();hh.forEach((v,i)=>{if(v==null)return;const prev=i?hh[i-1]:null;c.fillStyle=v>=0?(prev!=null&&v<prev?'rgba(34,197,94,.45)':'#22C55E'):(prev!=null&&v>prev?'rgba(239,68,68,.45)':'#EF4444');const y=Y(v);c.fillRect(X(i)-pw*.32,Math.min(y,h/2),Math.max(1,pw*.64),Math.abs(y-h/2))});[[m,'#38BDF8'],[sg,'#F59E0B']].forEach(([a,col])=>{c.beginPath();let on=false;a.forEach((v,i)=>{if(v==null)return;on?c.lineTo(X(i),Y(v)):(c.moveTo(X(i),Y(v)),on=true)});c.strokeStyle=col;c.lineWidth=1.4;c.stroke()})})}
-  const pick=e=>{if(!S.geo)return;const r=cv.getBoundingClientRect();const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;S.hover=Math.max(0,Math.min(S.geo.n-1,Math.floor((x-PAD_L)/S.geo.pw)));drawAll()};
-  cv.addEventListener('pointermove',pick);cv.addEventListener('pointerdown',pick);cv.addEventListener('pointerleave',()=>{S.hover=null;drawAll()});
+  const pick=e=>{if(!S.geo)return;const r=cv.getBoundingClientRect();const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;S.hover=Math.max(0,Math.min(S.geo.n-1,Math.floor((x-PAD_L)/S.geo.pw)));draw()};
+  cv.addEventListener('pointermove',pick);cv.addEventListener('pointerdown',pick);cv.addEventListener('pointerleave',()=>{S.hover=null;draw()});
   $$('#chTf button').forEach(b=>b.onclick=()=>{S.tf=+b.dataset.i;$$('#chTf button').forEach(x=>x.classList.toggle('on',x===b));S.data=[];S.hover=null;ctx.clearRect(0,0,cv.width,cv.height);load()});
-  $$('#chType button').forEach(b=>b.onclick=()=>{S.type=b.dataset.t;$$('#chType button').forEach(x=>x.classList.toggle('on',x===b));draw()});
-  S.onR=()=>{if(S.A)drawAll()};window.addEventListener('resize',S.onR);
-  load();live();stats24();
+  S.onR=()=>draw();window.addEventListener('resize',S.onR);
+  load();live();
   S.timer=setInterval(()=>{if(!$('#chCv')){closeChart();return}live()},5000);
-  S.kTimer=setInterval(()=>{if(CH===S){load(true);stats24()}},60000);
+  S.kTimer=setInterval(()=>{if(CH===S)load(true)},60000);
 }
 window.openChart=openChart;
 
