@@ -10,6 +10,9 @@
 <meta name="theme-color" content="#07040F">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://wfcizftmcclhnzgvukuy.supabase.co" crossorigin>
+<link rel="preconnect" href="https://api.binance.com" crossorigin>
+<link rel="dns-prefetch" href="https://assets.coincap.io">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" media="print" onload="this.media='all'">
@@ -844,7 +847,6 @@ body{background-attachment:scroll}
 <h1 class="hero-title"><span class="grad">توصيات احترافية يومية</span> للتداول الفوري في العملات الرقمية</h1>
 <p class="hero-desc">تحليلات مدروسة من خبراء التداول: نقطة دخول واضحة، 3 أهداف، ووقف خسارة محدد لإدارة المخاطر — ومتابعة لحظية للسعر جوه كل توصية.</p>
 <div class="hero-cta">
-<button class="cta-main" data-auth="reg"><span>ابدأ الآن</span><i class="fas fa-arrow-left"></i></button>
 <button class="cta-sub" data-auth="login"><i class="fas fa-right-to-bracket"></i><span>تسجيل الدخول</span></button>
 </div>
 <div class="hero-trust">
@@ -1022,7 +1024,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.26.4';
+const APP_VERSION='2026.10.26.5';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1129,8 +1131,9 @@ async function sendPushNotification(title,body,url){const r=await notifyServer('
 
 async function loadProfile(){
   if(!AUTH)return null;
-  const {data}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
+  const {data,error}=await sb.from('profiles').select('*').eq('id',AUTH.id).maybeSingle();
   if(data)return data;
+  if(error)return null;
   const email=(AUTH.email||'').toLowerCase();const meta=AUTH.user_metadata||{};
   const np={id:AUTH.id,username:meta.username||email.split('@')[0],email,phone:meta.phone||'',role:'user',banned:false};
   const {data:created,error:ce}=await sb.from('profiles').insert(np).select().single();
@@ -1171,17 +1174,23 @@ $$('.atab').forEach(t=>t.onclick=()=>setAuthTab(t.dataset.t));
 $('#authClose').onclick=closeAuth;
 document.addEventListener('click',e=>{const a=e.target.closest('[data-auth]');if(a){e.preventDefault();openAuth(a.dataset.auth)}const s=e.target.closest('[data-scroll]');if(s){e.preventDefault();const id=s.dataset.scroll;if(id==='top')window.scrollTo({top:0,behavior:'smooth'});else document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}});
 function aErr(id,m){const e=$('#'+id);e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),4500)}
+let loginBusy=false;
+const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
 $('#lf').onsubmit=async e=>{
   e.preventDefault();
+  if(loginBusy)return;
   const em=$('#lE').value.trim(),pw=$('#lP').value;if(!em||!pw)return aErr('le','اكتب البريد وكلمة السر');
-  const btn=$('#lBtn');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الدخول';
-  const {data,error}=await sb.auth.signInWithPassword({email:em,password:pw});
-  btn.disabled=false;btn.innerHTML='<i class="fas fa-right-to-bracket"></i> دخول';
-  if(error)return aErr('le',/Invalid/i.test(error.message)?'البريد أو كلمة السر خطأ':error.message);
-  AUTH=data.user;CU=await loadProfile();
-  if(!CU)return aErr('le','تعذر الاتصال بالسيرفر');
-  if(CU.banned){await sb.auth.signOut();CU=null;cacheCU();return aErr('le','تم حظر حسابك')}
-  cacheCU();afterLogin();
+  const btn=$('#lBtn');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري الدخول';loginBusy=true;
+  const slowT=setTimeout(()=>{if(loginBusy)btn.innerHTML='<span class="ldr"></span> الاتصال بطيء، استنى ثواني...'},6000);
+  try{
+    const {data,error}=await withTimeout(sb.auth.signInWithPassword({email:em,password:pw}),40000);
+    if(error)return aErr('le',/Invalid/i.test(error.message)?'البريد أو كلمة السر خطأ':/confirm/i.test(error.message)?'لازم تأكد بريدك الإلكتروني الأول':error.message);
+    AUTH=data.user;const p=await withTimeout(loadProfile(),15000);
+    if(!p)return aErr('le','تعذر الاتصال بالسيرفر، جرب تاني');
+    if(p.banned){await sb.auth.signOut();CU=null;cacheCU();return aErr('le','تم حظر حسابك')}
+    CU=p;cacheCU();afterLogin();
+  }catch(err){aErr('le',err&&err.message==='timeout'?'الاتصال بطيء، جرب تاني':'حصل خطأ، جرب تاني')}
+  finally{clearTimeout(slowT);loginBusy=false;btn.disabled=false;btn.innerHTML='<i class="fas fa-right-to-bracket"></i> دخول'}
 };
 $('#rf').onsubmit=async e=>{
   e.preventDefault();
@@ -1191,15 +1200,18 @@ $('#rf').onsubmit=async e=>{
   if(!ph)return aErr('re','رقم الهاتف مطلوب');
   if(!/^\+?\d{8,15}$/.test(ph.replace(/\s/g,'')))return aErr('re','رقم هاتف غير صالح');
   if(pw.length<6)return aErr('re','كلمة السر قصيرة');
-  const btn=$('#rBtn');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري التسجيل';
-  const {data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{username:un,phone:ph}}});
-  btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> إنشاء الحساب';
-  if(error)return aErr('re',error.message);
-  if(!data.user)return aErr('re','لم يتم إنشاء الحساب');
-  if(data.session){AUTH=data.user;await new Promise(r=>setTimeout(r,800));CU=await loadProfile();if(!CU)return aErr('re','تعذر إنشاء الملف الشخصي');cacheCU();afterLogin()}
-  else{const el=$('#ro');el.textContent='تم إنشاء الحساب! سجّل دخول الآن';el.classList.add('on');setTimeout(()=>setAuthTab('login'),1500)}
+  if(loginBusy)return;
+  const btn=$('#rBtn');btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري التسجيل';loginBusy=true;
+  try{
+    const {data,error}=await withTimeout(sb.auth.signUp({email:em,password:pw,options:{data:{username:un,phone:ph}}}),40000);
+    if(error)return aErr('re',/registered|exists/i.test(error.message)?'البريد ده مسجّل قبل كده، سجّل دخول':error.message);
+    if(!data.user)return aErr('re','لم يتم إنشاء الحساب');
+    if(data.session){AUTH=data.user;await new Promise(r=>setTimeout(r,800));const p=await withTimeout(loadProfile(),15000);if(!p)return aErr('re','تعذر إنشاء الملف الشخصي');CU=p;cacheCU();afterLogin()}
+    else{const el=$('#ro');el.textContent='تم إنشاء الحساب! سجّل دخول الآن';el.classList.add('on');setTimeout(()=>setAuthTab('login'),1500)}
+  }catch(err){aErr('re',err&&err.message==='timeout'?'الاتصال بطيء، جرب تاني':'حصل خطأ، جرب تاني')}
+  finally{loginBusy=false;btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> إنشاء الحساب'}
 };
-function afterLogin(){showApp();syncOneSignalUser();initRealtime();applyPendingReferral();fetchRecos().then(l=>{window._recsCache=l;updateRB()})}
+function afterLogin(){showApp();[syncOneSignalUser,initRealtime,applyPendingReferral].forEach(f=>{try{f()}catch(e){}});fetchRecos().then(l=>{window._recsCache=l;updateRB()}).catch(()=>{})}
 async function doLogout(){try{history.replaceState(null,'','#')}catch(e){}stopAllTimers();removeRealtime();await sb.auth.signOut();AUTH=null;CU=null;cacheCU();$('#lE').value='';$('#lP').value='';showLanding();window.scrollTo(0,0)}
 window.doLogout=doLogout;
 
@@ -1798,13 +1810,13 @@ window.markNotifSeen=markNotifSeen;
 let rtChannels=[];
 function removeRealtime(){rtChannels.forEach(ch=>{try{sb.removeChannel(ch)}catch(e){}});rtChannels=[]}
 function initRealtime(){
-  removeRealtime();
-  rtChannels.push(sb.channel('recos-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'recommendations'},p=>{if(p.new.hidden)return;window._recsCache=[p.new,...window._recsCache];updateRB();notify('📈 توصية جديدة','تم نزول توصية جديدة على Blo Trade 24');if(currentPage==='recs')renderRecos()}).subscribe());
-  rtChannels.push(sb.channel('notif-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},p=>{if(p.new.is_public===false&&p.new.user_id&&p.new.user_id!==CU?.id)return;updateNotifBadge();notify(p.new.title||'إشعار جديد',p.new.body||'');if(currentPage==='notifications')go('notifications')}).subscribe());
-  rtChannels.push(sb.channel('words-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'words'},p=>{if(p.new.hidden)return;window._wordsCache=[p.new,...window._wordsCache];notify('📅 كلمة اليوم','تم نزول كلمة اليوم الجديدة');if(currentPage==='words')go('words')}).subscribe());
-  rtChannels.push(sb.channel('profile-update').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},p=>{if(p.new.id!==CU?.id)return;const was=isSub();CU={...CU,...p.new};cacheCU();refreshUI();if(!was&&isSub()){notify('🎉 تم تفعيل اشتراكك','تم تفعيل باقتك');toast('🎉 تم تفعيل اشتراكك!','ok');if(['home','prof','plans','recs','words','winner'].includes(currentPage))go(currentPage)}}).subscribe());
-  rtChannels.push(sb.channel('admin-messages').on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages'},p=>{if(p.new.user_id===CU?.id){notify('📩 رسالة من الإدارة',p.new.title||'لديك رسالة جديدة');if(currentPage==='home')go('home')}}).subscribe());
-  rtChannels.push(sb.channel('chat-msg-user').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},p=>{if(p.new.user_id===CU?.id&&p.new.sender==='admin'){notify('💬 رد من الإدارة',p.new.body||'📷 صورة');if(currentPage!=='chat'){toast('💬 رد جديد من الإدارة');const d=$('#supDot');if(d)d.style.display='block'}}}).subscribe());
+  removeRealtime();const RT_ID=Date.now().toString(36);
+  rtChannels.push(sb.channel('recos-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'recommendations'},p=>{if(p.new.hidden)return;window._recsCache=[p.new,...window._recsCache];updateRB();notify('📈 توصية جديدة','تم نزول توصية جديدة على Blo Trade 24');if(currentPage==='recs')renderRecos()}).subscribe());
+  rtChannels.push(sb.channel('notif-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},p=>{if(p.new.is_public===false&&p.new.user_id&&p.new.user_id!==CU?.id)return;updateNotifBadge();notify(p.new.title||'إشعار جديد',p.new.body||'');if(currentPage==='notifications')go('notifications')}).subscribe());
+  rtChannels.push(sb.channel('words-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'words'},p=>{if(p.new.hidden)return;window._wordsCache=[p.new,...window._wordsCache];notify('📅 كلمة اليوم','تم نزول كلمة اليوم الجديدة');if(currentPage==='words')go('words')}).subscribe());
+  rtChannels.push(sb.channel('profile-update-'+RT_ID).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},p=>{if(p.new.id!==CU?.id)return;const was=isSub();CU={...CU,...p.new};cacheCU();refreshUI();if(!was&&isSub()){notify('🎉 تم تفعيل اشتراكك','تم تفعيل باقتك');toast('🎉 تم تفعيل اشتراكك!','ok');if(['home','prof','plans','recs','words','winner'].includes(currentPage))go(currentPage)}}).subscribe());
+  rtChannels.push(sb.channel('admin-messages-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages'},p=>{if(p.new.user_id===CU?.id){notify('📩 رسالة من الإدارة',p.new.title||'لديك رسالة جديدة');if(currentPage==='home')go('home')}}).subscribe());
+  rtChannels.push(sb.channel('chat-msg-user-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},p=>{if(p.new.user_id===CU?.id&&p.new.sender==='admin'){notify('💬 رد من الإدارة',p.new.body||'📷 صورة');if(currentPage!=='chat'){toast('💬 رد جديد من الإدارة');const d=$('#supDot');if(d)d.style.display='block'}}}).subscribe());
 }
 
 /* =====================================================================
@@ -2075,9 +2087,10 @@ async function boot(){
   let fast=false;
   try{const raw=localStorage.getItem(SB_STORE_KEY);const s=raw?JSON.parse(raw):null;const cu=JSON.parse(localStorage.getItem('blo_cu_cache')||'null');if(s&&s.user&&cu&&cu.id===s.user.id&&!cu.banned){AUTH=s.user;CU=cu;fast=true;showApp()}}catch(e){}
   if(!fast){showLanding();try{if(!sessionStorage.getItem('blo_welcomed')){sessionStorage.setItem('blo_welcomed','1');const o=$('#welcomeOverlay');o.style.display='flex';setTimeout(()=>{o.style.opacity='0';setTimeout(()=>o.style.display='none',500)},1300)}}catch(e){}}
-  const settingsP=loadAppSettings();
+  /* الإعدادات (الأسعار وأرقام الدفع) بتتحمّل بالتوازي ومن غير ما نعطّل ظهور الصفحة، ولما توصل بنحدّث الصفحات اللي فيها أسعار */
+  const pricesBefore=[SUB_PRICE_USD,SUB_PRICE_USD_PERMANENT,USD_RATE_EGP].join();
+  loadAppSettings().then(()=>{if(!appShown)return;const changed=[SUB_PRICE_USD,SUB_PRICE_USD_PERMANENT,USD_RATE_EGP].join()!==pricesBefore;if(changed&&(currentPage==='plans'||(currentPage==='dep'&&!$('#fAmt'))||(currentPage==='home'&&!isSub())))renderPage(currentPage)});
   const {data:{session}}=await sb.auth.getSession();
-  await settingsP;
   if(session&&session.user){
     AUTH=session.user;const fresh=await loadProfile();
     if(fresh&&!fresh.banned){
@@ -2091,9 +2104,12 @@ async function boot(){
     if(fast){CU=null;AUTH=null;cacheCU();showLanding();toast('انتهت الجلسة، سجّل دخولك تاني','er')}
     else initLanding();
   }
-  sb.auth.onAuthStateChange(async(event,s)=>{
-    if(event==='SIGNED_OUT'){if(CU){AUTH=null;CU=null;cacheCU();removeRealtime();showLanding()}}
-    else if(event==='SIGNED_IN'&&s?.user&&!CU){AUTH=s.user;CU=await loadProfile();if(CU&&!CU.banned){cacheCU();afterLogin()}}
+  /* ⚠️ ممنوع نستنى أي طلب Supabase جوه الـ callback ده مباشرة (بيقفل المكتبة ويعلّق تسجيل الدخول) — بنأجّله بـ setTimeout */
+  sb.auth.onAuthStateChange((event,s)=>{
+    setTimeout(async()=>{
+      if(event==='SIGNED_OUT'){if(CU){AUTH=null;CU=null;cacheCU();removeRealtime();showLanding()}}
+      else if(event==='SIGNED_IN'&&s?.user&&!CU&&!loginBusy){AUTH=s.user;const p=await loadProfile();if(p&&!p.banned&&!CU){CU=p;cacheCU();afterLogin()}}
+    },0);
   });
   setInterval(updateRB,8000);setInterval(updateNotifBadge,15000);updateNotifBadge();
 }
