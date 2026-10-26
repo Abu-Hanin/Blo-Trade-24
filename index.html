@@ -172,6 +172,16 @@ body.is-admin .dr-links a.adm{display:flex}
 .bni span{white-space:nowrap}
 @media(max-width:360px){.bni span{font-size:.56rem}}
 
+/* ===== زرار الدعم الفني العايم ===== */
+.sup-fab{position:fixed;left:16px;bottom:calc(var(--bn) + 26px + env(safe-area-inset-bottom,0px));z-index:1450;width:56px;height:56px;border-radius:50%;background:var(--grad);color:#fff;font-size:1.35rem;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(124,58,237,.55),inset 0 1px 0 rgba(255,255,255,.3);animation:fabFloat 3.2s ease-in-out infinite;transition:transform .2s}
+.sup-fab:hover{transform:scale(1.08)}
+.sup-fab .sf-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(236,72,153,.55);animation:fabRing 2.2s ease-out infinite}
+.sup-fab .sf-dot{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--err);border:2px solid #0B0619}
+.sup-fab .sf-tip{position:absolute;left:66px;white-space:nowrap;padding:6px 12px;border-radius:12px;background:rgba(18,12,34,.95);border:1px solid var(--line2);font-size:.75rem;font-weight:800;opacity:0;transform:translateX(-6px);transition:.25s;pointer-events:none}
+.sup-fab:hover .sf-tip{opacity:1;transform:none}
+@keyframes fabFloat{0%,100%{translate:0 0}50%{translate:0 -7px}}
+@keyframes fabRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+body.is-admin .sup-fab{display:none}
 /* ===== هيكل التطبيق ===== */
 #app,#landing{display:none;position:relative;z-index:1}
 html.has-sess #app{display:block}
@@ -366,13 +376,15 @@ html:not(.has-sess) #tst{bottom:24px}
 .foot-copy span{color:#D8B4FE;font-weight:800}
 
 /* ===== رئيسية العميل ===== */
-.welcome-box{position:relative;overflow:hidden;padding:20px;border-radius:28px;margin-bottom:16px;background:radial-gradient(420px 200px at 100% 0%,rgba(168,85,247,.4),transparent 70%),radial-gradient(300px 200px at 0% 100%,rgba(236,72,153,.22),transparent 70%),linear-gradient(160deg,#1E1240,#0B0619 80%);border:1px solid rgba(168,85,247,.45);box-shadow:0 20px 50px rgba(124,58,237,.22)}
-.wb-top{display:flex;align-items:center;gap:14px}
-.wb-av{width:58px;height:58px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.5rem;flex-shrink:0;box-shadow:0 10px 26px rgba(124,58,237,.5)}
-.wb-hi{flex:1;min-width:0}
-.wb-hi small{color:#CFC6F2;font-size:.8rem}
-.wb-hi h2{color:#fff;font-size:1.3rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wb-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.welcome-box{position:relative;overflow:hidden;padding:12px 14px;border-radius:22px;margin-bottom:14px;background:radial-gradient(420px 200px at 100% 0%,rgba(168,85,247,.4),transparent 70%),radial-gradient(300px 200px at 0% 100%,rgba(236,72,153,.22),transparent 70%),linear-gradient(160deg,#1E1240,#0B0619 80%);border:1px solid rgba(168,85,247,.45);box-shadow:0 20px 50px rgba(124,58,237,.22)}
+.wb-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wb-av{width:44px;height:44px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.15rem;flex-shrink:0;box-shadow:0 8px 20px rgba(124,58,237,.45)}
+.wb-hi{flex:1;min-width:120px}
+.wb-hi small{color:#CFC6F2;font-size:.72rem;display:block;line-height:1.3}
+.wb-hi h2{color:#fff;font-size:1.05rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+.wb-meta{display:flex;gap:6px;flex-wrap:wrap}
+.wb-meta .chip{font-size:.68rem;padding:3px 9px}
+@media(max-width:560px){.wb-meta{width:100%}}
 .wb-cta{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
 .mini-tk{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:640px){.mini-tk{grid-template-columns:repeat(2,1fr)}}
@@ -427,6 +439,18 @@ html:not(.has-sess) #tst{bottom:24px}
 .rc-profit{display:flex;gap:8px;flex-wrap:wrap}
 .pf{padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);font-size:.72rem;color:var(--mt);font-weight:700}
 .pf b{font-family:Poppins,sans-serif;direction:ltr;display:inline-block;margin-right:3px}
+/* مسار الأهداف: بيبدأ من اليمين (منطقة الدخول) ويكمّل للشمال، وكل نقطة فوق الهدف بتاعها */
+.rc-track{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 -4px;padding-right:6px}
+.rc-track::before{content:'';position:absolute;right:0;top:50%;width:10px;height:10px;border-radius:50%;transform:translateY(-50%);background:#A855F7;box-shadow:0 0 0 3px rgba(168,85,247,.25),0 0 10px #A855F7}
+.trk{display:flex;align-items:center;height:28px;min-width:0}
+.trk .tb2{position:relative;flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;margin-left:-3px;border:1px solid rgba(255,255,255,.05)}
+.trk .tb2 i{position:absolute;top:0;bottom:0;right:0;width:0;border-radius:6px;background:linear-gradient(270deg,#7C3AED,#A855F7 45%,#22D3EE);box-shadow:0 0 10px rgba(34,211,238,.45);transition:width 1s cubic-bezier(.2,.9,.2,1)}
+.trk .nd{position:relative;z-index:1;width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;font-family:Poppins,sans-serif;color:#CFC6F2;background:#1A1233;border:2px solid #4C3D7A;transition:.4s}
+.trk.done .tb2{border-color:rgba(74,222,128,.45)}
+.trk.done .tb2 i{width:100%!important;background:linear-gradient(270deg,#16A34A,#22C55E,#86EFAC);box-shadow:0 0 14px rgba(74,222,128,.7)}
+.trk.done .tb2::after{content:'';position:absolute;inset:0;background:linear-gradient(250deg,transparent 30%,rgba(255,255,255,.6) 50%,transparent 70%);background-size:220% 100%;animation:segShine 2.4s ease-in-out infinite}
+.trk.done .nd{color:#fff;background:linear-gradient(135deg,#16A34A,#22C55E);border-color:#BBF7D0;box-shadow:0 0 0 4px rgba(34,197,94,.18),0 0 14px rgba(74,222,128,.8)}
+.trk.just .nd{animation:segPop 1.4s cubic-bezier(.2,1.4,.4,1)}
 .rc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:4px 0 2px}
 .sg-bar{position:relative;height:9px;border-radius:7px;background:rgba(255,255,255,.07);overflow:hidden;border:1px solid rgba(255,255,255,.05)}
 .sg-bar i{position:absolute;inset:0 auto 0 0;border-radius:7px;background:linear-gradient(90deg,#7C3AED,#22D3EE);transition:width .9s cubic-bezier(.2,.9,.2,1);box-shadow:0 0 10px rgba(34,211,238,.45)}
@@ -449,11 +473,13 @@ html:not(.has-sess) #tst{bottom:24px}
 .rc-tg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .tg{position:relative;padding:10px 4px;border-radius:14px;text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:.3s}
 .tg .tl{font-size:.64rem;color:var(--mt);font-weight:800}
-.tg .tv{font-size:.86rem;font-weight:800;color:#fff;direction:ltr;font-family:Poppins,sans-serif;word-break:break-all}
-.tg .tp2{font-size:.62rem;font-weight:800;color:var(--ok2);direction:ltr}
+.tg .tv{font-size:.88rem;font-weight:800;color:#fff;direction:ltr;font-family:Poppins,sans-serif;word-break:break-all;margin-top:2px}
+.tg .tv small{font-size:.58rem;color:var(--mt);font-weight:700}
+.tg .tp2{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:8px;font-size:.66rem;font-weight:800;color:var(--ok2);background:rgba(34,197,94,.12);direction:ltr;font-family:Poppins,sans-serif}
+.tg.hit .tv small{color:#86EFAC}
 .tg.hit{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.55)}
 .tg.hit .tv{color:var(--ok2)}
-.tg.hit::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:-8px;left:-6px;width:22px;height:22px;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;box-shadow:0 4px 10px rgba(34,197,94,.5);animation:checkPop .35s cubic-bezier(.18,.89,.32,1.28)}
+.tg.hit::after{display:none;content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:-8px;left:-6px;width:22px;height:22px;background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;box-shadow:0 4px 10px rgba(34,197,94,.5);animation:checkPop .35s cubic-bezier(.18,.89,.32,1.28)}
 @keyframes checkPop{from{transform:scale(0)}to{transform:scale(1)}}
 .rc-sl{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3)}
 .rc-sl span{color:#FCA5A5;font-size:.78rem;font-weight:800}
@@ -658,6 +684,7 @@ html:not(.has-sess) #tst{bottom:24px}
 .nw:hover{border-color:rgba(168,85,247,.5);transform:translateY(-3px)}
 .nw.fresh{border-color:rgba(34,197,94,.55);box-shadow:0 0 0 1px rgba(34,197,94,.3),0 14px 34px rgba(0,0,0,.35)}
 .nw-h{display:flex;align-items:center;gap:10px;padding:14px 14px 8px}
+.nw-logo{width:42px;height:42px;border-radius:50%;font-size:1.35rem}
 .nw-av{width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(168,85,247,.45);background:#1A1036}
 .nw-who{flex:1;min-width:0}
 .nw-who b{display:flex;align-items:center;gap:5px;color:#fff;font-size:.9rem;direction:ltr;justify-content:flex-end}
@@ -826,7 +853,6 @@ body{background-attachment:scroll}
 </div>
 <div class="hero-stats">
 <div class="hs"><div class="hs-val" id="stVisits">—</div><div class="hs-lbl"><i class="fas fa-eye"></i> زيارة للمنصة</div></div>
-<div class="hs"><div class="hs-val">3</div><div class="hs-lbl"><i class="fas fa-bullseye"></i> أهداف لكل توصية</div></div>
 <div class="hs"><div class="hs-val">24/7</div><div class="hs-lbl"><i class="fas fa-headset"></i> متابعة ودعم</div></div>
 </div>
 </div>
@@ -946,11 +972,12 @@ body{background-attachment:scroll}
 </div>
 </div></header>
 <main class="ct" id="ct"></main>
+<button class="sup-fab" id="supFab" aria-label="الدعم الفني"><span class="sf-ring"></span><i class="fas fa-headset"></i><span class="sf-dot" id="supDot" style="display:none"></span><span class="sf-tip">الدعم الفني</span></button>
 <nav class="bn" id="bnav">
 <div class="bni on" data-n="home"><i class="fas fa-house"></i><span>الرئيسية</span></div>
 <div class="bni" data-n="recs"><i class="fas fa-chart-line"></i><span>التوصيات</span></div>
 <div class="bni" data-n="done"><i class="fas fa-check-double"></i><span>المكتملة</span></div>
-<div class="bni" data-n="chat" id="navChatBtn"><i class="fas fa-comments"></i><span>المحادثة</span></div>
+<div class="bni" data-n="bubble" id="navChatBtn"><i class="fas fa-circle-nodes"></i><span>الفقاعات</span></div>
 <div class="bni" data-n="prof" id="navProfBtn"><i class="fas fa-user"></i><span>حسابي</span></div>
 </nav>
 </div>
@@ -994,7 +1021,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.26.2';
+const APP_VERSION='2026.10.26.3';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1131,7 +1158,7 @@ function refreshUI(){
   $('#mPb').innerHTML=planChip();
   const navChat=$('#navChatBtn'),navProf=$('#navProfBtn');
   if(CU.role==='admin'){navChat.dataset.n='admin';navChat.innerHTML='<i class="fas fa-user-shield"></i><span>لوحة الأدمن</span>';navProf.dataset.n='addreco';navProf.innerHTML='<i class="fas fa-circle-plus"></i><span>إضافة توصية</span>'}
-  else{navChat.dataset.n='chat';navChat.innerHTML='<i class="fas fa-comments"></i><span>المحادثة</span>';navProf.dataset.n='prof';navProf.innerHTML='<i class="fas fa-user"></i><span>حسابي</span>'}
+  else{navChat.dataset.n='bubble';navChat.innerHTML='<i class="fas fa-circle-nodes"></i><span>الفقاعات</span>';navProf.dataset.n='prof';navProf.innerHTML='<i class="fas fa-user"></i><span>حسابي</span>'}
 }
 function planChip(){if(!CU)return '';if(CU.role==='admin')return '<span class="chip vip">👑 أدمن</span>';if(isPermanentSub())return '<span class="chip vip">👑 اشتراك دائم</span>';if(isSub())return '<span class="chip ok">✅ مشترك · '+subDaysLeft()+' يوم</span>';return '<span class="chip bad">⚠️ غير مشترك</span>'}
 
@@ -1208,6 +1235,7 @@ window.closeM=closeM;window.openM=openM;
 $('#mod').onclick=e=>{if(e.target.id==='mod')closeM()};
 $('#mbx').addEventListener('click',e=>{if(e.target.closest('.mc'))closeM()});
 $('#notifBtn').onclick=()=>go('notifications');
+$('#supFab').onclick=()=>{$('#supDot').style.display='none';go('chat')};
 
 async function getVisitorCount(){try{const {data}=await sb.from('site_stats').select('visits').eq('id',1).maybeSingle();return data?.visits||0}catch(e){return 0}}
 async function incrementVisitor(){try{const key='blo_visited_'+new Date().toDateString();if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');await sb.rpc('increment_visits')}catch(e){}}
@@ -1242,9 +1270,7 @@ R.home=async c=>{
   if(CU.role==='admin')tiles.push(['winner','fa-trophy','اختيار الفائز','للأدمن فقط','#F59E0B']);
   const cd=s&&!isPermanentSub()&&CU.role!=='admin'?`<span class="chip pur"><i class="fas fa-hourglass-half"></i> متبقي ${subDaysLeft()} يوم</span>`:'';
   c.innerHTML=`<div id="admMsgs"></div>
-  <div class="welcome-box reveal"><div class="wb-top"><div class="wb-av">${esc((CU.username||'U').charAt(0).toUpperCase())}</div><div class="wb-hi"><small>أهلاً بيك 👋</small><h2>${esc(CU.username||'')}</h2></div></div>
-  <div class="wb-meta">${planChip()}${cd}<span class="chip pur" id="visBadge"><i class="fas fa-eye"></i> — زيارة</span></div>
-  ${s?`<div class="wb-cta"><button class="btn-p" data-go="recs"><i class="fas fa-chart-line"></i> شوف التوصيات</button><button class="btn-g" data-go="words"><i class="fas fa-key"></i> كلمة اليوم</button></div>`:`<div class="wb-cta"><button class="btn-p" data-go="plans"><i class="fas fa-crown"></i> اشترك الآن</button><button class="btn-g" data-go="dep"><i class="fas fa-wallet"></i> طرق الإيداع</button></div>`}</div>
+  <div class="welcome-box reveal"><div class="wb-top"><div class="wb-av">${esc((CU.username||'U').charAt(0).toUpperCase())}</div><div class="wb-hi"><small>أهلاً بيك 👋</small><h2>${esc(CU.username||'')}</h2></div><div class="wb-meta">${planChip()}${cd}<span class="chip pur" id="visBadge"><i class="fas fa-eye"></i> — زيارة</span></div></div></div>
   <div class="mini-tk" id="miniTk">${['BTC','ETH','BNB','SOL'].map(x=>`<div class="mt-c" data-s="${x}">${coinImg(x)}<div><b>${x}/USDT</b><div class="mp">—</div><div class="mch">—</div></div></div>`).join('')}</div>
   <div class="tiles">${tiles.map((t,i)=>`<a class="tile reveal" style="--c:${t[4]};animation-delay:${i*.04}s" data-go="${t[0]}">${t[5]?'<span class="lk"><i class="fas fa-lock"></i></span>':''}<span class="t-ico"><i class="fas ${t[1]}"></i></span><span class="t-txt"><b>${t[2]}</b><small>${t[3]}</small></span></a>`).join('')}</div>
   ${!s?`<h3 class="sub-t" style="margin-top:26px"><i class="fas fa-crown"></i> اختار خطتك</h3><div class="plans">${plansHTML(false)}</div>`:''}`;
@@ -1389,6 +1415,8 @@ function recoState(r,price,high){
   const seg=[0,1,2].map(i=>{if(hit[i])return 100;const a=P[i],b=P[i+1];if(a==null||b==null||b<=a||!ref)return 0;return Math.max(0,Math.min(100,(ref-a)/(b-a)*100))});
   return {cls,label,hit,hitSL,best,live,pos,nowPos,mk,tp,n,seg};
 }
+/* عرض الهدف: السعر + USDT + النسبة فقط (من غير أي كلام زيادة مكتوب في نص الهدف) */
+function targetView(t,calcPct){const s=String(t||'').replace(/,/g,'');const m=s.match(/\d+(\.\d+)?/);const pm=s.match(/([+\-]?\d+(?:\.\d+)?)\s*%/);let pct=null;if(pm){const v=parseFloat(pm[1]);pct=(v>=0&&!/^[+\-]/.test(pm[1])?'+':'')+pm[1]+'%'}else if(calcPct!=null)pct=pctStr(calcPct);return {price:m?esc(m[0])+' <small>USDT</small>':esc(t||'-'),pct}}
 function buildRecoCard(r,p,recoHigh,opts){
   opts=opts||{};
   const sym=String(r.symbol||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -1398,9 +1426,9 @@ function buildRecoCard(r,p,recoHigh,opts){
   <div class="rc-head">${coinBadge(sym)}<div class="rc-sym" data-copy="${sym}" title="نسخ اسم العملة"><h3>${sym} <small>/USDT</small></h3><div class="rc-time"><i class="far fa-clock"></i> ${(Date.now()-new Date(r.created_at).getTime())<30*864e5?timeAgo(r.created_at)+' · ':''}${fmtDateOnly(r.created_at)}</div></div><div class="rc-px"${!p&&opts.noLive?' style="display:none"':''}><div class="p">${p?fmtPx(p.price):'—'}</div><div class="c ${p&&p.change>=0?'up':'dn'}">${p?(p.change>=0?'▲ ':'▼ ')+Math.abs(p.change).toFixed(2)+'%':''}</div></div></div>
   <div class="rc-body">
   <div class="rc-stat"><span class="rc-lbl">${st.label}</span><button class="rc-chart" data-chart="${sym}"><i class="fas fa-chart-area"></i> المؤشر</button><div class="rc-profit"><span class="pf">الربح المحقق <b class="${st.best!=null?'up':''} rc-best">${st.best!=null?pctStr(st.best):'—'}</b></span>${opts.noLive?'':`<span class="pf">من الدخول <b class="rc-live ${st.live!=null?(st.live>=0?'up':'dn'):''}">${st.live!=null?pctStr(st.live):'—'}</b></span>`}</div></div>
-  <div class="rc-steps">${[0,1,2].map(i=>`<div class="seg-t ${st.hit[i]?'done':''}" data-seg="${i+1}"><div class="sg-bar"><i style="width:${st.seg[i]}%"></i></div><span class="sg-l">${st.hit[i]?'<i class="fas fa-circle-check"></i> ':''}هدف ${i+1}</span></div>`).join('')}</div>
   <div class="rc-entry"><span>📍 منطقة الدخول</span><b>${esc(r.entry||'-')}</b></div>
-  <div class="rc-tg">${[r.target1,r.target2,r.target3].map((t,i)=>`<div class="tg ${st.hit[i]?'hit':''}" data-t="${i+1}"><div class="tl">🎯 هدف ${i+1}</div><div class="tv">${esc(t||'-')}</div>${st.tp[i]!=null&&!/%/.test(t||'')?`<div class="tp2">${pctStr(st.tp[i])}</div>`:''}</div>`).join('')}</div>
+  <div class="rc-track">${[0,1,2].map(i=>`<div class="trk ${st.hit[i]?'done':''}" data-seg="${i+1}"><div class="tb2"><i style="width:${st.seg[i]}%"></i></div><span class="nd">${st.hit[i]?'<i class="fas fa-check"></i>':i+1}</span></div>`).join('')}</div>
+  <div class="rc-tg">${[r.target1,r.target2,r.target3].map((t,i)=>{const v=targetView(t,st.tp[i]);return `<div class="tg ${st.hit[i]?'hit':''}" data-t="${i+1}"><div class="tl">هدف ${i+1}</div><div class="tv">${v.price}</div>${v.pct?`<div class="tp2">${v.pct}</div>`:''}</div>`}).join('')}</div>
   <div class="rc-sl ${st.hitSL?'hit':''}"><span>🛑 وقف الخسارة</span><b>${esc(r.stop_loss||'-')}</b></div>
   ${r.notes&&!opts.noNotes?`<div class="rc-notes">📝 ${esc(r.notes)}</div>`:''}
   </div></div>`;
@@ -1425,7 +1453,8 @@ async function updateRecoPrices(quiet){
     const lb=card.querySelector('.rc-lbl');if(lb&&lb.innerHTML!==st.label)lb.innerHTML=st.label;
     const be=card.querySelector('.rc-best');if(be){be.textContent=st.best!=null?pctStr(st.best):'—';be.className='rc-best '+(st.best!=null?'up':'')}
     const le=card.querySelector('.rc-live');if(le&&st.live!=null){le.textContent=pctStr(st.live);le.className='rc-live '+(st.live>=0?'up':'dn')}
-    [0,1,2].forEach(i=>{const sg=card.querySelector(`[data-seg="${i+1}"]`);if(!sg)return;const bar=sg.querySelector('.sg-bar i');if(bar)bar.style.width=st.seg[i]+'%';if(st.hit[i]&&!sg.classList.contains('done')){sg.classList.add('done','just');sg.querySelector('.sg-l').innerHTML='<i class="fas fa-circle-check"></i> هدف '+(i+1);setTimeout(()=>sg.classList.remove('just'),1600);if(!quiet&&card.dataset.ready==='1')toast('🎯 '+card.dataset.sym+' حققت هدف '+(i+1),'ok')}});
+    /* الهدف اللي اتحقق بيفضل متعلّم ✓ حتى لو السعر نزل بعد كده (مبنيين على أعلى سعر وصله) */
+    [0,1,2].forEach(i=>{const sg=card.querySelector(`.trk[data-seg="${i+1}"]`);if(!sg)return;const bar=sg.querySelector('.tb2 i');if(sg.classList.contains('done'))return;if(bar)bar.style.width=st.seg[i]+'%';if(st.hit[i]){sg.classList.add('done','just');sg.querySelector('.nd').innerHTML='<i class="fas fa-check"></i>';setTimeout(()=>sg.classList.remove('just'),1600);if(!quiet&&card.dataset.ready==='1')toast('🎯 '+card.dataset.sym+' حققت هدف '+(i+1),'ok')}});
     if(quiet)card.dataset.ready='1';
   });
 }
@@ -1690,7 +1719,7 @@ window.openChart=openChart;
 let newsTimer=null;const NEWS={items:[],at:0};
 function stopNews(){if(newsTimer){clearInterval(newsTimer);newsTimer=null}}
 async function fetchNews(){try{const r=await fetch(SUPABASE_URL+'/functions/v1/blo-news',{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});if(!r.ok)return null;const j=await r.json();return Array.isArray(j.items)?j.items:null}catch(e){return null}}
-function newsCard(n,fresh){const av=safeUrl(n.avatar),img=safeUrl(n.image);const d=new Date(n.date);return `<article class="nw${fresh?' fresh':''}" data-id="${esc(n.id)}"><div class="nw-h">${av?`<img class="nw-av" src="${av}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">`:'<span class="nw-av"></span>'}<div class="nw-who"><b>${n.verified?'<i class="fas fa-circle-check"></i>':''}${esc(n.author)}</b><small>${timeAgo(n.date)} · ${d.toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div><span class="nw-tag">أخبار</span></div><div class="nw-b">${n.title?`<h3>${esc(n.title)}</h3>`:''}${n.summary?`<p>${esc(n.summary)}</p>`:''}${(n.summary||'').length>220?'<button class="nw-more">عرض المزيد</button>':''}</div>${img?`<img class="nw-img" src="${img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<div class="nw-f"><span class="vw"><i class="fas fa-eye"></i>${fmtBig(n.views)}</span><span class="lk2"><i class="fas fa-heart"></i>${fmtBig(n.likes)}</span><span class="cm2"><i class="fas fa-comment"></i>${fmtBig(n.comments)}</span><span class="sh"><i class="fas fa-share"></i>${fmtBig(n.shares)}</span></div></article>`}
+function newsCard(n,fresh){const av=safeUrl(n.avatar),img=safeUrl(n.image);const d=new Date(n.date);return `<article class="nw${fresh?' fresh':''}" data-id="${esc(n.id)}"><div class="nw-h"><span class="brand-mark nw-logo"><i class="fab fa-bitcoin"></i></span><div class="nw-who"><b><i class="fas fa-circle-check"></i>Blo Trade 24</b><small>${timeAgo(n.date)} · ${d.toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div><span class="nw-tag">أخبار</span></div><div class="nw-b">${n.title?`<h3>${esc(n.title)}</h3>`:''}${n.summary?`<p>${esc(n.summary)}</p>`:''}${(n.summary||'').length>220?'<button class="nw-more">عرض المزيد</button>':''}</div>${img?`<img class="nw-img" src="${img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}<div class="nw-f"><span class="vw"><i class="fas fa-eye"></i>${fmtBig(n.views)}</span><span class="lk2"><i class="fas fa-heart"></i>${fmtBig(n.likes)}</span><span class="cm2"><i class="fas fa-comment"></i>${fmtBig(n.comments)}</span><span class="sh"><i class="fas fa-share"></i>${fmtBig(n.shares)}</span></div></article>`}
 function bindNews(root){root.querySelectorAll('.nw-more').forEach(b=>b.onclick=()=>{const a=b.closest('.nw');a.classList.toggle('open');b.textContent=a.classList.contains('open')?'عرض أقل':'عرض المزيد'})}
 R.news=async c=>{
   c.innerHTML=`<h2 class="pt"><i class="fas fa-newspaper"></i> أخبار العملات</h2><div class="nw-bar"><span class="chip ok"><span class="live-dot"></span> بتتحدث تلقائياً<span class="auto-pill"><i class="fas fa-bolt"></i> تلقائي</span></span><span style="color:var(--mt);font-size:.74rem" id="nwAt"></span></div><div class="nw-list" id="nwList">${NEWS.items.length?NEWS.items.map(n=>newsCard(n)).join(''):Array.from({length:4},()=>'<div class="nw" style="padding:16px;gap:12px"><div class="skl" style="width:45%"></div><div class="skl" style="width:90%"></div><div class="skl" style="height:60px"></div></div>').join('')}</div>`;
@@ -1769,7 +1798,7 @@ function initRealtime(){
   rtChannels.push(sb.channel('words-insert').on('postgres_changes',{event:'INSERT',schema:'public',table:'words'},p=>{if(p.new.hidden)return;window._wordsCache=[p.new,...window._wordsCache];notify('📅 كلمة اليوم','تم نزول كلمة اليوم الجديدة');if(currentPage==='words')go('words')}).subscribe());
   rtChannels.push(sb.channel('profile-update').on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},p=>{if(p.new.id!==CU?.id)return;const was=isSub();CU={...CU,...p.new};cacheCU();refreshUI();if(!was&&isSub()){notify('🎉 تم تفعيل اشتراكك','تم تفعيل باقتك');toast('🎉 تم تفعيل اشتراكك!','ok');if(['home','prof','plans','recs','words','winner'].includes(currentPage))go(currentPage)}}).subscribe());
   rtChannels.push(sb.channel('admin-messages').on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages'},p=>{if(p.new.user_id===CU?.id){notify('📩 رسالة من الإدارة',p.new.title||'لديك رسالة جديدة');if(currentPage==='home')go('home')}}).subscribe());
-  rtChannels.push(sb.channel('chat-msg-user').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},p=>{if(p.new.user_id===CU?.id&&p.new.sender==='admin'){notify('💬 رد من الإدارة',p.new.body||'📷 صورة');if(currentPage!=='chat')toast('💬 رد جديد من الإدارة')}}).subscribe());
+  rtChannels.push(sb.channel('chat-msg-user').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},p=>{if(p.new.user_id===CU?.id&&p.new.sender==='admin'){notify('💬 رد من الإدارة',p.new.body||'📷 صورة');if(currentPage!=='chat'){toast('💬 رد جديد من الإدارة');const d=$('#supDot');if(d)d.style.display='block'}}}).subscribe());
 }
 
 /* =====================================================================
@@ -1972,7 +2001,7 @@ function initLanding(){
   const tkSyms=['BTC','ETH','BNB','SOL','XRP','DOGE','ADA','TRX','AVAX','LINK','TON','SUI','PEPE','LTC'];
   const fillTicker=async()=>{if(appShown)return;const pr=await fetchPricesBatch(tkSyms);const items=tkSyms.filter(s=>pr[s]);if(!items.length)return;const one=items.map(s=>`<span class="tk">${coinImg(s)}${s}<span class="tp">${fmtPx(pr[s].price)}</span><span class="${pr[s].change>=0?'up':'dn'}">${pctStr(pr[s].change)}</span></span>`).join('');$('#tickerTrack').innerHTML=one+one;if(pr.BTC){const e=$('#hcPrice');if(e)e.textContent=fmtPx(pr.BTC.price)}};
   fillTicker();setInterval(fillTicker,30000);
-  const res=$('#results');const io=new IntersectionObserver(en=>{if(en.some(x=>x.isIntersecting)){io.disconnect();loadPublicResults()}},{rootMargin:'300px'});io.observe(res);
+  const res=$('#results');let resDone=false;const loadRes=()=>{if(resDone)return;resDone=true;io.disconnect();loadPublicResults()};const io=new IntersectionObserver(en=>{if(en.some(x=>x.isIntersecting))loadRes()},{rootMargin:'600px'});io.observe(res);setTimeout(loadRes,2500);
   (async()=>{try{const {data,error}=await sb.from('blo_testimonials').select('name,body,rating').eq('visible',true).order('created_at',{ascending:false}).limit(9);if(!error&&data&&data.length){$('#revList').innerHTML=data.map(r=>`<div class="rev reveal"><div class="stars-r">${'★'.repeat(Math.max(1,Math.min(5,r.rating||5)))}</div><p>${esc(r.body)}</p><div class="rv-who"><div class="rv-av">${esc((r.name||'?').charAt(0))}</div><b>${esc(r.name)}</b></div></div>`).join('');$('#revSec').style.display=''}}catch(e){}})();
   initHero3D();
 }
@@ -1980,12 +2009,12 @@ async function loadPublicResults(){
   const box=$('#pubResults');
   const list=await fetchPublicRecos();
   if(!list.length){box.innerHTML='<div class="es" style="grid-column:1/-1"><i class="fas fa-chart-line ei"></i><p>النتايج هتظهر هنا قريباً</p></div>';return}
-  await initRecoHighs(list.slice(0,60));
-  let comp=completedOf(list.slice(0,60));
-  let show=comp.length?comp:list.filter(r=>getRecoHigh(r.id)>=parseTarget(r.target1)&&parseTarget(r.target1)!==null);
-  show=show.slice(0,6);
-  if(!show.length){box.innerHTML='<div class="es" style="grid-column:1/-1"><i class="fas fa-chart-line ei"></i><p>النتايج هتظهر هنا قريباً</p></div>';return}
-  box.innerHTML=show.map(r=>buildRecoCard(r,null,getRecoHigh(r.id),{noLive:true,noNotes:true})).join('');bindCopy(box);
+  /* آخر 6 توصيات حققت أهدافها الثلاثة بس — بتظهر فوراً من الأهداف المحفوظة وبعدين بتتحدث */
+  const pool=list.slice(0,40);
+  const pick=()=>completedOf(pool).slice(0,6);
+  const paint=(final)=>{const show=pick();if(!show.length&&!final){box.innerHTML=skeletons(3);return}if(!show.length){box.innerHTML='<div class="es" style="grid-column:1/-1"><i class="fas fa-chart-line ei"></i><p>النتايج هتظهر هنا قريباً</p></div>';return}const key=show.map(r=>r.id).join(',');if(box.dataset.k===key&&!final)return;box.dataset.k=key;box.innerHTML=show.map(r=>buildRecoCard(r,null,getRecoHigh(r.id),{noLive:true,noNotes:true})).join('');bindCopy(box)};
+  paint(false);
+  await initRecoHighs(pool);paint(true);
 }
 function initHero3D(){
   const canvas=$('#heroCanvas'),layer=$('#coins3d');if(!canvas||!layer)return;
