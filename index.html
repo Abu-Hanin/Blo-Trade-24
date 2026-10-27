@@ -1101,7 +1101,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>
-const APP_VERSION='2026.10.27.8';
+const APP_VERSION='2026.10.27.9';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1197,6 +1197,10 @@ const IS_STANDALONE=(()=>{try{return matchMedia('(display-mode: standalone)').ma
 const PUSH_OK=('serviceWorker' in navigator)&&('PushManager' in window)&&('Notification' in window);
 let SW_REG=null;
 const swReady=PUSH_OK?navigator.serviceWorker.register('sw.js').then(r=>{SW_REG=r;return navigator.serviceWorker.ready}).catch(()=>null):Promise.resolve(null);
+/* الموقع اتنقل للدومين الرئيسي: أي Service Worker قديم (زي /Blo-Trade-24/) بيتشال هو واشتراكه، عشان الإشعار مايوصلش مرتين */
+const oldSwSubs=[];
+if(PUSH_OK)swReady.then(async cur=>{if(!cur)return;try{for(const r of await navigator.serviceWorker.getRegistrations()){if(r.scope===cur.scope)continue;const s=await r.pushManager.getSubscription().catch(()=>null);if(s){oldSwSubs.push(s.endpoint);await s.unsubscribe().catch(()=>{})}await r.unregister().catch(()=>{})}flushOldSubs()}catch(e){}});
+function flushOldSubs(){if(!AUTH||!oldSwSubs.length)return;oldSwSubs.splice(0).forEach(ep=>sb.rpc('blo_remove_push_sub',{p_endpoint:ep}).then(()=>{},()=>{}))}
 function pushEp(){try{return localStorage.getItem('blo_push_ep')||''}catch(e){return ''}}
 function pushOn(){return PUSH_OK&&Notification.permission==='granted'&&!!pushEp()}
 function pushState(){if(IS_IOS&&!IS_STANDALONE)return 'ios-install';if(!PUSH_OK)return 'unsupported';if(Notification.permission==='denied')return 'denied';if(pushOn())return 'on';return 'off'}
@@ -1260,7 +1264,7 @@ function renderPushCard(){
     el.querySelector('[data-ptest]')?.addEventListener('click',()=>testPush(false));
   });
 }
-function syncOneSignalUser(){ensurePush();setTimeout(maybePushSheet,2500)}
+function syncOneSignalUser(){ensurePush();flushOldSubs();setTimeout(maybePushSheet,2500)}
 /* نافذة منبثقة من تحت: بتطلب من المستخدم يفعّل الإشعارات (بتظهر لحد ما يفعّلها، ولو قال لاحقاً بتستنى يوم) */
 function maybePushSheet(){
   if(!AUTH||document.getElementById('pushSheet'))return;const st=pushState();if(st==='on'||st==='unsupported')return;
