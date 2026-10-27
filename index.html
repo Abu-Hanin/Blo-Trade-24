@@ -1091,9 +1091,8 @@ body{background-attachment:scroll}
 <script src="lib-supabase.min.js"></script>
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-const APP_VERSION='2026.10.27.3';
+const APP_VERSION='2026.10.27.4';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1141,8 +1140,6 @@ const APP_URL='https://abu-hanin.github.io/Blo-Trade-24/';
 const SITE_TITLE='Blo Trade 24';
 const SITE_TEXT='منصة Blo Trade 24 - توصيات احترافية للتداول الفوري للعملات الرقمية';
 const AFF_TRIAL_USD=5,AFF_PERM_USD=10,AFF_MIN_PAYOUT=20;
-/* إشعارات التوصيات وكلمة اليوم وردود الدعم بتتبعت من السيرفر تلقائياً (blo-push) */
-const SERVER_PUSH=true;
 
 let SUB_PRICE_USD=33,SUB_PRICE_USD_PERMANENT=100,USD_RATE_EGP=50;
 function PRICE_EGP(){return SUB_PRICE_USD*USD_RATE_EGP}
@@ -1183,43 +1180,60 @@ function subDaysLeft(){if(!CU||!CU.subscription_end)return 0;return Math.max(0,M
 function isPermanentSub(){return !!(CU&&CU.subscription_end&&new Date(CU.subscription_end).getTime()>new Date('2100-01-01').getTime())}
 function cacheCU(){try{if(CU)localStorage.setItem('blo_cu_cache',JSON.stringify(CU));else localStorage.removeItem('blo_cu_cache')}catch(e){}}
 
-/* ===== OneSignal ===== */
-window.OneSignalDeferred=window.OneSignalDeferred||[];
-OneSignalDeferred.push(async function(OneSignal){
-  try{
-    await OneSignal.init({appId:ONESIGNAL_APP_ID,allowLocalhostAsSecureOrigin:true,notifyButton:{enable:false},serviceWorkerPath:'/OneSignalSDKWorker.js',serviceWorkerParam:{scope:'/'},promptOptions:{slidedown:{enable:true,autoPrompt:true,actionMessage:'تفعيل الإشعارات لتصلك التوصيات والإشعارات فوراً'}}});
-    if(AUTH){try{await OneSignal.login(AUTH.id);if(AUTH.email)await OneSignal.User.addTag('email',AUTH.email)}catch(e){}}
-  }catch(e){}
-});
-function syncOneSignalUser(){
-  if(!AUTH)return;
-  try{window.OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.login(AUTH.id);if(AUTH.email)await OneSignal.User.addTag('email',AUTH.email);if(AUTH.email&&AUTH.email.toLowerCase()===ADMIN_EMAIL.toLowerCase()){await OneSignal.User.addAlias('external_id','admin');await OneSignal.User.addTag('is_admin','true')}}catch(e){}})}catch(e){}
-  syncSubTag();ensurePush();
-}
-/* ===== إشعارات الجهاز (زي واتساب: بتوصل في شريط الإشعارات حتى والتطبيق مقفول) =====
-   السيرفر بيبعت للجهاز المربوط بحساب المستخدم — فلازم الجهاز يكون مسموح له ومربوط بالحساب */
+/* ===== إشعارات الجهاز (Web Push) — زي واتساب: بتوصل في شريط الإشعارات حتى والتطبيق مقفول =====
+   كل إشعار بيتسجل في جدول notifications، وقاعدة البيانات بتبعته للأجهزة المسجلة فوراً (blo-push).
+   الجهاز بيتسجل بضغطة "تفعيل الإشعارات" ويتحفظ في push_subscriptions مربوط بالحساب. */
 const IS_IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const IS_STANDALONE=(()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}})();
-function osReady(){return new Promise(res=>{let done=false;const t=setTimeout(()=>{if(!done){done=true;res(null)}},9000);window.OneSignalDeferred.push(async OS=>{if(done)return;done=true;clearTimeout(t);res(OS)})})}
-function pushState(){if(IS_IOS&&!IS_STANDALONE)return 'ios-install';if(!('Notification' in window)||!('serviceWorker' in navigator))return 'unsupported';if(Notification.permission==='denied')return 'denied';if(Notification.permission==='granted'&&pushOn())return 'on';return 'off'}
-let ensuring=false;
-async function ensurePush(){if(!AUTH||ensuring)return;ensuring=true;try{const OS=await osReady();if(!OS)return;if(OS.User.externalId!==AUTH.id)await OS.login(AUTH.id);if(Notification.permission==='granted'&&!OS.User.PushSubscription.optedIn)await OS.User.PushSubscription.optIn()}catch(e){}finally{ensuring=false;renderPushCard()}}
+const PUSH_OK=('serviceWorker' in navigator)&&('PushManager' in window)&&('Notification' in window);
+let SW_REG=null;
+const swReady=PUSH_OK?navigator.serviceWorker.register('sw.js').then(r=>{SW_REG=r;return navigator.serviceWorker.ready}).catch(()=>null):Promise.resolve(null);
+function pushEp(){try{return localStorage.getItem('blo_push_ep')||''}catch(e){return ''}}
+function pushOn(){return PUSH_OK&&Notification.permission==='granted'&&!!pushEp()}
+function pushState(){if(IS_IOS&&!IS_STANDALONE)return 'ios-install';if(!PUSH_OK)return 'unsupported';if(Notification.permission==='denied')return 'denied';if(pushOn())return 'on';return 'off'}
+function b64ToU8(s){const p='='.repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))}
+let VAPID_PUB='';
+async function vapidKey(){if(VAPID_PUB)return VAPID_PUB;try{VAPID_PUB=localStorage.getItem('blo_vapid')||''}catch(e){}if(VAPID_PUB)return VAPID_PUB;const {data}=await sb.functions.invoke('blo-push',{body:{kind:'push_vapid'}});VAPID_PUB=(data&&data.publicKey)||'';try{if(VAPID_PUB)localStorage.setItem('blo_vapid',VAPID_PUB)}catch(e){}return VAPID_PUB}
+/* بيسجل الجهاز (أو بيجدد تسجيله) ويربطه بالحساب اللي داخل دلوقتي */
+async function subscribeDevice(){
+  const reg=await swReady;if(!reg)throw new Error('no sw');
+  const key=await vapidKey();if(!key)throw new Error('no key');
+  let sub=await reg.pushManager.getSubscription();
+  if(sub){const cur=sub.options&&sub.options.applicationServerKey;if(cur&&btoa(String.fromCharCode(...new Uint8Array(cur))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')!==key){await sub.unsubscribe();sub=null}}
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(key)});
+  const j=sub.toJSON();
+  const {error}=await sb.rpc('blo_save_push_sub',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent});
+  if(error)throw error;
+  try{localStorage.setItem('blo_push_ep',j.endpoint);localStorage.setItem('blo_push_uid',AUTH.id)}catch(e){}
+  return true;
+}
+let ensuring=false,ensuredFor='';
+async function ensurePush(){
+  if(!AUTH||ensuring||!PUSH_OK||Notification.permission!=='granted')return renderPushCard();
+  if(ensuredFor===AUTH.id&&pushEp())return renderPushCard();
+  ensuring=true;try{await subscribeDevice();ensuredFor=AUTH.id}catch(e){}finally{ensuring=false;renderPushCard()}
+}
 async function enablePush(btn){
   if(IS_IOS&&!IS_STANDALONE){pushHelp('ios');return}
-  const OS=await osReady();if(!OS){toast('الإشعارات مش جاهزة دلوقتي، جرب تاني كمان شوية','er');return}
+  if(!PUSH_OK){toast('المتصفح ده مش بيدعم الإشعارات','er');return}
   if(btn){btn.disabled=true;btn.innerHTML='<span class="ldr"></span> جاري التفعيل...'}
   try{
-    if(Notification.permission!=='granted')await OS.Notifications.requestPermission();
-    if(Notification.permission==='granted'){await OS.login(AUTH.id);if(!OS.User.PushSubscription.optedIn)await OS.User.PushSubscription.optIn();lastSubTag=null;syncSubTag();toast('✅ الإشعارات اتفعلت','ok');setTimeout(()=>testPush(true),3500)}
-    else if(Notification.permission==='denied')pushHelp('denied');
+    const perm=Notification.permission==='granted'?'granted':await Notification.requestPermission();
+    if(perm==='granted'){await subscribeDevice();ensuredFor=AUTH.id;toast('✅ الإشعارات اتفعلت','ok');setTimeout(()=>testPush(true),800)}
+    else if(perm==='denied')pushHelp('denied');
   }catch(e){toast('تعذر تفعيل الإشعارات، جرب تاني','er')}
   finally{renderPushCard()}
 }
+/* إشعار تجريبي لنفس المستخدم: صف في notifications والسيرفر بيبعته للجهاز */
 async function testPush(auto){
-  const r=await notifyServer('test_push',{});
-  if(r&&r.ok){if(!auto)toast('📨 اتبعتلك إشعار تجريبي، بص على شريط الإشعارات','ok');return}
-  if(auto){setTimeout(()=>notifyServer('test_push',{}),6000);return}
-  toast((r&&r.error)||'الإشعار ما اتبعتش، جرب تاني','er');
+  if(!AUTH)return;
+  const {error}=await sb.from('notifications').insert({user_id:AUTH.id,is_public:false,type:'test',title:'✅ الإشعارات شغالة',body:'كده هيوصلك أي رد من الدعم وأي توصية جديدة على طول، حتى والتطبيق مقفول',link:'notifications'});
+  if(!auto)toast(error?'الإشعار ما اتبعتش، جرب تاني':'📨 اتبعتلك إشعار تجريبي، بص على شريط الإشعارات',error?'er':'ok');
+}
+async function unsubscribeDevice(token){
+  const ep=pushEp();try{localStorage.removeItem('blo_push_ep');localStorage.removeItem('blo_push_uid')}catch(e){}ensuredFor='';
+  if(!ep||!token)return Promise.resolve();
+  return fetch(SUPABASE_URL+'/rest/v1/rpc/blo_remove_push_sub',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({p_endpoint:ep}),keepalive:true}).catch(()=>{});
 }
 function pushHelp(kind){
   const steps=kind==='ios'?['اضغط زرار المشاركة <i class="fas fa-arrow-up-from-bracket"></i> تحت في سفاري','اختار <b>إضافة إلى الشاشة الرئيسية</b>','افتح التطبيق من الأيقونة الجديدة وفعّل الإشعارات من جوه']
@@ -1233,20 +1247,24 @@ function renderPushCard(){
     if(st==='on'){el.innerHTML=`<div class="push-card on"><span class="pc-ico"><i class="fas fa-bell"></i></span><div class="pc-t"><b>الإشعارات شغالة ✅</b><small>هتوصلك الرسايل والتوصيات على طول</small></div><button class="pc-btn ghost" data-ptest>إشعار تجريبي</button></div>`}
     else{const txt=st==='denied'?['الإشعارات مقفولة على جهازك','افتحها من الإعدادات عشان توصلك ردود الدعم والتوصيات','إزاي أفتحها؟']:st==='ios-install'?['ضيف التطبيق للشاشة الرئيسية','على الآيفون الإشعارات بتشتغل من التطبيق المثبت بس','إزاي؟']:['فعّل الإشعارات 🔔','عشان توصلك ردود الدعم والتوصيات الجديدة فوراً — حتى والتطبيق مقفول','تفعيل الإشعارات'];
       el.innerHTML=`<div class="push-card"><span class="pc-ico"><i class="fas fa-bell"></i></span><div class="pc-t"><b>${txt[0]}</b><small>${txt[1]}</small></div><button class="pc-btn" data-pon>${txt[2]}</button></div>`}
-    el.querySelector('[data-pon]')?.addEventListener('click',e=>{const s=pushState();if(s==='denied')pushHelp('denied');else enablePush(e.currentTarget)});
+    el.querySelector('[data-pon]')?.addEventListener('click',e=>{const s=pushState();if(s==='denied')pushHelp('denied');else if(s==='ios-install')pushHelp('ios');else enablePush(e.currentTarget)});
     el.querySelector('[data-ptest]')?.addEventListener('click',()=>testPush(false));
   });
 }
+function syncOneSignalUser(){ensurePush()}
+function syncSubTag(){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH)ensurePush()});
-/* تاج المشترك: إشعارات تحقيق الأهداف بتروح للمشتركين بس (السيرفر بيفلتر عليه) */
-let lastSubTag=null;
-function syncSubTag(){if(!AUTH||!CU)return;const v=isSub()?'1':'0';if(v===lastSubTag)return;lastSubTag=v;try{window.OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.User.addTag('sub',v)}catch(e){lastSubTag=null}})}catch(e){}}
-/* لما الإشعارات الحقيقية (Push) شغالة، السيرفر هو اللي بيبعت — فمش بنكرر إشعار محلي */
-function pushOn(){try{return !!(window.OneSignal&&OneSignal.User&&OneSignal.User.PushSubscription&&OneSignal.User.PushSubscription.optedIn)}catch(e){return false}}
+/* الضغط على الإشعار: لو التطبيق مفتوح بيوصله رسالة، ولو مقفول بيتفتح بـ ?open= */
+const PUSH_PAGES=['recs','words','chat','done','notifications','news','prof','home','affiliate'];
+function openFromPush(link){if(!link)return;if(/^https:\/\//.test(link)){location.href=link;return}if(!PUSH_PAGES.includes(link))return;if(CU)go(link);else{try{sessionStorage.setItem('blo_open',link)}catch(e){}}}
+if(PUSH_OK)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='open')openFromPush(e.data.link)});
+try{const o=new URLSearchParams(location.search).get('open');if(o){sessionStorage.setItem('blo_open',o);history.replaceState(null,'',location.pathname+location.hash)}}catch(e){}
+function consumePendingOpen(){try{const o=sessionStorage.getItem('blo_open');if(o&&CU){sessionStorage.removeItem('blo_open');setTimeout(()=>openFromPush(o),300)}}catch(e){}}
 
-/* ===== إشعارات السيرفر (تليجرام + الإشعارات الجماعية) — المفاتيح على السيرفر مش في المتصفح ===== */
+/* ===== إشعارات السيرفر (تليجرام) — المفاتيح على السيرفر مش في المتصفح ===== */
 async function notifyServer(action,payload){try{const {data,error}=await sb.functions.invoke('blo-notify',{body:Object.assign({action},payload||{})});if(error)return {ok:false,error:error.message};return data||{ok:true}}catch(e){return {ok:false,error:e.message}}}
-async function sendPushNotification(title,body,url){const r=await notifyServer('push',{title,body,url:url||APP_URL});return r&&r.ok?{ok:true}:{ok:false,error:(r&&r.error)||'فشل الإرسال'}}
+/* إشعار جماعي من الأدمن = صف عام في notifications، والسيرفر بيبعته لكل الأجهزة */
+async function sendPushNotification(title,body,url){const link=/^https:\/\//.test(url||'')&&url!==APP_URL?url:'notifications';const {error}=await sb.from('notifications').insert({title,body,type:'broadcast',is_public:true,link});return error?{ok:false,error:error.message}:{ok:true}}
 
 async function loadProfile(){
   if(!AUTH)return null;
@@ -1345,7 +1363,7 @@ $('#rf').onsubmit=async e=>{
   }catch(err){aErr('re',err&&err.message==='timeout'?'الاتصال بطيء، جرب تاني':'حصل خطأ، جرب تاني')}
   finally{loginBusy=false;btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> إنشاء الحساب'}
 };
-function afterLogin(){showApp();[syncOneSignalUser,initRealtime,applyPendingReferral].forEach(f=>{try{f()}catch(e){}});fetchRecos().then(l=>{window._recsCache=l;updateRB()}).catch(()=>{})}
+function afterLogin(){showApp();[syncOneSignalUser,initRealtime,applyPendingReferral,consumePendingOpen].forEach(f=>{try{f()}catch(e){}});fetchRecos().then(l=>{window._recsCache=l;updateRB()}).catch(()=>{})}
 /* خروج فوري: بنمسح الجلسة من الجهاز ونرجع للرئيسية على طول، وإبلاغ السيرفر بيكمل في الخلفية */
 async function doLogout(){
   let tok=null;try{tok=JSON.parse(localStorage.getItem(SB_STORE_KEY)||'null')?.access_token||null}catch(e){}
@@ -1353,7 +1371,8 @@ async function doLogout(){
   try{localStorage.removeItem(SB_STORE_KEY)}catch(e){}
   $('#lE').value='';$('#lP').value='';showLanding();window.scrollTo(0,0);toast('تم تسجيل الخروج','ok');
   /* إلغاء الجلسة على السيرفر (التوكن مبيفضلش صالح) + تنضيف الذاكرة */
-  if(tok)fetch(SUPABASE_URL+'/auth/v1/logout?scope=local',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+tok},keepalive:true}).catch(()=>{});
+  /* الجهاز بيتشال من حساب المستخدم الأول (عشان إشعاراته ماتوصلش لحد تاني يدخل من نفس الموبايل) وبعدين الجلسة بتتلغي */
+  unsubscribeDevice(tok).finally(()=>{if(tok)fetch(SUPABASE_URL+'/auth/v1/logout?scope=local',{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+tok},keepalive:true}).catch(()=>{})});
   sb.auth.signOut({scope:'local'}).catch(()=>{});
 }
 window.doLogout=doLogout;
@@ -1961,15 +1980,15 @@ $('#shareBtn').onclick=async()=>{if(navigator.share){try{await navigator.share({
 
 function notify(title,body){if(!('Notification' in window)||pushOn())return;if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png',badge:'badge-72.png',tag:'blo_'+Date.now()})}catch(e){}}}
 async function askNotifPermission(){if(!('Notification' in window))return;if(Notification.permission==='default'){try{await Notification.requestPermission()}catch(e){}}}
-async function updateNotifBadge(){try{if(!CU)return;const {data,error}=await sb.from('notifications').select('created_at,is_public,user_id').order('created_at',{ascending:false}).limit(50);const badge=$('#notifBadge');if(!badge)return;if(error||!data||!data.length){badge.style.display='none';return}let ls='';try{ls=localStorage.getItem('blo_notif_seen')||''}catch(e){}const unread=data.filter(n=>(n.is_public!==false||n.user_id===CU?.id||!n.user_id)&&n.created_at>ls);if(unread.length){badge.textContent=unread.length>9?'9+':unread.length;badge.style.display='flex'}else badge.style.display='none'}catch(e){}}
-function markNotifSeen(){try{localStorage.setItem('blo_notif_seen',new Date().toISOString())}catch(e){}updateNotifBadge()}
+async function updateNotifBadge(){try{if(!CU)return;const {data,error}=await sb.from('notifications').select('created_at,is_public,user_id,is_read').order('created_at',{ascending:false}).limit(50);const badge=$('#notifBadge');if(!badge)return;if(error||!data||!data.length){badge.style.display='none';return}let ls='';try{ls=localStorage.getItem('blo_notif_seen')||''}catch(e){}const unread=data.filter(n=>n.user_id===CU?.id?!n.is_read:((n.is_public!==false||!n.user_id)&&n.created_at>ls));if(unread.length){badge.textContent=unread.length>9?'9+':unread.length;badge.style.display='flex'}else badge.style.display='none'}catch(e){}}
+function markNotifSeen(){try{localStorage.setItem('blo_notif_seen',new Date().toISOString())}catch(e){}if(CU)sb.from('notifications').update({is_read:true}).eq('user_id',CU.id).eq('is_read',false).then(()=>updateNotifBadge(),()=>updateNotifBadge());else updateNotifBadge()}
 window.markNotifSeen=markNotifSeen;
 let rtChannels=[];
 function removeRealtime(){rtChannels.forEach(ch=>{try{sb.removeChannel(ch)}catch(e){}});rtChannels=[]}
 function initRealtime(){
   removeRealtime();const RT_ID=Date.now().toString(36);
   rtChannels.push(sb.channel('recos-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'recommendations'},p=>{if(p.new.hidden)return;window._recsCache=[p.new,...window._recsCache];updateRB();notify('📈 توصية جديدة','تم نزول توصية جديدة على Blo Trade 24');if(currentPage==='recs')renderRecos()}).subscribe());
-  rtChannels.push(sb.channel('notif-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},p=>{if(p.new.is_public===false&&p.new.user_id&&p.new.user_id!==CU?.id)return;updateNotifBadge();notify(p.new.title||'إشعار جديد',p.new.body||'');if(currentPage==='notifications')go('notifications')}).subscribe());
+  rtChannels.push(sb.channel('notif-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},p=>{if(p.new.is_public===false&&p.new.user_id&&p.new.user_id!==CU?.id)return;updateNotifBadge();if(!['chat','test'].includes(p.new.type))toast('🔔 '+(p.new.title||'إشعار جديد'));notify(p.new.title||'إشعار جديد',p.new.body||'');if(currentPage==='notifications')go('notifications')}).subscribe());
   rtChannels.push(sb.channel('words-insert-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'words'},p=>{if(p.new.hidden)return;window._wordsCache=[p.new,...window._wordsCache];notify('📅 كلمة اليوم','تم نزول كلمة اليوم الجديدة');if(currentPage==='words')go('words')}).subscribe());
   rtChannels.push(sb.channel('profile-update-'+RT_ID).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},p=>{if(p.new.id!==CU?.id)return;const was=isSub();CU={...CU,...p.new};cacheCU();refreshUI();syncSubTag();if(!was&&isSub()){notify('🎉 تم تفعيل اشتراكك','تم تفعيل باقتك');toast('🎉 تم تفعيل اشتراكك!','ok');if(['home','prof','plans','recs','words','winner'].includes(currentPage))go(currentPage)}}).subscribe());
   rtChannels.push(sb.channel('admin-messages-'+RT_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'admin_messages'},p=>{if(p.new.user_id===CU?.id){notify('📩 رسالة من الإدارة',p.new.title||'لديك رسالة جديدة');if(currentPage==='home')go('home')}}).subscribe());
@@ -2067,7 +2086,7 @@ async function pasteInto(ip){if(!navigator.clipboard||!navigator.clipboard.readT
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.pst');if(b){e.preventDefault();const ip=document.getElementById(b.dataset.pfor);if(ip)pasteInto(ip);return}const ip=e.target.closest&&e.target.closest('input[data-paste]');if(ip&&!ip.value.trim())pasteInto(ip)});
 function recoPayload(){return {symbol:$('#fSym').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,''),entry:$('#fEnt').value.trim(),target1:$('#fT1').value.trim(),target2:$('#fT2').value.trim(),target3:$('#fT3').value.trim(),stop_loss:$('#fSL').value.trim()}}
 window.editReco=async function(id){const {data:r}=await sb.from('recommendations').select('*').eq('id',id).single();if(!r)return;openM(`<button class="mc">✕</button><h3><i class="fas fa-pen"></i> تعديل التوصية</h3>`+recoForm(r));$('#fSave').onclick=async()=>{const p=recoPayload();if(!p.symbol)return toast('اكتب العملة','er');const {error}=await sb.from('recommendations').update(p).eq('id',id);if(error)return toast(error.message,'er');try{localStorage.removeItem('blo_rh_v2_'+id)}catch(e){}closeM();toast('تم التعديل','ok');admRenderBody()}};
-function addRecoModal(){openM(`<button class="mc">✕</button><h3><i class="fas fa-chart-line"></i> توصية جديدة</h3>`+recoForm(null));$('#fSave').onclick=async()=>{const p=recoPayload();if(!p.symbol||!p.entry)return toast('أكمل البيانات','er');const btn=$('#fSave');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('recommendations').insert(p);btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');try{await sb.from('notifications').insert({title:'📈 توصية جديدة',body:'تم نزول توصية جديدة على منصة Blo Trade 24 الآن',type:'reco',is_public:true})}catch(e){}if(!SERVER_PUSH)sendPushNotification('📈 توصية جديدة','تم نزول توصية جديدة على منصة Blo Trade 24 الآن');closeM();toast('✅ تم النشر والإشعار','ok');admRenderBody()}}
+function addRecoModal(){openM(`<button class="mc">✕</button><h3><i class="fas fa-chart-line"></i> توصية جديدة</h3>`+recoForm(null));$('#fSave').onclick=async()=>{const p=recoPayload();if(!p.symbol||!p.entry)return toast('أكمل البيانات','er');const btn=$('#fSave');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('recommendations').insert(p);btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');closeM();toast('✅ تم النشر والإشعار','ok');admRenderBody()}}
 window.addRecoModal=addRecoModal;
 
 async function admWords(b){
@@ -2083,7 +2102,7 @@ async function admWords(b){
 window.delWord=async function(id){if(!await smConfirm('حذف الكلمة؟','',true))return;const {error}=await sb.from('words').delete().eq('id',id);if(error)return toast(error.message,'er');toast('تم الحذف','ok');admRenderBody()};
 window.toggleWordHidden=async function(id,hidden){const {error}=await sb.from('words').update({hidden:!hidden}).eq('id',id);if(error)return toast(error.message,'er');toast(hidden?'تم الإظهار':'تم الإخفاء','ok');admRenderBody()};
 window.editWord=async function(id){const {data:w}=await sb.from('words').select('*').eq('id',id).single();if(!w)return;openM(`<button class="mc">✕</button><h3><i class="fas fa-pen"></i> تعديل الكلمة</h3><div class="mform"><div><label class="lb">الكلمة</label><input type="text" class="ip ltr" id="eW" value="${esc(w.word)}" style="text-transform:uppercase;text-align:center"></div><div><label class="lb">تلميح</label><textarea class="ip" id="eWh">${esc(w.hint||'')}</textarea></div><button class="btn-p" id="saveWE"><i class="fas fa-save"></i> حفظ</button></div>`);$('#saveWE').onclick=async()=>{const wv=$('#eW').value.trim().toUpperCase();if(!wv)return toast('اكتب الكلمة','er');const {error}=await sb.from('words').update({word:wv,hint:$('#eWh').value.trim()}).eq('id',id);if(error)return toast(error.message,'er');closeM();toast('تم التعديل','ok');admRenderBody()}};
-function addWordModal(){openM(`<button class="mc">✕</button><h3><i class="fas fa-key"></i> كلمة اليوم</h3><div class="mform"><div><label class="lb">الكلمة</label><input type="text" class="ip ltr" id="nW" placeholder="WODL" style="text-transform:uppercase;text-align:center"></div><div><label class="lb">تلميح</label><textarea class="ip" id="nWh"></textarea></div><button class="btn-p" id="saveW"><i class="fas fa-paper-plane"></i> نشر</button></div>`);$('#saveW').onclick=async()=>{const wv=$('#nW').value.trim().toUpperCase();if(!wv)return toast('اكتب الكلمة','er');const btn=$('#saveW');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('words').insert({word:wv,hint:$('#nWh').value.trim()});btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');try{await sb.from('notifications').insert({title:'📅 كلمة اليوم',body:'تم نزول كلمة اليوم الجديدة',type:'word',is_public:true})}catch(e){}if(!SERVER_PUSH)sendPushNotification('📅 كلمة اليوم','تم نزول كلمة اليوم الجديدة على منصة Blo Trade 24');closeM();toast('✅ تم النشر والإشعار','ok');admRenderBody()}}
+function addWordModal(){openM(`<button class="mc">✕</button><h3><i class="fas fa-key"></i> كلمة اليوم</h3><div class="mform"><div><label class="lb">الكلمة</label><input type="text" class="ip ltr" id="nW" placeholder="WODL" style="text-transform:uppercase;text-align:center"></div><div><label class="lb">تلميح</label><textarea class="ip" id="nWh"></textarea></div><button class="btn-p" id="saveW"><i class="fas fa-paper-plane"></i> نشر</button></div>`);$('#saveW').onclick=async()=>{const wv=$('#nW').value.trim().toUpperCase();if(!wv)return toast('اكتب الكلمة','er');const btn=$('#saveW');btn.disabled=true;btn.innerHTML='<span class="ldr"></span>';const {error}=await sb.from('words').insert({word:wv,hint:$('#nWh').value.trim()});btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> نشر';if(error)return toast(error.message,'er');closeM();toast('✅ تم النشر والإشعار','ok');admRenderBody()}}
 
 let adminChatUserId=null,msgFilter='all',msgSearch='',adminMsgsChannel=null,admChatChannel=null;
 async function admMsgs(b){
@@ -2258,7 +2277,7 @@ async function boot(){
     if(fresh&&!fresh.banned){
       const wasSub=fast?isSub():null;CU=fresh;cacheCU();
       if(!fast)showApp();else{refreshUI();if(wasSub!==isSub()||['plans','dep','prof','home'].includes(currentPage))renderPage(currentPage)}
-      initRealtime();askNotifPermission();syncOneSignalUser();applyPendingReferral();
+      initRealtime();syncOneSignalUser();applyPendingReferral();consumePendingOpen();
       window._recsCache=await fetchRecos();updateRB();
     }else if(fresh&&fresh.banned){await sb.auth.signOut();CU=null;cacheCU();showLanding();toast('تم حظر حسابك','er')}
     else if(!fast){showLanding()}
