@@ -1101,7 +1101,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>
-const APP_VERSION='2026.10.27.6';
+const APP_VERSION='2026.10.27.7';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1749,9 +1749,10 @@ R.notifications=async c=>{
 let chatChannel=null;
 async function fetchChatMsgs(){const {data,error}=await sb.from('chat_messages').select('*').eq('user_id',CU.id).order('created_at',{ascending:true});if(error)return[];return data||[]}
 async function sendChatMsg(body,imageUrl){
-  const {data:row,error}=await sb.from('chat_messages').insert({user_id:CU.id,sender:'user',body:body||null,image_url:imageUrl||null,is_read:false}).select('id').single();
+  const {data:row,error}=await sb.from('chat_messages').insert({user_id:CU.id,sender:'user',body:body||null,image_url:imageUrl||null,is_read:false}).select('*').single();
   if(error)throw error;
   if(row&&row.id!=null)notifyServer('chat',{message_id:row.id});
+  return row;
 }
 function bubbleHTML(m,isMine,mineAv,themAv){const d=new Date(m.created_at);const img=safeUrl(m.image_url);return `<div class="bw ${isMine?'mine':'them'}"><div class="mav">${isMine?mineAv:themAv}</div><div class="bub">${m.body?esc(m.body):''}${img?`<img src="${img}" alt="" data-open="${img}">`:''}<div class="meta">${d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} <i class="fas fa-check-double"></i></div></div></div>`}
 function renderBubbles(body,msgs,isMineFn,mineAv,themAv,emptyHTML){if(!msgs.length){body.innerHTML=emptyHTML;return}let lastDay='';const html=[];msgs.forEach(m=>{const d=new Date(m.created_at);const k=d.toDateString();if(k!==lastDay){lastDay=k;html.push(`<div class="day-sep">${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</div>`)}html.push(bubbleHTML(m,isMineFn(m),mineAv,themAv))});body.innerHTML=html.join('');body.querySelectorAll('img[data-open]').forEach(i=>i.onclick=()=>window.open(i.dataset.open,'_blank','noopener'));body.scrollTop=body.scrollHeight}
@@ -1762,15 +1763,23 @@ R.chat=async c=>{
   c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
   const av=esc((CU.username||'أ').charAt(0).toUpperCase());
   renderPushCard();
-  const renderMsgs=async()=>{const msgs=await fetchChatMsgs();const body=$('#chatBody');if(!body)return;renderBubbles(body,msgs,m=>m.sender==='user',av,'<i class="fas fa-headset" style="font-size:.7rem"></i>',`<div class="chat-empty"><i class="fas fa-comments"></i><h4>أهلاً بيك 👋</h4><p>مفيش رسايل لسه. ابدأ المحادثة مع فريق الإدارة وهنرد عليك في أسرع وقت.</p></div>`)};
+  /* الرسايل بتترسم مرة واحدة، وبعد كده أي رسالة جديدة بتتضاف في الآخر بس (من غير إعادة رسم = من غير خطف) */
+  const themAv='<i class="fas fa-headset" style="font-size:.7rem"></i>',seen=new Set();let lastDay='';
+  const renderMsgs=async()=>{const msgs=await fetchChatMsgs();const body=$('#chatBody');if(!body)return;seen.clear();msgs.forEach(m=>seen.add(String(m.id)));lastDay=msgs.length?new Date(msgs[msgs.length-1].created_at).toDateString():'';renderBubbles(body,msgs,m=>m.sender==='user',av,themAv,`<div class="chat-empty"><i class="fas fa-comments"></i><h4>أهلاً بيك 👋</h4><p>مفيش رسايل لسه. ابدأ المحادثة مع فريق الإدارة وهنرد عليك في أسرع وقت.</p></div>`)};
+  const daySep=d=>{const k=d.toDateString();if(k===lastDay)return '';lastDay=k;return `<div class="day-sep">${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</div>`};
+  const appendMsg=m=>{const body=$('#chatBody');if(!body||m.id==null||seen.has(String(m.id)))return;
+    /* رسالتي اللي لسه ظاهرة (قبل رد السيرفر): نأكدها بدل ما نكررها */
+    if(m.sender==='user'){const pend=[...body.querySelectorAll('.bw.mine[data-pending]')].find(x=>x.dataset.pending===(m.body||''));if(pend){pend.removeAttribute('data-pending');pend.dataset.id=m.id;pend.style.opacity='';seen.add(String(m.id));return}}
+    seen.add(String(m.id));body.querySelector('.chat-empty')?.remove();body.insertAdjacentHTML('beforeend',daySep(new Date(m.created_at))+bubbleHTML(m,m.sender==='user',av,themAv));
+    const img=body.lastElementChild.querySelector('img[data-open]');if(img)img.onclick=()=>window.open(img.dataset.open,'_blank','noopener');body.scrollTop=body.scrollHeight};
   await renderMsgs();
   try{await sb.from('chat_messages').update({is_read:true}).eq('user_id',CU.id).eq('sender','admin')}catch(e){}
-  $('#chatImg').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024)return toast('الصورة كبيرة (max 5MB)','er');toast('جاري رفع الصورة...');try{const blob=await compressImage(f);const fn=`chat_${CU.id}_${Date.now()}.jpg`;const {error:up}=await sb.storage.from('proofs').upload(fn,blob,{contentType:'image/jpeg'});if(up)return toast('خطأ في الرفع','er');await sendChatMsg(null,sb.storage.from('proofs').getPublicUrl(fn).data.publicUrl);toast('✅ تم إرسال الصورة','ok');renderMsgs()}catch(err){toast('خطأ','er')}};
+  $('#chatImg').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024)return toast('الصورة كبيرة (max 5MB)','er');toast('جاري رفع الصورة...');try{const blob=await compressImage(f);const fn=`chat_${CU.id}_${Date.now()}.jpg`;const {error:up}=await sb.storage.from('proofs').upload(fn,blob,{contentType:'image/jpeg'});if(up)return toast('خطأ في الرفع','er');const row=await sendChatMsg(null,sb.storage.from('proofs').getPublicUrl(fn).data.publicUrl);toast('✅ تم إرسال الصورة','ok');if(row)appendMsg(row)}catch(err){toast('خطأ','er')}};
   /* الرسالة بتظهر فوراً (قبل رد السيرفر) وبعدين بتتأكد */
-  const sendNow=async(preset)=>{const t=(typeof preset==='string'?preset:$('#chatTxt').value).trim();if(!t)return;const body=$('#chatBody');$('#chatTxt').value='';body.querySelector('.chat-empty')?.remove();body.insertAdjacentHTML('beforeend',bubbleHTML({body:t,created_at:new Date().toISOString()},true,av,''));const pend=body.lastElementChild;pend.style.opacity='.6';body.scrollTop=body.scrollHeight;try{await sendChatMsg(t,null);pend.style.opacity='';renderMsgs()}catch(e){pend.remove();$('#chatTxt').value=t;toast('الرسالة متبعتتش، جرب تاني','er')}};
+  const sendNow=async(preset)=>{const t=(typeof preset==='string'?preset:$('#chatTxt').value).trim();if(!t)return;const body=$('#chatBody');$('#chatTxt').value='';body.querySelector('.chat-empty')?.remove();body.insertAdjacentHTML('beforeend',daySep(new Date())+bubbleHTML({body:t,created_at:new Date().toISOString()},true,av,''));const pend=body.lastElementChild;pend.dataset.pending=t;pend.style.opacity='.6';body.scrollTop=body.scrollHeight;try{const row=await sendChatMsg(t,null);if(row)appendMsg(row)}catch(e){pend.remove();$('#chatTxt').value=t;toast('الرسالة متبعتتش، جرب تاني','er')}};
   $('#chatSend').onclick=()=>sendNow();$('#chatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
   if(chatChannel){try{sb.removeChannel(chatChannel)}catch(e){}}
-  chatChannel=sb.channel('chat-user-'+CU.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${CU.id}`},()=>{if(currentPage==='chat')renderMsgs()}).subscribe();
+  chatChannel=sb.channel('chat-user-'+CU.id+'-'+Date.now()).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${CU.id}`},p=>{if(currentPage!=='chat'||!p.new)return;appendMsg(p.new);if(p.new.sender==='admin')sb.from('chat_messages').update({is_read:true}).eq('id',p.new.id).then(()=>{},()=>{})}).subscribe();
 };
 
 /* ===== اختيار الفائز ===== */
