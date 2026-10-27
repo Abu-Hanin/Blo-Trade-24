@@ -1,6 +1,6 @@
 // Blo Trade 24 — Service Worker: إشعارات الجهاز (Web Push) + فتح الصفحة الصح عند الضغط
 // الإشعار بيوصل حتى لو التطبيق مقفول، وكل إشعار بيظهر في كارت لوحده
-const CACHE_NAME = 'blotrade-v40';
+const CACHE_NAME = 'blotrade-v41';
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -29,7 +29,7 @@ self.addEventListener('push', event => {
   event.waitUntil(self.registration.showNotification(data.title || 'Blo Trade 24', {
     body: data.body || '',
     icon: 'icon-192.png',
-    badge: 'badge-72.png',
+    badge: 'badge-72.png?v=2',
     tag: 'blo-' + (data.id || '') + '-' + Date.now(), // tag مختلف = كل إشعار في كارت لوحده
     data: { link: data.link || '' },
     dir: 'rtl', lang: 'ar',

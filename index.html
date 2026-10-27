@@ -222,6 +222,15 @@ html.has-sess .guest-only,html:not(.has-sess) .user-only{display:none!important}
 .chat-push .push-card{margin:8px 10px 0;padding:10px 12px}
 @media(max-width:420px){.push-card{flex-wrap:wrap}.push-card .pc-btn{width:100%;text-align:center}}
 .push-steps{margin:10px 0 0;padding-right:20px;display:flex;flex-direction:column;gap:10px;color:#E9D5FF;font-size:.88rem;line-height:1.8}.push-steps b{color:#fff}
+.psh{position:fixed;inset:0;z-index:99980;background:rgba(4,2,10,0);display:flex;align-items:flex-end;justify-content:center;transition:background .3s;pointer-events:auto}
+.psh.show{background:rgba(4,2,10,.6)}
+.psh-card{width:min(520px,100%);padding:14px 20px calc(20px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:linear-gradient(165deg,#22134A 0%,#0F0822 70%);border:1px solid rgba(236,72,153,.35);border-bottom:none;box-shadow:0 -20px 60px rgba(124,58,237,.35);text-align:center;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,1,.3,1)}
+.psh.show .psh-card{transform:none}
+.psh-grab{display:block;width:44px;height:5px;border-radius:5px;background:rgba(255,255,255,.18);margin:0 auto 14px}
+.psh-ico{width:64px;height:64px;margin:0 auto 10px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff;font-size:1.6rem;box-shadow:0 10px 30px rgba(236,72,153,.4);animation:pcRing 2.4s ease-in-out infinite}
+.psh-card h3{color:#fff;font-size:1.15rem;margin:0 0 6px}.psh-card p{color:#D8CCF5;font-size:.84rem;line-height:1.8;margin:0 0 12px}
+.psh-list{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:8px;text-align:right}.psh-list li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.05);color:#E9D5FF;font-size:.82rem;font-weight:700}.psh-list i{width:18px;color:#F0ABFC}
+.psh-later{display:block;width:100%;margin-top:8px;padding:10px;color:var(--mt);font-weight:700;font-size:.85rem;background:none}
 .pf-hint{display:flex;align-items:center;gap:8px;font-size:.74rem;font-weight:700;color:#C4B5FD;background:rgba(168,85,247,.10);border:1px dashed rgba(168,85,247,.35);border-radius:12px;padding:8px 10px}
 #tst{position:fixed;left:50%;bottom:calc(var(--bn) + 26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(30px);z-index:99990;display:flex;align-items:center;gap:10px;max-width:min(92vw,440px);padding:12px 18px;border-radius:18px;background:linear-gradient(160deg,rgba(34,22,68,.97),rgba(11,6,25,.97));border:1px solid rgba(168,85,247,.5);color:#fff;font-weight:700;font-size:.9rem;box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 30px rgba(168,85,247,.25);opacity:0;pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,1.2,.3,1)}
 #tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -1092,7 +1101,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>
-const APP_VERSION='2026.10.27.4';
+const APP_VERSION='2026.10.27.5';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1251,7 +1260,20 @@ function renderPushCard(){
     el.querySelector('[data-ptest]')?.addEventListener('click',()=>testPush(false));
   });
 }
-function syncOneSignalUser(){ensurePush()}
+function syncOneSignalUser(){ensurePush();setTimeout(maybePushSheet,2500)}
+/* نافذة منبثقة من تحت: بتطلب من المستخدم يفعّل الإشعارات (بتظهر لحد ما يفعّلها، ولو قال لاحقاً بتستنى يوم) */
+function maybePushSheet(){
+  if(!AUTH||document.getElementById('pushSheet'))return;const st=pushState();if(st==='on'||st==='unsupported')return;
+  try{if(Date.now()-Number(localStorage.getItem('blo_push_later')||0)<864e5)return}catch(e){}
+  const txt=st==='denied'?['الإشعارات مقفولة على جهازك','عشان توصلك التوصيات الجديدة وردود الدعم الفني فوراً، افتح الإشعارات من إعدادات الموبايل','إزاي أفتحها؟']:st==='ios-install'?['فعّل الإشعارات على الآيفون','ضيف التطبيق للشاشة الرئيسية الأول، وبعدين افتحه من الأيقونة وفعّل الإشعارات','إزاي؟']:['فعّل الإشعارات 🔔','عشان توصلك التوصيات الجديدة وكلمة اليوم وردود الدعم الفني فوراً — حتى والتطبيق مقفول','تفعيل الإشعارات'];
+  const el=document.createElement('div');el.id='pushSheet';el.className='psh';
+  el.innerHTML=`<div class="psh-card" role="dialog" aria-modal="true"><span class="psh-grab"></span><div class="psh-ico"><i class="fas fa-bell"></i></div><h3>${txt[0]}</h3><p>${txt[1]}</p><ul class="psh-list"><li><i class="fas fa-chart-line"></i> التوصيات الجديدة أول ما تنزل</li><li><i class="fas fa-bullseye"></i> تحقيق الأهداف لحظة بلحظة</li><li><i class="fas fa-headset"></i> ردود الدعم الفني</li></ul><button class="btn-p btn-w psh-on">${txt[2]}</button><button class="psh-later">لاحقاً</button></div>`;
+  document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('show'));
+  const close=()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300)};
+  el.querySelector('.psh-later').onclick=()=>{try{localStorage.setItem('blo_push_later',String(Date.now()))}catch(e){}close()};
+  el.onclick=e=>{if(e.target===el){try{localStorage.setItem('blo_push_later',String(Date.now()))}catch(e){}close()}};
+  el.querySelector('.psh-on').onclick=async e=>{const s=pushState();if(s==='denied'){close();pushHelp('denied');return}if(s==='ios-install'){close();pushHelp('ios');return}await enablePush(e.currentTarget);if(pushState()==='on')close()};
+}
 function syncSubTag(){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH)ensurePush()});
 /* الضغط على الإشعار: لو التطبيق مفتوح بيوصله رسالة، ولو مقفول بيتفتح بـ ?open= */
@@ -1446,7 +1468,7 @@ R.home=async c=>{
   const tiles=[['recs','fa-chart-line','التوصيات','توصيات يومية مدروسة','#7C3AED',!s],['words','fa-key','كلمة اليوم','كلمة باينانس اليومية','#F59E0B',!s],['news','fa-newspaper','أخبار العملات','آخر أخبار الكريبتو بالعربي','#EC4899'],['done','fa-check-double','التوصيات المكتملة','حققت أهدافها الثلاثة','#22C55E'],['bubble','fa-circle-nodes','فقاعة العملات','+100 عملة لحظياً','#22D3EE'],['market','fa-globe','سوق العملات','أسعار لحظية مباشرة','#3B82F6'],['gold','fa-coins','أسعار الذهب','أسعار لحظية + حاسبة','#FBBF24'],['affiliate','fa-handshake','التسويق بالعمولة','5$ و10$ عن كل اشتراك','#16A34A']];
   if(CU.role==='admin')tiles.push(['winner','fa-trophy','اختيار الفائز','للأدمن فقط','#F59E0B']);
   const cd=s&&!isPermanentSub()&&CU.role!=='admin'?`<span class="chip pur"><i class="fas fa-hourglass-half"></i> متبقي ${subDaysLeft()} يوم</span>`:'';
-  c.innerHTML=`<div id="admMsgs"></div><div class="push-slot"></div>
+  c.innerHTML=`<div id="admMsgs"></div>
   <div class="welcome-box reveal"><div class="wb-top"><div class="wb-av">${esc((CU.username||'U').charAt(0).toUpperCase())}</div><div class="wb-hi"><small>أهلاً بيك 👋</small><h2>${esc(CU.username||'')}</h2></div><div class="wb-meta">${planChip()}${cd}<span class="chip pur" id="visBadge"><i class="fas fa-eye"></i> — زيارة</span></div></div></div>
   <div class="mini-tk" id="miniTk">${['BTC','ETH','BNB','SOL'].map(x=>`<div class="mt-c" data-s="${x}">${coinImg(x)}<div><b>${x}/USDT</b><div class="mp">—</div><div class="mch">—</div></div></div>`).join('')}</div>
   <div class="tiles">${tiles.map((t,i)=>`<a class="tile reveal" style="--c:${t[4]};animation-delay:${i*.04}s" data-go="${t[0]}">${t[5]?'<span class="lk"><i class="fas fa-lock"></i></span>':''}<span class="t-ico"><i class="fas ${t[1]}"></i></span><span class="t-txt"><b>${t[2]}</b><small>${t[3]}</small></span></a>`).join('')}</div>
@@ -1729,7 +1751,6 @@ async function fetchChatMsgs(){const {data,error}=await sb.from('chat_messages')
 async function sendChatMsg(body,imageUrl){
   const {data:row,error}=await sb.from('chat_messages').insert({user_id:CU.id,sender:'user',body:body||null,image_url:imageUrl||null,is_read:false}).select('id').single();
   if(error)throw error;
-  try{await sb.from('notifications').insert({title:'💬 رسالة جديدة من مستخدم',body:`من: ${CU.username} - ${body||'📷 صورة'}`,type:'chat_message',is_public:false,user_id:CU.id})}catch(e){}
   if(row&&row.id!=null)notifyServer('chat',{message_id:row.id});
 }
 function bubbleHTML(m,isMine,mineAv,themAv){const d=new Date(m.created_at);const img=safeUrl(m.image_url);return `<div class="bw ${isMine?'mine':'them'}"><div class="mav">${isMine?mineAv:themAv}</div><div class="bub">${m.body?esc(m.body):''}${img?`<img src="${img}" alt="" data-open="${img}">`:''}<div class="meta">${d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})} <i class="fas fa-check-double"></i></div></div></div>`}
@@ -1738,7 +1759,7 @@ function compressImage(file){return new Promise((res,rej)=>{const r=new FileRead
 R.chat=async c=>{
   if(!CU)return;
   c.classList.add('chatp');
-  c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="push-slot chat-push"></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
+  c.innerHTML=`<div class="chat-shell"><div class="chat-top"><div class="chat-av"><i class="fas fa-headset"></i><span class="sd"></span></div><div class="chat-info"><div class="nm">فريق الإدارة</div><div class="st2" style="direction:rtl;text-align:right"><span class="live-dot" style="display:inline-block;width:7px;height:7px;margin-left:5px"></span>متصل الآن · رد سريع</div></div><span class="chat-hint"><i class="fas fa-shield-halved"></i> محادثة خاصة</span></div><div class="chat-scroll" id="chatBody"></div><div class="compose"><label class="att" title="إرسال صورة"><i class="fas fa-image"></i><input type="file" accept="image/*" id="chatImg"></label><input type="text" id="chatTxt" placeholder="اكتب رسالتك هنا..." maxlength="2000"><button class="snd" id="chatSend" aria-label="إرسال"><i class="fas fa-paper-plane"></i></button></div></div>`;
   const av=esc((CU.username||'أ').charAt(0).toUpperCase());
   renderPushCard();
   const renderMsgs=async()=>{const msgs=await fetchChatMsgs();const body=$('#chatBody');if(!body)return;renderBubbles(body,msgs,m=>m.sender==='user',av,'<i class="fas fa-headset" style="font-size:.7rem"></i>',`<div class="chat-empty"><i class="fas fa-comments"></i><h4>أهلاً بيك 👋</h4><p>مفيش رسايل لسه. ابدأ المحادثة مع فريق الإدارة وهنرد عليك في أسرع وقت.</p></div>`)};
@@ -1978,7 +1999,7 @@ window.addEventListener('appinstalled',()=>{deferredPrompt=null;$('#instBtn')?.c
 if(isPWAInstalled())showShareBtn();
 $('#shareBtn').onclick=async()=>{if(navigator.share){try{await navigator.share({title:SITE_TITLE,text:SITE_TEXT,url:SITE_URL});return}catch(e){if(e&&e.name==='AbortError')return}}const enc=encodeURIComponent;openM(`<button class="mc">✕</button><h3><i class="fas fa-share-nodes"></i> مشاركة التطبيق</h3><div class="al-share" style="justify-content:center;margin:0 0 14px"><a style="--c:#25D366" href="https://wa.me/?text=${enc(SITE_TEXT+' '+SITE_URL)}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a><a style="--c:#229ED9" href="https://t.me/share/url?url=${enc(SITE_URL)}&text=${enc(SITE_TEXT)}" target="_blank" rel="noopener"><i class="fab fa-telegram"></i></a><a style="--c:#1877F2" href="https://www.facebook.com/sharer/sharer.php?u=${enc(SITE_URL)}" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a><a style="--c:#111" href="https://twitter.com/intent/tweet?url=${enc(SITE_URL)}&text=${enc(SITE_TEXT)}" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a></div><button class="btn-g btn-w" id="cpShare"><i class="fas fa-copy"></i> نسخ الرابط</button>`);$('#cpShare').onclick=()=>navigator.clipboard.writeText(SITE_URL).then(()=>toast('✅ تم نسخ الرابط','ok')).catch(()=>toast('تعذر النسخ','er'))};
 
-function notify(title,body){if(!('Notification' in window)||pushOn())return;if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png',badge:'badge-72.png',tag:'blo_'+Date.now()})}catch(e){}}}
+function notify(title,body){if(!('Notification' in window)||pushOn())return;if(Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon-192.png',badge:'badge-72.png?v=2',tag:'blo_'+Date.now()})}catch(e){}}}
 async function askNotifPermission(){if(!('Notification' in window))return;if(Notification.permission==='default'){try{await Notification.requestPermission()}catch(e){}}}
 async function updateNotifBadge(){try{if(!CU)return;const {data,error}=await sb.from('notifications').select('created_at,is_public,user_id,is_read').order('created_at',{ascending:false}).limit(50);const badge=$('#notifBadge');if(!badge)return;if(error||!data||!data.length){badge.style.display='none';return}let ls='';try{ls=localStorage.getItem('blo_notif_seen')||''}catch(e){}const unread=data.filter(n=>n.user_id===CU?.id?!n.is_read:((n.is_public!==false||!n.user_id)&&n.created_at>ls));if(unread.length){badge.textContent=unread.length>9?'9+':unread.length;badge.style.display='flex'}else badge.style.display='none'}catch(e){}}
 function markNotifSeen(){try{localStorage.setItem('blo_notif_seen',new Date().toISOString())}catch(e){}if(CU)sb.from('notifications').update({is_read:true}).eq('user_id',CU.id).eq('is_read',false).then(()=>updateNotifBadge(),()=>updateNotifBadge());else updateNotifBadge()}
@@ -2136,7 +2157,7 @@ async function admChatView(b,uid){
   const renderMsgs=async()=>{const {data:msgs}=await sb.from('chat_messages').select('*').eq('user_id',uid).order('created_at',{ascending:true});const body=$('#adminChatBody');if(!body)return;renderBubbles(body,msgs||[],m=>m.sender==='admin','<i class="fas fa-headset" style="font-size:.7rem"></i>',pav,'<div class="chat-empty"><i class="fas fa-comments"></i><h4>لا توجد رسائل بعد</h4><p>المستخدم ده لسه مبعتش أي رسالة.</p></div>')};
   await renderMsgs();
   try{await sb.from('chat_messages').update({is_read:true}).eq('user_id',uid).eq('sender','user')}catch(e){}
-  const sendMsg=async(txt,img)=>{await sb.from('chat_messages').insert({user_id:uid,sender:'admin',body:txt||null,image_url:img||null,is_read:false});try{await sb.from('notifications').insert({title:'💬 رسالة جديدة من الإدارة',body:txt||'📷 صورة',type:'chat_message',is_public:false,user_id:uid})}catch(e){}};
+  const sendMsg=async(txt,img)=>{await sb.from('chat_messages').insert({user_id:uid,sender:'admin',body:txt||null,image_url:img||null,is_read:false});};
   $('#adminChatImg').onchange=async e=>{const f=e.target.files[0];if(!f)return;toast('جاري رفع الصورة...');try{const blob=await compressImage(f);const fn=`chat_admin_${uid}_${Date.now()}.jpg`;const {error:up}=await sb.storage.from('proofs').upload(fn,blob,{contentType:'image/jpeg'});if(up)return toast('خطأ في الرفع','er');await sendMsg(null,sb.storage.from('proofs').getPublicUrl(fn).data.publicUrl);toast('✅ تم إرسال الصورة','ok');await renderMsgs()}catch(err){toast('خطأ','er')}};
   const sendNow=async()=>{const t=$('#adminChatTxt').value.trim();if(!t)return;const btn=$('#adminChatSend');btn.disabled=true;await sendMsg(t,null);$('#adminChatTxt').value='';await renderMsgs();btn.disabled=false};
   $('#adminChatSend').onclick=sendNow;$('#adminChatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
