@@ -668,8 +668,28 @@ body[data-page="chat"] .sup-fab{display:none}
 .chat-empty h4{color:#fff;margin-bottom:6px}
 .chat-empty p{font-size:.84rem;max-width:280px}
 
-/* ===== سوق العملات ===== */
-.mk-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+/* ===== حكم العملات الرقمية ===== */
+.rl-add{padding:11px 16px;font-size:.85rem;white-space:nowrap}
+.rl-note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(168,85,247,.10);border:1px solid rgba(168,85,247,.3);color:#E9D5FF;font-size:.8rem;line-height:1.8;margin-bottom:14px}.rl-note i{color:#F0ABFC;margin-top:4px}
+.rl-table{border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03);overflow:hidden}
+.rl-head,.rl-row{display:grid;grid-template-columns:minmax(170px,2.2fr) repeat(6,1fr);align-items:center;gap:6px;padding:12px 16px}
+.rl-head{background:rgba(124,58,237,.16);color:#C4B5FD;font-weight:800;font-size:.8rem;text-align:center}.rl-head div:first-child{text-align:right}
+.rl-row{border-top:1px solid rgba(255,255,255,.06);transition:background .2s}.rl-row:hover{background:rgba(168,85,247,.06)}
+.rl-coin{display:flex;align-items:center;gap:10px;min-width:0}.rl-coin .coin{width:36px;height:36px;flex:none}
+.rl-coin b{display:block;color:#fff;font-family:Poppins,sans-serif;font-size:.9rem;direction:ltr;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rl-coin small{color:var(--mt);font-weight:600;font-size:.74rem}
+.rl-verdict{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:800;margin-top:2px}.rl-verdict.ok{color:#4ADE80}.rl-verdict.bad{color:#F87171}
+.rl-cell{display:flex;justify-content:center;align-items:center;gap:6px}
+.rl-chip{min-width:46px;text-align:center;padding:5px 10px;border-radius:9px;font-size:.76rem;font-weight:800}.rl-chip.ok{background:rgba(34,197,94,.14);color:#4ADE80}.rl-chip.bad{background:rgba(239,68,68,.16);color:#F87171}
+.rl-btn{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(168,85,247,.14);color:#D8B4FE;border:1px solid rgba(168,85,247,.3);cursor:pointer}.rl-btn.ed{background:rgba(255,255,255,.06);color:var(--mt);border-color:rgba(255,255,255,.1)}
+@media(max-width:760px){.rl-head{display:none}.rl-row{grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}.rl-coin{grid-column:1/-1}.rl-cell{flex-direction:column;gap:5px;padding:8px 4px;border-radius:12px;background:rgba(255,255,255,.035)}.rl-cell::before{content:attr(data-l);font-size:.68rem;color:var(--mt);font-weight:700}.rl-cell .rl-btn{width:30px;height:30px}}
+.rl-src-h{display:flex;align-items:center;gap:12px;margin:0 0 12px}.rl-src-h .coin{width:44px;height:44px}.rl-src-h b{display:block;color:#fff;font-size:1.1rem;font-family:Poppins,sans-serif}.rl-src-h small{color:var(--mt)}
+.rl-reason{padding:10px 12px;border-radius:12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#FECACA;font-size:.84rem;margin-bottom:10px}
+.rl-src-t{color:#E9D5FF;font-size:.9rem;margin:6px 0 8px}.rl-links{display:flex;flex-direction:column;gap:8px}
+.rl-links a{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#fff;text-decoration:none;font-family:Poppins,sans-serif;font-size:.86rem;direction:ltr;justify-content:flex-end}.rl-links a i{color:#C084FC}.rl-none{color:var(--mt);font-size:.85rem}
+.rl-miss b{color:#fff;font-family:Poppins,sans-serif}.rl-miss .btn-p{margin-top:12px;padding:11px 18px}
+.rl-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}.rl-ck{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#E9D5FF;font-weight:700;font-size:.85rem;cursor:pointer}.rl-ck input{width:18px;height:18px;accent-color:#EF4444}
+
+/* ===== سوق العملات ===== */.mk-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .search{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid var(--line2)}
 .search i{color:var(--p2)}
 .search input{flex:1;min-width:0;padding:12px 0;background:transparent;border:none;outline:none;color:#fff;font-size:.95rem}
@@ -1080,6 +1100,7 @@ body{background-attachment:scroll}
 <a class="adm" data-m="winner"><span class="dl-ico"><i class="fas fa-trophy"></i></span><span class="dl-txt">اختيار الفائز<small>سحب عشوائي من التعليقات</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <div class="dr-sec">أدوات السوق</div>
 <a data-m="bubble"><span class="dl-ico"><i class="fas fa-circle-nodes"></i></span><span class="dl-txt">فقاعة العملات<small>+100 عملة من باينانس لحظياً</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
+<a data-m="rulings"><span class="dl-ico"><i class="fas fa-scale-balanced"></i></span><span class="dl-txt">حكم العملات<small>اعرف حكم العملة قبل ما تشتري</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <a data-m="market"><span class="dl-ico"><i class="fas fa-globe"></i></span><span class="dl-txt">سوق العملات<small>أسعار لحظية مباشرة</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
 <a data-m="news"><span class="dl-ico"><i class="fas fa-newspaper"></i></span><span class="dl-txt">أخبار العملات<small>آخر أخبار الكريبتو بالعربي</small></span><em class="dl-new">جديد</em><i class="fas fa-chevron-left dl-arr"></i></a>
 <a data-m="gold"><span class="dl-ico"><i class="fas fa-coins"></i></span><span class="dl-txt">أسعار الذهب<small>أسعار لحظية + حاسبة</small></span><i class="fas fa-chevron-left dl-arr"></i></a>
@@ -1101,7 +1122,7 @@ body{background-attachment:scroll}
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"><\/script>');</script>
 <script>
-const APP_VERSION='2026.10.27.9';
+const APP_VERSION='2026.10.30.1';
 (function forceUpdate(){
   try{
     const stored=localStorage.getItem('blo_app_version');
@@ -1305,7 +1326,7 @@ async function loadProfile(){
 }
 async function refreshUser(){AUTH=(await sb.auth.getUser()).data.user;if(AUTH){CU=await loadProfile();cacheCU()}return CU}
 
-const VALID_PAGES=['home','recs','words','chat','prof','dep','plans','gold','bubble','market','winner','notifications','admin','done','affiliate','news'];
+const VALID_PAGES=['home','recs','words','chat','prof','dep','plans','gold','bubble','rulings','market','winner','notifications','admin','done','affiliate','news'];
 
 /* ===== تبديل الواجهة: زائر / مسجل ===== */
 let appShown=false;
@@ -1469,7 +1490,7 @@ R.plans=c=>{c.innerHTML=`<h2 class="pt"><i class="fas fa-crown"></i> الخطط<
 let homeTicker=null;function stopHomeTicker(){if(homeTicker){clearInterval(homeTicker);homeTicker=null}}
 R.home=async c=>{
   const s=isSub();
-  const tiles=[['recs','fa-chart-line','التوصيات','توصيات يومية مدروسة','#7C3AED',!s],['words','fa-key','كلمة اليوم','كلمة باينانس اليومية','#F59E0B',!s],['news','fa-newspaper','أخبار العملات','آخر أخبار الكريبتو بالعربي','#EC4899'],['done','fa-check-double','التوصيات المكتملة','حققت أهدافها الثلاثة','#22C55E'],['bubble','fa-circle-nodes','فقاعة العملات','+100 عملة لحظياً','#22D3EE'],['market','fa-globe','سوق العملات','أسعار لحظية مباشرة','#3B82F6'],['gold','fa-coins','أسعار الذهب','أسعار لحظية + حاسبة','#FBBF24'],['affiliate','fa-handshake','التسويق بالعمولة','5$ و10$ عن كل اشتراك','#16A34A']];
+  const tiles=[['recs','fa-chart-line','التوصيات','توصيات يومية مدروسة','#7C3AED',!s],['words','fa-key','كلمة اليوم','كلمة باينانس اليومية','#F59E0B',!s],['news','fa-newspaper','أخبار العملات','آخر أخبار الكريبتو بالعربي','#EC4899'],['done','fa-check-double','التوصيات المكتملة','حققت أهدافها الثلاثة','#22C55E'],['bubble','fa-circle-nodes','فقاعة العملات','+100 عملة لحظياً','#22D3EE'],['rulings','fa-scale-balanced','حكم العملات','اعرف حكم العملة قبل ما تشتري','#A855F7'],['market','fa-globe','سوق العملات','أسعار لحظية مباشرة','#3B82F6'],['gold','fa-coins','أسعار الذهب','أسعار لحظية + حاسبة','#FBBF24'],['affiliate','fa-handshake','التسويق بالعمولة','5$ و10$ عن كل اشتراك','#16A34A']];
   if(CU.role==='admin')tiles.push(['winner','fa-trophy','اختيار الفائز','للأدمن فقط','#F59E0B']);
   const cd=s&&!isPermanentSub()&&CU.role!=='admin'?`<span class="chip pur"><i class="fas fa-hourglass-half"></i> متبقي ${subDaysLeft()} يوم</span>`:'';
   c.innerHTML=`<div id="admMsgs"></div>
@@ -1781,6 +1802,7 @@ R.chat=async c=>{
   $('#chatImg').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024)return toast('الصورة كبيرة (max 5MB)','er');toast('جاري رفع الصورة...');try{const blob=await compressImage(f);const fn=`chat_${CU.id}_${Date.now()}.jpg`;const {error:up}=await sb.storage.from('proofs').upload(fn,blob,{contentType:'image/jpeg'});if(up)return toast('خطأ في الرفع','er');const row=await sendChatMsg(null,sb.storage.from('proofs').getPublicUrl(fn).data.publicUrl);toast('✅ تم إرسال الصورة','ok');if(row)appendMsg(row)}catch(err){toast('خطأ','er')}};
   /* الرسالة بتظهر فوراً (قبل رد السيرفر) وبعدين بتتأكد */
   const sendNow=async(preset)=>{const t=(typeof preset==='string'?preset:$('#chatTxt').value).trim();if(!t)return;const body=$('#chatBody');$('#chatTxt').value='';body.querySelector('.chat-empty')?.remove();body.insertAdjacentHTML('beforeend',daySep(new Date())+bubbleHTML({body:t,created_at:new Date().toISOString()},true,av,''));const pend=body.lastElementChild;pend.dataset.pending=t;pend.style.opacity='.6';body.scrollTop=body.scrollHeight;try{const row=await sendChatMsg(t,null);if(row)appendMsg(row)}catch(e){pend.remove();$('#chatTxt').value=t;toast('الرسالة متبعتتش، جرب تاني','er')}};
+  try{const dr=sessionStorage.getItem('blo_chat_draft');if(dr){sessionStorage.removeItem('blo_chat_draft');$('#chatTxt').value=dr;setTimeout(()=>$('#chatTxt').focus(),200)}}catch(e){}
   $('#chatSend').onclick=()=>sendNow();$('#chatTxt').onkeydown=e=>{if(e.key==='Enter')sendNow()};
   if(chatChannel){try{sb.removeChannel(chatChannel)}catch(e){}}
   chatChannel=sb.channel('chat-user-'+CU.id+'-'+Date.now()).on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages',filter:`user_id=eq.${CU.id}`},p=>{if(currentPage!=='chat'||!p.new)return;appendMsg(p.new);if(p.new.sender==='admin')sb.from('chat_messages').update({is_read:true}).eq('id',p.new.id).then(()=>{},()=>{})}).subscribe();
@@ -1788,6 +1810,48 @@ R.chat=async c=>{
 
 /* ===== اختيار الفائز ===== */
 R.winner=c=>{if(CU?.role!=='admin'){c.innerHTML='<div class="es"><i class="fas fa-ban ei"></i><p>الصفحة دي للأدمن فقط</p></div>';return}c.innerHTML=`<h2 class="pt"><i class="fas fa-trophy"></i> اختيار الفائز</h2><iframe src="winner.html" title="اختيار الفائز" style="width:100%;height:calc(100dvh - 220px);min-height:640px;border:0;border-radius:22px;background:#0B0619;display:block" allow="autoplay; clipboard-write; encrypted-media; fullscreen"></iframe>`};
+
+/* ===== حكم العملات الرقمية: البيانات في جدول coin_rulings والأدمن بيضيف ويعدّل من نفس الصفحة ===== */
+const RUL_COLS=[['gambling','قمار'],['interest','ربوية'],['no_purpose','بلا هدف'],['adult','محتوى +18'],['drugs','مخدرات']];
+let rulQ='',rulF='all',RUL=[];
+function rulBad(r){return RUL_COLS.some(([k])=>r[k])}
+function rulChip(v){return `<span class="rl-chip ${v?'bad':'ok'}">${v?'نعم':'لا'}</span>`}
+function rulRow(r,adm){const bad=rulBad(r);return `<div class="rl-row"><div class="rl-coin">${coinBadge(r.symbol)}<div><b>${esc(r.symbol)}<small> / ${esc(r.name)}</small></b><span class="rl-verdict ${bad?'bad':'ok'}"><i class="fas ${bad?'fa-circle-xmark':'fa-circle-check'}"></i> ${bad?'غير متوافقة':'متوافقة'}</span></div></div>${RUL_COLS.map(([k,l])=>`<div class="rl-cell" data-l="${l}">${rulChip(!!r[k])}</div>`).join('')}<div class="rl-cell" data-l="المصادر"><button class="rl-btn" data-src="${esc(r.id)}" aria-label="المصادر"><i class="fas fa-link"></i></button>${adm?`<button class="rl-btn ed" data-edit="${esc(r.id)}" aria-label="تعديل"><i class="fas fa-pen"></i></button>`:''}</div></div>`}
+R.rulings=async c=>{
+  const adm=CU&&CU.role==='admin';
+  c.innerHTML=`<h2 class="pt"><i class="fas fa-scale-balanced"></i> حكم العملات الرقمية</h2>
+  <div class="mk-tools"><div class="search"><i class="fas fa-magnifying-glass"></i><input type="text" id="rlQ" placeholder="ابحث عن عملة... BTC" value="${esc(rulQ)}"></div><div class="seg" id="rlSeg">${[['all','الكل'],['ok','المتوافقة'],['bad','غير المتوافقة']].map(([f,l])=>`<button data-f="${f}" class="${rulF===f?'on':''}">${l}</button>`).join('')}</div>${adm?'<button class="btn-p rl-add" id="rlAdd"><i class="fas fa-plus"></i> إضافة عملة</button>':''}</div>
+  <div class="rl-note"><i class="fas fa-triangle-exclamation"></i><span>تنويه: الحكم مبني على طبيعة نشاط كل مشروع، وممكن يتغير مع الوقت لو المشروع غيّر نشاطه. المعلومات للتوعية ومش فتوى شرعية.</span></div>
+  <div class="rl-table"><div class="rl-head"><div>اسم العملة</div>${RUL_COLS.map(([,l])=>`<div>${l}</div>`).join('')}<div>المصادر</div></div><div id="rlList"><div class="es"><i class="fas fa-spinner fa-spin ei"></i><p>جاري التحميل...</p></div></div></div>`;
+  const paint=()=>{const box=$('#rlList');if(!box)return;const q=rulQ.trim().toLowerCase();const list=RUL.filter(r=>(!q||String(r.symbol).toLowerCase().includes(q)||String(r.name).toLowerCase().includes(q))&&(rulF==='all'||(rulF==='bad')===rulBad(r)));
+    box.innerHTML=list.length?list.map(r=>rulRow(r,adm)).join(''):(q?`<div class="es rl-miss"><i class="fas fa-hourglass-half ei"></i><p>العملة <b>${esc(rulQ.trim().toUpperCase())}</b> لسه ما اتصنفتش عندنا</p><button class="btn-p" id="rlAsk"><i class="fas fa-headset"></i> اسأل الدعم عن حكمها</button></div>`:'<div class="es"><i class="fas fa-inbox ei"></i><p>مفيش عملات في القسم ده</p></div>');
+    const ask=box.querySelector('#rlAsk');if(ask)ask.onclick=()=>{try{sessionStorage.setItem('blo_chat_draft','عايز أعرف حكم عملة '+rulQ.trim().toUpperCase())}catch(e){}go('chat')};
+    box.querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>rulSources(RUL.find(x=>String(x.id)===b.dataset.src)));
+    box.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>rulForm(RUL.find(x=>String(x.id)===b.dataset.edit)))};
+  const load=async()=>{try{const {data,error}=await sb.from('coin_rulings').select('*').order('sort',{ascending:true}).order('symbol',{ascending:true});if(error)throw error;RUL=data||[];paint()}catch(e){const box=$('#rlList');if(box)box.innerHTML='<div class="es"><i class="fas fa-triangle-exclamation ei"></i><p>تعذر تحميل البيانات، جرب تاني</p></div>'}};
+  window._rulReload=load;
+  $('#rlQ').oninput=e=>{rulQ=e.target.value;paint()};
+  $$('#rlSeg button').forEach(b=>b.onclick=()=>{rulF=b.dataset.f;$$('#rlSeg button').forEach(x=>x.classList.toggle('on',x===b));paint()});
+  if(adm)$('#rlAdd').onclick=()=>rulForm(null);
+  if(RUL.length)paint();
+  load();
+};
+function rulSources(r){if(!r)return;const links=(Array.isArray(r.sources)?r.sources:[]).map(u=>safeUrl(u)).filter(Boolean);
+  openM(`<button class="mc">✕</button><div class="rl-src-h">${coinBadge(r.symbol)}<div><b>${esc(r.symbol)}</b><small>${esc(r.name)}</small></div></div>${r.note?`<div class="rl-reason"><i class="fas fa-circle-info"></i> ${esc(r.note)}</div>`:''}<h4 class="rl-src-t">المصادر</h4><div class="rl-links">${links.length?links.map(u=>{let host=u;try{host=new URL(u.replace(/&amp;/g,'&')).hostname.replace(/^www\./,'')}catch(e){}return `<a href="${u}" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-up-right-from-square"></i><span>${esc(host)}</span></a>`}).join(''):'<p class="rl-none">مفيش مصادر مضافة لسه</p>'}</div>`)}
+function rulForm(r){r=r||{};const isNew=!r.id;
+  openM(`<button class="mc">✕</button><h3><i class="fas fa-scale-balanced"></i> ${isNew?'إضافة عملة':'تعديل '+esc(r.symbol)}</h3><div class="mform">
+  <div class="pf-3" style="grid-template-columns:1fr 2fr"><div><label class="lb">الرمز</label><input class="ip ltr" id="rfSym" value="${esc(r.symbol||'')}" placeholder="BTC" style="text-transform:uppercase"></div><div><label class="lb">اسم العملة</label><input class="ip ltr" id="rfName" value="${esc(r.name||'')}" placeholder="Bitcoin"></div></div>
+  <div class="rl-checks">${RUL_COLS.map(([k,l])=>`<label class="rl-ck"><input type="checkbox" data-k="${k}" ${r[k]?'checked':''}><span>${l}</span></label>`).join('')}</div>
+  <div><label class="lb">سبب الحكم (اختياري)</label><input class="ip" id="rfNote" value="${esc(r.note||'')}" placeholder="مثال: منصة إقراض بفوائد"></div>
+  <div><label class="lb">المصادر (رابط في كل سطر)</label><textarea class="ip ltr" id="rfSrc" rows="3" placeholder="https://...">${esc((Array.isArray(r.sources)?r.sources:[]).join('\n'))}</textarea></div>
+  <div style="display:flex;gap:8px"><button class="btn-p" id="rfSave" style="flex:1"><i class="fas fa-save"></i> حفظ</button>${isNew?'':'<button class="btn-g" id="rfDel"><i class="fas fa-trash"></i> حذف</button>'}</div></div>`);
+  $('#rfSave').onclick=async()=>{const sym=$('#rfSym').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');const name=$('#rfName').value.trim();if(!sym||!name)return toast('اكتب الرمز والاسم','er');
+    const p={symbol:sym,name,note:$('#rfNote').value.trim()||null,sources:$('#rfSrc').value.split(/\s+/).map(s=>s.trim()).filter(s=>/^https:\/\//i.test(s)).slice(0,8),updated_at:new Date().toISOString()};
+    $$('.rl-checks input').forEach(i=>p[i.dataset.k]=i.checked);
+    const q=isNew?sb.from('coin_rulings').insert(p):sb.from('coin_rulings').update(p).eq('id',r.id);const {error}=await q;
+    if(error)return toast(/duplicate|unique/i.test(error.message)?'العملة دي موجودة بالفعل':error.message,'er');closeM();toast('✅ تم الحفظ','ok');window._rulReload&&window._rulReload()};
+  if(!isNew)$('#rfDel').onclick=async()=>{if(!await smConfirm('حذف '+r.symbol+'؟','',true))return;const {error}=await sb.from('coin_rulings').delete().eq('id',r.id);if(error)return toast(error.message,'er');closeM();toast('تم الحذف','ok');window._rulReload&&window._rulReload()};
+}
 
 /* ===== سوق العملات (تحديث جوه الصفوف من غير ما الصفحة ترمش) ===== */
 const STABLES=new Set(['USDC','FDUSD','TUSD','BUSD','DAI','USDP','EUR','EURI','AEUR','USDE','XUSD','USD1','BFUSD','PAXG','WBTC','WBETH','BNSOL','USTC','RLUSD']);
@@ -1898,10 +1962,10 @@ function openChart(sym,info){
   sym=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(!sym)return;
   closeChart();
   openM(`<button class="mc" id="chClose">✕</button><div class="ch-head">${coinBadge(sym)}<div><b>${sym}/USDT <span class="ch-live"><span class="live-dot"></span> لحظي</span></b><div class="chp ch-big" id="chPx">${info&&info.price?fmtPx(info.price):(PXC[sym]?fmtPx(PXC[sym].price):'—')}</div></div><span class="chip" id="chCh" style="margin-right:auto"></span></div>
-  <div class="ch-tf" id="chTf">${CH_TF.map((t,i)=>`<button data-i="${i}" class="${i===1?'on':''}">${t[1]}</button>`).join('')}</div>
+  <div class="ch-tf" id="chTf">${CH_TF.map((t,i)=>`<button data-i="${i}" class="${i===4?'on':''}">${t[1]}</button>`).join('')}</div>
   <div class="ch-box" id="chBox"><canvas id="chCv"></canvas><div class="ind-tip" id="chTip"></div><div class="ch-load" id="chLoad"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الشموع...</div></div>`);
   $('#mbx').classList.add('wide');$('#mod').classList.add('chart');
-  const S=CH={sym,tf:1,data:[],timer:0,kTimer:0,hover:null,geo:null};
+  const S=CH={sym,tf:4,data:[],timer:0,kTimer:0,hover:null,hy:null,geo:null};
   const cv=$('#chCv'),box=$('#chBox'),ctx=cv.getContext('2d');
   const close=()=>{closeChart();$('#mbx').classList.remove('wide');$('#mod').classList.remove('chart')};
   $('#chClose').onclick=()=>{close();closeM()};
@@ -1928,13 +1992,19 @@ function openChart(sym,info){
     const last=d[n-1],ly=Y(last.c),up=last.c>=last.o;ctx.setLineDash([4,4]);ctx.strokeStyle=up?'rgba(34,197,94,.55)':'rgba(239,68,68,.55)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PAD_L,ly);ctx.lineTo(W-PAD_R,ly);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle=up?'#16A34A':'#DC2626';ctx.beginPath();ctx.roundRect?ctx.roundRect(W-PAD_R+2,ly-10,PAD_R-4,20,5):ctx.rect(W-PAD_R+2,ly-10,PAD_R-4,20);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 10px Poppins, Arial';ctx.fillText(fmtPx(last.c),W-PAD_R+5,ly+4);
     const tip=$('#chTip');
-    if(S.hover!=null&&S.hover>=0&&S.hover<n){const i=S.hover,x=d[i],cx=X(i);ctx.strokeStyle='rgba(255,255,255,.3)';ctx.beginPath();ctx.moveTo(cx,padT);ctx.lineTo(cx,H-padB);ctx.stroke();
-      const ch=(x.c-x.o)/x.o*100;if(tip){tip.style.display='flex';tip.innerHTML=`<span>${new Date(x.t).toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span><span>O <b>${fmtPx(x.o)}</b></span><span>H <b>${fmtPx(x.h)}</b></span><span>L <b>${fmtPx(x.l)}</b></span><span>C <b class="${ch>=0?'up':'dn'}">${fmtPx(x.c)}</b></span>`}}
+    /* مؤشر اللمس: خط رأسي على الشمعة + خط أفقي عند صباعك، والسعر عند النقطة دي ظاهر على اليمين */
+    if(S.hover!=null&&S.hover>=0&&S.hover<n){const i=S.hover,x=d[i],cx=X(i);ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(255,255,255,.45)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx,padT);ctx.lineTo(cx,H-padB);ctx.stroke();
+      const hy=Math.max(padT,Math.min(H-padB,S.hy==null?Y(x.c):S.hy)),hv=mn+(1-(hy-padT)/pH)*(mx-mn);ctx.beginPath();ctx.moveTo(PAD_L,hy);ctx.lineTo(W-PAD_R,hy);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#A855F7';ctx.beginPath();ctx.roundRect?ctx.roundRect(W-PAD_R+2,hy-10,PAD_R-4,20,5):ctx.rect(W-PAD_R+2,hy-10,PAD_R-4,20);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 10px Poppins, Arial';ctx.textAlign='left';ctx.fillText(fmtPx(hv),W-PAD_R+5,hy+4);
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx,hy,3.5,0,Math.PI*2);ctx.fill();
+      const ch=(x.c-x.o)/x.o*100;if(tip){tip.style.display='flex';tip.innerHTML=`<span>${new Date(x.t).toLocaleString('ar-EG',S.tf>=3?{year:'numeric',month:'short',day:'numeric'}:{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span><span class="${ch>=0?'up':'dn'}">${pctStr(ch)}</span><span>O <b>${fmtPx(x.o)}</b></span><span>H <b>${fmtPx(x.h)}</b></span><span>L <b>${fmtPx(x.l)}</b></span><span>C <b class="${ch>=0?'up':'dn'}">${fmtPx(x.c)}</b></span>`}}
     else if(tip)tip.style.display='none';
     S.geo={pw,n};
   }
-  const pick=e=>{if(!S.geo)return;const r=cv.getBoundingClientRect();const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;S.hover=Math.max(0,Math.min(S.geo.n-1,Math.floor((x-PAD_L)/S.geo.pw)));draw()};
-  cv.addEventListener('pointermove',pick);cv.addEventListener('pointerdown',pick);cv.addEventListener('pointerleave',()=>{S.hover=null;draw()});
+  const pick=e=>{if(!S.geo)return;const r=cv.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;S.hover=Math.max(0,Math.min(S.geo.n-1,Math.floor((x-PAD_L)/S.geo.pw)));S.hy=y;draw()};
+  cv.style.touchAction='none';
+  cv.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons||e.pressure>0)pick(e)});cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}pick(e)});
+  cv.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'){S.hover=null;S.hy=null;draw()}});
   $$('#chTf button').forEach(b=>b.onclick=()=>{S.tf=+b.dataset.i;$$('#chTf button').forEach(x=>x.classList.toggle('on',x===b));S.data=[];S.hover=null;ctx.clearRect(0,0,cv.width,cv.height);load()});
   S.onR=()=>draw();window.addEventListener('resize',S.onR);
   load();live();
